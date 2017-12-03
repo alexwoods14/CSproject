@@ -5,14 +5,16 @@ public class Block {
 	private float x;
 	private float y;
 	private boolean exists = true;
+	private boolean isSolid;
 
 	public enum Sides{
 		LEFT,RIGHT,TOP,BOTTOM;
 	}
 
-	public Block(int x, int y) {
+	public Block(int x, int y, boolean isSolid) {
 		this.x = x*side;
 		this.y = y*side;
+		this.setSolid(isSolid);
 	}
 
 	public int getSide(){
@@ -34,6 +36,15 @@ public class Block {
 	public void setY(float y) {
 		this.y = y;
 	}
+	
+	public boolean isSolid() {
+		return isSolid;
+	}
+
+	public void setSolid(boolean isSolid) {
+		this.isSolid = isSolid;
+	}
+
 	public boolean exists() {
 		return exists;
 	}

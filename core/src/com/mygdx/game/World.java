@@ -43,15 +43,6 @@ public class World implements Screen{
 		player = new Player();
 		enemies = new ArrayList<Enemy>();
 		map = new Map();
-		enemies.add(new GroundEnemy(13*map.getSide(), 4*map.getSide()));
-		enemies.add(new GroundEnemy(16*map.getSide(), 4*map.getSide()));
-		enemies.add(new GroundEnemy(30*map.getSide(), 4*map.getSide()));
-		enemies.add(new GroundEnemy(40*map.getSide(), 4*map.getSide()));
-		enemies.add(new FlyingEnemy(100, 500, 550, 450, 400, 2));
-		enemies.add(new FlyingEnemy(19*map.getSide() + 20, 336, 420, 268, 1.5f));
-		enemies.add(new FlyingEnemy(44*map.getSide(), 336, 480, 336, 2f));
-		enemies.add(new FlyingEnemy(30*map.getSide(), 336, 420, 268, 6*map.getSide(), 2.5f));
-		
 		
 	}
 
@@ -76,7 +67,7 @@ public class World implements Screen{
 		cam.position.set(camX, camY, 0);
 
 		cam.update();
-		System.out.println("camX: " + camX + "  camX + viewportWidth: " + (camX + cam.viewportWidth));
+		//System.out.println("camX: " + camX + "  camX + viewportWidth: " + (camX + cam.viewportWidth));
 
 		sr.begin(ShapeType.Line);
 

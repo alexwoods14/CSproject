@@ -40,7 +40,7 @@ public class Map {
 		for(int j = 0; j < 20; j++){
 			ArrayList<Block> blocks =  new ArrayList<Block>();
 			for(int i = 0; i < mapWidth ;i++){
-				blocks.add(new Block(i, j));
+				blocks.add(new Block(i, j, true));
 			}
 			//add layer to list of layers
 			layers.add(blocks);
@@ -51,54 +51,6 @@ public class Map {
 			}
 		}
 		
-		for(int i = 6; i < 10; i ++){
-			layers.get(4).get(i).setExists(true);
-		}
-		
-		for(int i = 10; i < 14;i ++){
-			layers.get(7).get(i).setExists(true);
-		}
-		
-		for(int i = 16; i < 19;i ++){
-			layers.get(9).get(i).setExists(true);
-		}
-		
-		layers.get(4).get(21).setExists(true);
-		
-		for(int j = 0; j < 4; j++){
-			for(int i = 23; i < 25;i ++){
-				layers.get(j).get(i).setExists(false);
-			}
-		}
-		
-		for(int j = 4; j < 6; j++){
-			for(int i = 28; i < 30;i ++){
-				layers.get(j).get(i).setExists(true);
-			}
-		}
-		
-		for(int i = 34; i < 37;i ++){
-			layers.get(4).get(i).setExists(true);
-		}
-		
-		for(int i = 39; i < 42;i ++){
-			layers.get(6).get(i).setExists(true);
-		}
-		
-		for(int i = 45; i < 47;i ++){
-			layers.get(5).get(i).setExists(true);
-		}
-		
-		layers.get(8).get(46).setExists(true);
-			
-		int count = 0;
-		for(int j = 4; j < 10; j++){
-			for(int l = 11-j; l > 1; l--){
-				layers.get(j).get(l + 50 + count).setExists(true);
-			}
-			count++;
-		}
-
 	}
 
 	public void findAllBoundaries(float x2, float y2 , float width, float height){
@@ -152,7 +104,7 @@ public class Map {
 	public float findFloor(int xindex, int yindex){
 		float floor = 0;
 		boolean foundFloor = false;
-		int i = 0;
+		int i = 1;
 		//System.out.println(yindex);
 		while(foundFloor == false && i < 3){
 			if(yindex >= layers.size()){
@@ -164,7 +116,7 @@ public class Map {
 						floor = layers.get(yindex - i).get(xindex).getY() + side;
 						foundFloor = true;
 					}
-				}
+				}      
 				i++;
 			}
 		}
@@ -182,7 +134,7 @@ public class Map {
 				foundRoof = true;
 			}
 			else{
-				if(layers.get(yindex + i).get(xindex).exists() == true){
+				if(layers.get(yindex + i).get(xindex).exists() == true && layers.get(yindex + i).get(xindex).isSolid() == true){
 					roof = layers.get(yindex + i).get(xindex).getY();
 					foundRoof = true;
 				}
@@ -203,7 +155,7 @@ public class Map {
 				foundWall = true;
 			}
 			else{
-				if(layers.get(yindex).get(xindex + i).exists() == true){
+				if(layers.get(yindex).get(xindex + i).exists() == true && layers.get(yindex).get(xindex + i).isSolid() == true){
 					wallX = layers.get(yindex).get(xindex + i).getX() - side;
 					foundWall = true;
 					//System.out.println("HERE");
@@ -226,7 +178,7 @@ public class Map {
 			}
 			else{
 				if(xindex - 1 > 0){
-					if(layers.get(yindex).get(xindex - i).exists() == true){
+					if(layers.get(yindex).get(xindex - i).exists() == true && layers.get(yindex).get(xindex - i).isSolid() == true){
 						wallX = layers.get(yindex).get(xindex - i).getX() + side;
 						foundWall = true;
 						//System.out.println("leftWall: " + (wallX/32));
@@ -245,7 +197,14 @@ public class Map {
 		for(ArrayList<Block> layer : layers){
 			for(Block block: layer){
 				if(block.exists() == true){
-					sr.rect(block.getX(), block.getY(), side, side);
+					if(block.isSolid() == true){
+						sr.rect(block.getX(), block.getY(), side, side);
+					}
+					else{
+						sr.rect(block.getX(), (float) (block.getY() + side*0.75), side, (float) (side*0.25));
+						
+					}
+					
 //					sr.setColor(Color.GREEN);
 //					boolean[] sides = edge(block, layer);
 //					if(sides[0] = true){

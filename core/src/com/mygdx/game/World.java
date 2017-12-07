@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.entities.Enemy;
-import com.mygdx.entities.FlyingEnemy;
 import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
 import com.mygdx.game.Block.Sides;
@@ -19,9 +18,10 @@ public class World implements Screen{
 
 	OrthographicCamera cam;
 
-	float gravity = 3000.0f;
+	float gravity = 3500.0f;
 	int camX = 720;
 	int camY = 452; 
+	int side;
 
 	Player player;
 	Map map;
@@ -41,8 +41,13 @@ public class World implements Screen{
 	public void show() {
 		cam = new OrthographicCamera(1440, 810);
 		player = new Player();
-		enemies = new ArrayList<Enemy>();
 		map = new Map();
+		side = map.getSide();
+		enemies = new ArrayList<Enemy>();
+		enemies.add(new GroundEnemy((int) (15.5*side), 4*side, false));
+		enemies.add(new GroundEnemy((int) (19.5*side), 7*side, false));
+		enemies.add(new GroundEnemy((int) (25.5*side), 9*side, false));
+		
 		
 	}
 
@@ -104,9 +109,10 @@ public class World implements Screen{
 
 
 
-			map.findAllBoundaries(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+			
 			if(enemy.hadFirstMove() == true && enemy.getX() + cam.viewportWidth/2 > camX){
-				enemy.move(delta, map.getLeftWall(), map.getRightWall(), map.getFloor(), map.getRoofY());
+				map.findAllBoundaries(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+				enemy.move(delta, map.getLeftWall(), map.getRightWall(), map.getFloor(), map.getRoofY(), gravity);
 			}
 			
 			if(enemy.getX() < camX + cam.viewportWidth/2){

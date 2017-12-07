@@ -8,20 +8,25 @@ public class Enemy extends Entity{
 
 	protected boolean hadFirstMove = false;
 	
-	public Enemy(int x, int y) {		
+	public Enemy(int x, int y, boolean startsRight) {		
 		height = 64;
 		width = 48;
 		this.x = x;
 		this.y = y;
 		vertV = 0.0f;
-		horiV = 100.0f;
+		if(startsRight == true) {
+			horiV = 100.0f;
+		}
+		else {
+			horiV = -100.0f;
+		}
 	}
 	
 	public void reverseDirection(){
 		horiV = - horiV;
 	}
 	
-	public void move(float delta, float leftWall, float rightWall, float floorY, float roofY){
+	public void move(float delta, float leftWall, float rightWall, float floorY, float roofY, float gravity){
 		moveHori(delta, leftWall, rightWall);
 		moveVert(delta, floorY, roofY);
 	}

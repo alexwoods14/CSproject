@@ -39,7 +39,7 @@ public class Player extends Entity{
 		}
 
 		if(Gdx.input.isKeyPressed(Keys.SPACE) == true && y <= floorY){
-			vertV = 1000.0f;
+			vertV = 1250.0f;
 		}
 
 		if(y > floorY){

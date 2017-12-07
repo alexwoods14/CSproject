@@ -8,8 +8,8 @@ public class FlyingEnemy extends Enemy{
 	private float zeroDisplacement;
 	private float timePeriod;
 	
-	public FlyingEnemy(int x, int y, int yUpperLimit, int yLowerLimit, float horiDisplacement, float timePeriod) {
-		super(x, y);
+	public FlyingEnemy(int x, int y, int yUpperLimit, int yLowerLimit, float horiDisplacement, float timePeriod, boolean startsRight) {
+		super(x, y, startsRight);
 		height = width;
 		horiV = horiDisplacement/(timePeriod*4);
 		this.yUpperLimit = yUpperLimit;
@@ -22,8 +22,8 @@ public class FlyingEnemy extends Enemy{
 		vertV = (float) ((2*Math.PI/timePeriod) * (yUpperLimit-(yUpperLimit + yLowerLimit)/2));
 	}
 	
-	public FlyingEnemy(int x, int y, int yUpperLimit, int yLowerLimit, float timePeriod) {
-		super(x, y);
+	public FlyingEnemy(int x, int y, int yUpperLimit, int yLowerLimit, float timePeriod, boolean startsRight) {
+		super(x, y, false);
 		height = width;
 		horiV = 0;
 		this.yUpperLimit = yUpperLimit;

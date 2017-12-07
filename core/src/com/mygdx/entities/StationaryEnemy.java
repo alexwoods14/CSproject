@@ -2,9 +2,10 @@ package com.mygdx.entities;
 
 public class StationaryEnemy extends Enemy{
 	public StationaryEnemy(int x, int y) {
-		super(x + (48-32)/2, y - 128);
+		super(x + (48-32)/2, y - 128, false);
 		width = 32;
 		height = 128;
+		horiV = 0;
 	}
 
 	private final double interval = 5;

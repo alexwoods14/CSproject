@@ -51,6 +51,24 @@ public class Map {
 			}
 		}
 		
+		for(int i = 15; i < 20; i++){
+			layers.get(6).get(i).setExists(true);
+			layers.get(6).get(i).setSolid(false);
+		}
+		for(int i = 19; i < 26; i++){
+			layers.get(8).get(i).setExists(true);
+			layers.get(8).get(i).setSolid(false);
+		}
+		for(int i = 30; i < 33; i++){
+			layers.get(5).get(i).setExists(true);
+			layers.get(5).get(i).setSolid(false);
+		}
+		for(int j = 4; j < 9; j++){
+			for(int i = 36; i < 42; i++){
+				layers.get(j).get(i).setExists(true);
+			}
+		}
+		
 	}
 
 	public void findAllBoundaries(float x2, float y2 , float width, float height){

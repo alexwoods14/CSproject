@@ -2,13 +2,27 @@ package com.mygdx.entities;
 
 public class GroundEnemy extends Enemy{
 	
-	public GroundEnemy(int x, int y) {
-		super(x, y);
+	public GroundEnemy(int x, int y, boolean startsRight) {
+		super(x, y, startsRight);
 		vertV = 0.0f;
 	}
 	
-	public void move(float delta, float leftWall, float rightWall, float floorY, float roofY){
+	public void move(float delta, float leftWall, float rightWall, float floorY, float roofY, float gravity){
 		super.moveHori(delta, leftWall, rightWall);
+		
+		if(y > floorY){
+			vertV -= gravity * delta;
+		}
+		
+		if(y + vertV*delta > floorY){
+			
+			y += vertV * delta;
+		}
+		else{
+			y = floorY;
+			vertV = 0;
+		}
+		
 		
 	}
 

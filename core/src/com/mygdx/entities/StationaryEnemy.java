@@ -1,7 +1,7 @@
 package com.mygdx.entities;
 
-public class stationaryEnemy extends Enemy{
-	public stationaryEnemy(int x, int y) {
+public class StationaryEnemy extends Enemy{
+	public StationaryEnemy(int x, int y) {
 		super(x + (48-32)/2, y - 128);
 		width = 32;
 		height = 128;

@@ -2,6 +2,8 @@ package com.mygdx.entities;
 
 public class GroundEnemy extends Enemy{
 	
+	private boolean hasJumped = false;
+	
 	public GroundEnemy(int x, int y, boolean startsRight) {
 		super(x, y, startsRight);
 		vertV = 0.0f;
@@ -11,6 +13,10 @@ public class GroundEnemy extends Enemy{
 		super.moveHori(delta, leftWall, rightWall);
 		
 		if(y > floorY){
+			if(hasJumped == false) {
+				vertV = 400;
+				hasJumped = true;
+			}
 			vertV -= gravity * delta;
 		}
 		
@@ -21,10 +27,9 @@ public class GroundEnemy extends Enemy{
 		else{
 			y = floorY;
 			vertV = 0;
+			hasJumped = false;
 		}
 		
-		
 	}
-
-
+	
 }

@@ -50,22 +50,55 @@ public class Map {
 				layers.get(j).get(i).setExists(false);
 			}
 		}
-		
-		for(int i = 15; i < 20; i++){
+		for(int i = 8; i < 14; i++){
+			layers.get(3).get(i).setExists(false);
+		}
+		for(int i = 16; i < 23; i++){
+			layers.get(4).get(i).setExists(true);
+			layers.get(4).get(i).setSolid(true);
+		}
+
+		for(int i = 30; i < 35; i++){
 			layers.get(6).get(i).setExists(true);
 			layers.get(6).get(i).setSolid(false);
 		}
-		for(int i = 19; i < 26; i++){
+		for(int i = 34; i < 41; i++){
 			layers.get(8).get(i).setExists(true);
 			layers.get(8).get(i).setSolid(false);
 		}
-		for(int i = 30; i < 33; i++){
+		for(int i = 45; i < 48; i++){
 			layers.get(5).get(i).setExists(true);
 			layers.get(5).get(i).setSolid(false);
 		}
 		for(int j = 4; j < 9; j++){
-			for(int i = 36; i < 42; i++){
+			for(int i = 51; i < 57; i++){
 				layers.get(j).get(i).setExists(true);
+			}
+		}
+		for(int i = 58; i < 65; i++){
+			layers.get(10).get(i).setExists(true);
+			layers.get(10).get(i).setSolid(false);
+		}
+		for(int i = 69; i < 71; i++){
+			layers.get(7).get(i).setExists(true);
+			layers.get(7).get(i).setSolid(true);
+		}
+		for(int j = 9; j < 11; j++){
+			for(int i = 73; i < 77; i++){
+				layers.get(j).get(i).setExists(true);
+				layers.get(j).get(i).setSolid(true);
+			}
+		}
+		for(int j = 6; j < 9; j++){
+			for(int i = 75; i < 77; i++){
+				layers.get(j).get(i).setExists(true);
+				layers.get(j).get(i).setSolid(true);
+			}
+		}
+		for(int j = 4; j < 8; j++){
+			for(int i = 80; i < 82; i++){
+				layers.get(j).get(i).setExists(true);
+				layers.get(j).get(i).setSolid(true);
 			}
 		}
 		

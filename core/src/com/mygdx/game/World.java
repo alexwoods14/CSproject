@@ -44,9 +44,9 @@ public class World implements Screen{
 		map = new Map();
 		side = map.getSide();
 		enemies = new ArrayList<Enemy>();
-		enemies.add(new GroundEnemy((int) (15.5*side), 4*side, false));
-		enemies.add(new GroundEnemy((int) (19.5*side), 7*side, false));
-		enemies.add(new GroundEnemy((int) (25.5*side), 9*side, false));
+		enemies.add(new GroundEnemy((int) (30.5*side), 4*side, false));
+		enemies.add(new GroundEnemy((int) (34.5*side), 7*side, false));
+		enemies.add(new GroundEnemy((int) (40.5*side), 9*side, false));
 		
 		
 	}
@@ -110,7 +110,7 @@ public class World implements Screen{
 
 
 			
-			if(enemy.hadFirstMove() == true && enemy.getX() + cam.viewportWidth/2 > camX){
+			if(enemy.hadFirstMove() == true && enemy.getX() + cam.viewportWidth > camX){
 				map.findAllBoundaries(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
 				enemy.move(delta, map.getLeftWall(), map.getRightWall(), map.getFloor(), map.getRoofY(), gravity);
 			}

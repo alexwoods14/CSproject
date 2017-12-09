@@ -11,7 +11,7 @@ public class Player extends Entity{
 	public Player() {
 		height = 76;
 		width = 48;
-		x = 68*48;
+		x = 5*48;
 		y = 400.0f;
 		vertV = 0.0f;
 		horiV = 350.0f;

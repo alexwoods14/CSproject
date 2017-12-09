@@ -36,9 +36,9 @@ public class Map {
 	}
 
 	public Map() {
-		int mapWidth = 150;
+		int mapWidth = 300;
 		for(int j = 0; j < 20; j++){
-			ArrayList<Block> blocks =  new ArrayList<Block>();
+			ArrayList<Block> blocks = new ArrayList<Block>();
 			for(int i = 0; i < mapWidth ;i++){
 				blocks.add(new Block(i, j, true));
 			}

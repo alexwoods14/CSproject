@@ -217,7 +217,21 @@ public class Map {
 			layers.get(9).get(i).setExists(true);
 			layers.get(9).get(i).setSolid(false);
 		}
-		
+		for(int j = 4; j < 10; j++){
+			for(int i = 222; i < 225; i++){
+				layers.get(j).get(i).setExists(true);
+				layers.get(j).get(i).setSolid(true);
+			}
+		}
+		for(int j = 10; j < 12; j++){
+			for(int i = 221; i < 226; i++){
+				layers.get(j).get(i).setExists(true);
+				layers.get(j).get(i).setSolid(true);
+			}
+		}
+		layers.get(8).get(229).setExists(true);
+
+
 	}
 
 	public void findAllBoundaries(float x2, float y2 , float width, float height){

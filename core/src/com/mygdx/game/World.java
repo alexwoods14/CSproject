@@ -11,7 +11,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.entities.Enemy;
 import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
-import com.mygdx.game.Block.Sides;
+import com.mygdx.map.Map;
+import com.mygdx.map.Block.Sides;
 
 public class World implements Screen{
 

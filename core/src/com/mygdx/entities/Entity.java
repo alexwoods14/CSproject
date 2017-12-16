@@ -1,6 +1,6 @@
 package com.mygdx.entities;
 
-import com.mygdx.game.Block.Sides;
+import com.mygdx.map.Block.Sides;
 
 public class Entity {
 	protected int height;

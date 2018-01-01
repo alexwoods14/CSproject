@@ -14,6 +14,7 @@ public class MyGDXGame extends Game{
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
 		this.setScreen(new World(sr));
+		this.dispose();
 	}
 
 	@Override

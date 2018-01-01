@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.entities.Enemy;
-import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
 import com.mygdx.map.Map;
 import com.mygdx.map.Block.Sides;
@@ -42,12 +41,12 @@ public class World implements Screen{
 	public void show() {
 		cam = new OrthographicCamera(1440, 810);
 		player = new Player();
-		map = new Map();
-		side = map.getSide();
+		map = new Map("map1.txt");
+		side = Constants.BLOCK_HEIGHT;
 		enemies = new ArrayList<Enemy>();
-		enemies.add(new GroundEnemy((int) (30.5*side), 4*side, false));
-		enemies.add(new GroundEnemy((int) (34.5*side), 7*side, false));
-		enemies.add(new GroundEnemy((int) (40.5*side), 9*side, false));
+//		enemies.add(new GroundEnemy((int) (30.5*side), 4*side, false));
+//		enemies.add(new GroundEnemy((int) (34.5*side), 7*side, false));
+//		enemies.add(new GroundEnemy((int) (40.5*side), 9*side, false));
 		
 		
 	}

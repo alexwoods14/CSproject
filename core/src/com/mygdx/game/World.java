@@ -41,7 +41,7 @@ public class World implements Screen{
 	public void show() {
 		cam = new OrthographicCamera(1440, 810);
 		player = new Player();
-		map = new Map("map1.txt");
+		map = new Map("map2.txt");
 		side = Constants.BLOCK_HEIGHT;
 		enemies = new ArrayList<Enemy>();
 //		enemies.add(new GroundEnemy((int) (30.5*side), 4*side, false));

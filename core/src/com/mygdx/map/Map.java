@@ -72,23 +72,6 @@ public class Map {
 			//System.out.println();
 		}
 		reader.close();	
-		
-		for(int j = 0; j < Constants.MAP_HEIGHT; j++){
-			for(int i = 0; i < Constants.MAP_WIDTH; i++){
-				if(grid[i][j] == null){
-					System.out.print('N');
-				}
-				else{
-					if(grid[i][j].getClass() == SolidBlock.class){
-						System.out.print('S');
-					}
-					if(grid[i][j].getClass() == RooflessBlock.class){
-						System.out.print('R');
-					}
-				}				
-			}
-			System.out.println();
-		}
 	}
 		
 	public void findAllBoundaries(float x2, float y2 , float width, float height){

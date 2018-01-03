@@ -1,5 +1,8 @@
 package com.mygdx.entities;
 
+import com.mygdx.game.Constants;
+import com.mygdx.map.Map;
+
 public class GroundEnemy extends Enemy{
 	
 	private boolean hasJumped = false;
@@ -9,6 +12,11 @@ public class GroundEnemy extends Enemy{
 		vertV = 0.0f;
 	}
 	
+	public GroundEnemy(int x1, boolean nextBoolean, Map map) {
+		super(x1>10*Constants.BLOCK_HEIGHT? x1 : (x1+100)*x1, 500, nextBoolean);		
+		
+	}
+
 	public void move(float delta, float leftWall, float rightWall, float floorY, float roofY, float gravity){
 		super.moveHori(delta, leftWall, rightWall);
 		

@@ -11,7 +11,7 @@ public class Player extends Entity{
 	public Player() {
 		height = 76;
 		width = 48;
-		x = 200*48;
+		x = 1;
 		y = 400.0f;
 		vertV = 0.0f;
 		horiV = 350.0f;
@@ -76,6 +76,7 @@ public class Player extends Entity{
 		sr.set(ShapeType.Filled);
 		sr.setColor(Color.ORANGE);
 		sr.rect(x, y, width, height);
+		sr.setColor(Color.BLACK);
 	}
 	
 }

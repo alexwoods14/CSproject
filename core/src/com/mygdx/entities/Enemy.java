@@ -8,7 +8,7 @@ public class Enemy extends Entity{
 
 	protected boolean hadFirstMove = false;
 	
-	public Enemy(int x, int y, boolean startsRight) {		
+	public Enemy(float x, float y, boolean startsRight) {		
 		height = 64;
 		width = 48;
 		this.x = x;

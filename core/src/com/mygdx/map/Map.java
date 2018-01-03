@@ -72,6 +72,8 @@ public class Map {
 			//System.out.println();
 		}
 		reader.close();	
+		
+		
 	}
 		
 	public void findAllBoundaries(float x2, float y2 , float width, float height){
@@ -128,6 +130,30 @@ public class Map {
 		int i = 1;
 		//System.out.println(yindex);
 		while(foundFloor == false && i < 3){
+			if(yindex >= Constants.MAP_HEIGHT){
+				foundFloor = true;
+			}
+			else{
+				if(yindex - 1 > 0){
+					if(grid[xindex][yindex - i] != null){
+						floor = grid[xindex][yindex - i].getY() + side;
+						foundFloor = true;
+					}
+				}      
+				i++;
+			}
+		}
+
+		return floor;
+	}
+	
+	public float findStartingFloor(int xindex){
+		float floor = 0;
+		boolean foundFloor = false;
+		int i = 1;
+		int yindex = 24*side;
+		//System.out.println(yindex);
+		while(foundFloor == false){
 			if(yindex >= Constants.MAP_HEIGHT){
 				foundFloor = true;
 			}

@@ -266,6 +266,8 @@ public class MapMaker implements Screen, TextInputListener{
 	}
 
 	@Override
-	public void canceled() {}
+	public void canceled() {
+		input = false;
+	}
 
 }

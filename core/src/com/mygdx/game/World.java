@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.entities.Enemy;
+import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
 import com.mygdx.map.Map;
 import com.mygdx.map.Block.Sides;
@@ -16,23 +18,23 @@ import com.mygdx.map.Block.Sides;
 public class World implements Screen{
 
 
-	OrthographicCamera cam;
-
-	float gravity = 3500.0f;
-	int camX = 720;
-	int camY = 452; 
-	int side;
-
-	Player player;
-	Map map;
-	ArrayList<Enemy> enemies;
-
-	float WIDTH = Gdx.graphics.getWidth();
-	float HEIGHT = Gdx.graphics.getHeight();
+	private OrthographicCamera cam;
 	private ShapeRenderer sr;
 
-	public World(ShapeRenderer sr) {
+	private float gravity = 3500.0f;
+	private int camX = 720;
+	private int camY = 452; 
+
+	private Player player;
+	private Map map;
+	private ArrayList<Enemy> enemies;
+	private Random rand;
+
+	private String fileName;
+
+	public World(ShapeRenderer sr, String fileName) {
 		this.sr = sr;
+		this.fileName = fileName;
 	}
 
     
@@ -41,13 +43,23 @@ public class World implements Screen{
 	public void show() {
 		cam = new OrthographicCamera(1440, 810);
 		player = new Player();
-		map = new Map("map2.txt");
-		side = Constants.BLOCK_HEIGHT;
+		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
-//		enemies.add(new GroundEnemy((int) (30.5*side), 4*side, false));
+		rand = new Random();
+		spawnRandomEnemies(30, 5, 5);
+		
+//		int side = Constants.BLOCK_HEIGHT;
+//		enemies.add(new GroundEnemy((int) (30.5*side ), 4*side, false));
 //		enemies.add(new GroundEnemy((int) (34.5*side), 7*side, false));
 //		enemies.add(new GroundEnemy((int) (40.5*side), 9*side, false));
 		
+		
+	}
+
+	private void spawnRandomEnemies(int ground, int sine, int vert) {
+		for(int i = 0; i < ground; i++){
+			enemies.add(new GroundEnemy(rand.nextInt(300)*Constants.BLOCK_HEIGHT, rand.nextBoolean(), map));
+		}
 		
 	}
 

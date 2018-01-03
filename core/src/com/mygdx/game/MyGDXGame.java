@@ -13,7 +13,7 @@ public class MyGDXGame extends Game{
 	public void create () {
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
-		this.setScreen(new World(sr));
+		this.setScreen(new MenuScreen(this));
 		this.dispose();
 	}
 

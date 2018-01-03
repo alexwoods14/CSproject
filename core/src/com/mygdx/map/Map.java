@@ -37,6 +37,17 @@ public class Map {
 	public int getSide(){
 		return side;
 	}
+	
+	public char get(int i, int j){
+		char toReturn = 'N';
+		if(grid[i][j].getClass() == SolidBlock.class){
+			toReturn = 'S';
+		}
+		if(grid[i][j].getClass() == RooflessBlock.class){
+			toReturn = 'R';
+		}
+		return toReturn;
+	}
 
 	public Map(String fileName) {
 		grid = new Block[Constants.MAP_WIDTH][Constants.MAP_HEIGHT];

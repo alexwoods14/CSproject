@@ -76,6 +76,7 @@ public class Player extends Entity{
 		sr.set(ShapeType.Filled);
 		sr.setColor(Color.ORANGE);
 		sr.rect(x, y, width, height);
+		sr.setColor(Color.BLACK);
 	}
 	
 }

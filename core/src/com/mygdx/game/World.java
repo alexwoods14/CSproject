@@ -10,9 +10,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.mygdx.entities.Enemy;
 import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
+import com.mygdx.entities.SineFlyingEnemy;
+import com.mygdx.entities.VerticalFlyingEnemy;
 import com.mygdx.map.Map;
 import com.mygdx.map.Block.Sides;
 
@@ -49,10 +52,12 @@ public class World implements Screen{
 		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
 		rand = new Random();
-		spawnRandomEnemies(30, 5, 5);
+//		spawnRandomEnemies(30, 5, 5);
+		enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
+		enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
 		learner = new Agent(player, map, enemies);
 //		int side = Constants.BLOCK_HEIGHT;
-//		enemies.add(new GroundEnemy((int) (30.5*side ), 4*side, false));
+//		enemies.add(new GroundEnemy((int) (30.5*side ), 4*side, false));  
 //		enemies.add(new GroundEnemy((int) (34.5*side), 7*side, false));
 //		enemies.add(new GroundEnemy((int) (40.5*side), 9*side, false));
 		
@@ -61,8 +66,7 @@ public class World implements Screen{
 	private void spawnRandomEnemies(int ground, int sine, int vert) {
 		for(int i = 0; i < ground; i++){
 			enemies.add(new GroundEnemy(rand.nextInt(150)*Constants.BLOCK_HEIGHT, rand.nextBoolean(), map));
-		}
-		
+		}		
 	}
 
 	@Override
@@ -176,7 +180,6 @@ public class World implements Screen{
 			count = 0;
 		}
 		count++;
-		
 	}
 
 	@Override	

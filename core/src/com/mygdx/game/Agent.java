@@ -3,7 +3,11 @@ package com.mygdx.game;
 import java.util.ArrayList;
 
 import com.mygdx.entities.Enemy;
+import com.mygdx.entities.FlyingEnemy;
+import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
+import com.mygdx.entities.SineFlyingEnemy;
+import com.mygdx.entities.VerticalFlyingEnemy;
 import com.mygdx.map.Block;
 import com.mygdx.map.Map;
 import com.mygdx.map.SolidBlock;
@@ -147,7 +151,15 @@ public class Agent {
 			for(Enemy enemy: enemies) {
 				if(enemy.crossesPoint(x, y-distanceFromCentre) == true) {
 					found = true;
-					toReturn = objs.GROUND_ENEMY;
+					if(enemy.getClass() == GroundEnemy.class){
+						toReturn = objs.GROUND_ENEMY;
+					}
+					if(enemy.getClass() == SineFlyingEnemy.class){
+						toReturn = objs.SINE_ENEMY;
+					}
+					if(enemy.getClass() == VerticalFlyingEnemy.class){
+						toReturn = objs.VERTICAL_ENEMY;
+					}
 					break;
 				}
 			}

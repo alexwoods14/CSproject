@@ -66,13 +66,16 @@ public class Agent {
 				left = findLeft();
 				topLeft = findTopLeft();
 			}
-		});
+		}); 
 		thread1.start();
 		thread2.start();
 		thread3.start();
 		thread4.start();
 		
-		System.out.printf("top: %-14s  topRight: %-14s  right: %-14s  bottomRight: %-14s  bottom: %-14s  bottomLeft: %-14s  left: %-14s  topLeft: %-14s %n", top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);
+		
+		//System.out.printf("top: %-14s  topRight: %-14s  right: %-14s  bottomRight: %-14s  bottom: %-14s  bottomLeft: %-14s  left: %-14s  topLeft: %-14s %n", top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);
+		System.out.println("bottom:" + bottom);
+		
 	}
 
 	private objs findTop() {
@@ -127,15 +130,26 @@ public class Agent {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
-		float x1 = player.getX();
-		float y1 = player.getY();
+		float x = player.getX() + player.getWidth()/2;
+		float y = player.getY() + player.getHeight()/2;
 		while(found == false && distanceFromCentre <= range){
-			int blockX = (int) ((x1 + distanceFromCentre)/side);
-			int blockY = (int) (y1/side);
+			int blockX = (int) (x/side);
+			int blockY = (int) ((y - distanceFromCentre)/side);
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
 				found = true;				
+			}
+			if(block == 'R') {
+				toReturn = objs.ROOFLESS_BLOCK;
+				found = true;
+			}
+			for(Enemy enemy: enemies) {
+				if(enemy.crossesPoint(x, y-distanceFromCentre) == true) {
+					found = true;
+					toReturn = objs.GROUND_ENEMY;
+					break;
+				}
 			}
 			
 			distanceFromCentre += step;

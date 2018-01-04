@@ -27,8 +27,10 @@ public class World implements Screen{
 	private int camY = 452; 
 
 	private Player player;
+	private int count;
 	private Map map;
 	private ArrayList<Enemy> enemies;
+	private Agent learner;
 	private Random rand;
 
 	private String fileName;
@@ -48,7 +50,7 @@ public class World implements Screen{
 		enemies = new ArrayList<Enemy>();
 		rand = new Random();
 		spawnRandomEnemies(30, 5, 5);
-		
+		learner = new Agent(player, map, enemies);
 //		int side = Constants.BLOCK_HEIGHT;
 //		enemies.add(new GroundEnemy((int) (30.5*side ), 4*side, false));
 //		enemies.add(new GroundEnemy((int) (34.5*side), 7*side, false));
@@ -169,6 +171,12 @@ public class World implements Screen{
 		for(Enemy deadEnemies: toRemove){
 			enemies.remove(deadEnemies);
 		}
+		if(count != 0) {
+			learner.run();
+			count = 0;
+		}
+		count++;
+		
 	}
 
 	@Override	

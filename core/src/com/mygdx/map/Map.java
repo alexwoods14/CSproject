@@ -40,11 +40,14 @@ public class Map {
 	
 	public char get(int i, int j){
 		char toReturn = 'N';
-		if(grid[i][j].getClass() == SolidBlock.class){
-			toReturn = 'S';
-		}
-		if(grid[i][j].getClass() == RooflessBlock.class){
-			toReturn = 'R';
+		if(grid[i][j] != null) {
+			if(grid[i][j].getClass() == SolidBlock.class){
+				toReturn = 'S';
+			}
+
+			if(grid[i][j].getClass() == RooflessBlock.class){
+				toReturn = 'R';
+			}
 		}
 		return toReturn;
 	}

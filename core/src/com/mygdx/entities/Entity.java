@@ -1,5 +1,6 @@
 package com.mygdx.entities;
 
+import com.mygdx.game.Constants;
 import com.mygdx.map.Block.Sides;
 
 public class Entity {
@@ -76,6 +77,16 @@ public class Entity {
 
 		return hasHit;
 
+	}
+	
+	public boolean crossesPoint(float x2, float y2) {
+		if(x2 > x && x2 < x + width && y2 > y && y2 < y + height){
+			return true;		
+		}
+		else{
+			return false;
+		}
+		
 	}
 
 	public Sides collisionSide(float x2, float y2, int width2, int height2) {

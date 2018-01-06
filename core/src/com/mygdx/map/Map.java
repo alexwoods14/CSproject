@@ -40,13 +40,15 @@ public class Map {
 	
 	public char get(int i, int j){
 		char toReturn = 'N';
-		if(grid[i][j] != null) {
-			if(grid[i][j].getClass() == SolidBlock.class){
-				toReturn = 'S';
-			}
+		if(i > 0 && i < Constants.MAP_WIDTH && j > 0 && j < Constants.MAP_HEIGHT){
+			if(grid[i][j] != null) {
+				if(grid[i][j].getClass() == SolidBlock.class){
+					toReturn = 'S';
+				}
 
-			if(grid[i][j].getClass() == RooflessBlock.class){
-				toReturn = 'R';
+				if(grid[i][j].getClass() == RooflessBlock.class){
+					toReturn = 'R';
+				}
 			}
 		}
 		return toReturn;
@@ -148,7 +150,7 @@ public class Map {
 				foundFloor = true;
 			}
 			else{
-				if(yindex - 1 > 0){
+				if(yindex - i > 0){
 					if(grid[xindex][yindex - i] != null){
 						floor = grid[xindex][yindex - i].getY() + side;
 						foundFloor = true;
@@ -172,7 +174,7 @@ public class Map {
 				foundFloor = true;
 			}
 			else{
-				if(yindex - 1 > 0){
+				if(yindex - i > 0){
 					if(grid[xindex][yindex - i] != null){
 						floor = grid[xindex][yindex - i].getY() + side;
 						foundFloor = true;
@@ -195,11 +197,12 @@ public class Map {
 				foundRoof = true;
 			}
 			else{
-				if(grid[xindex][yindex + i] != null){
-					if(grid[xindex][yindex + i].getClass() == SolidBlock.class){
-
-						roof = grid[xindex][yindex + i].getY();
-						foundRoof = true;
+				if(yindex + i > 0 && xindex > 0){
+					if(grid[xindex][yindex + i] != null){
+						if(grid[xindex][yindex + i].getClass() == SolidBlock.class){
+							roof = grid[xindex][yindex + i].getY();
+							foundRoof = true;
+						}
 					}
 				}
 				i++;
@@ -218,7 +221,7 @@ public class Map {
 				foundWall = true;
 			}
 			else{
-				if(grid[xindex + i][yindex] != null){
+				if(grid[xindex + i][yindex] != null ){
 					if(grid[xindex + i][yindex].getClass() == SolidBlock.class){
 
 						wallX = grid[xindex + i][yindex].getX() - side;

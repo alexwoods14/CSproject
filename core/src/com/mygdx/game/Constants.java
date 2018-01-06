@@ -10,4 +10,6 @@ public class Constants {
 	public static final int MAP_HEIGHT = 25;
 	public static final int BLOCK_HEIGHT = 48;
 	public static final int SIGHT_DISTANCE = (int) (BLOCK_HEIGHT*2.5);
+	public static final int FPS = 45;
+	public static final float DELTA_TIME = 1/FPS;
 }

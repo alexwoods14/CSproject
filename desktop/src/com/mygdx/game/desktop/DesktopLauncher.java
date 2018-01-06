@@ -11,6 +11,7 @@ public class DesktopLauncher {
 		config.height = Constants.WINDOW_HEIGHT;
 		config.width = Constants.WINDOW_WIDTH;
 		config.resizable = false;
+		config.foregroundFPS = Constants.FPS;
 		new LwjglApplication(new MyGDXGame(), config);
 	}
 }

@@ -16,6 +16,7 @@ import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
 import com.mygdx.entities.SineFlyingEnemy;
 import com.mygdx.entities.VerticalFlyingEnemy;
+import com.mygdx.game.Agent.actions;
 import com.mygdx.map.Map;
 import com.mygdx.map.Block.Sides;
 
@@ -30,21 +31,25 @@ public class World implements Screen{
 	private int camY = 452; 
 
 	private Player player;
-	private int count;
+	
 	private Map map;
 	private ArrayList<Enemy> enemies;
 	private Agent learner;
 	private Random rand;
 
 	private String fileName;
+	private actions action = actions.NONE;
+	
+	private int count;
+	private int deathCount;
 
 	public World(ShapeRenderer sr, String fileName) {
 		this.sr = sr;
 		this.fileName = fileName;
 	}
-
+	
     
-
+	
 	@Override
 	public void show() {
 		cam = new OrthographicCamera(1440, 810);
@@ -53,9 +58,9 @@ public class World implements Screen{
 		enemies = new ArrayList<Enemy>();
 		rand = new Random();
 //		spawnRandomEnemies(30, 5, 5);
-		enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
-		enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
-		learner = new Agent(player, map, enemies);
+		//enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
+		//enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
+		learner = new Agent(player, map, enemies, true);
 //		int side = Constants.BLOCK_HEIGHT;
 //		enemies.add(new GroundEnemy((int) (30.5*side ), 4*side, false));  
 //		enemies.add(new GroundEnemy((int) (34.5*side), 7*side, false));
@@ -71,21 +76,26 @@ public class World implements Screen{
 
 	@Override
 	public void render(float delta) {	
-
-
+		System.out.print("  " + player.isAlive());
+		
 		Gdx.gl.glClearColor(173/255f, 218/255f, 248/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		double deltaX = 0;
+		if(player.isAlive() == true){
+			map.findAllBoundaries(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+			//player.move(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall());
+			deltaX = player.AImove(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall(), action);
 
-		map.findAllBoundaries(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-		player.move(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall());
+			if(player.getX() >= 720){
+				camX = (int) player.getX();
+			}
 
-		if(player.getX() >= 720){
-			camX = (int) player.getX();
+			if(player.getY() >= 452){
+				camY = (int) player.getY();
+			}
 		}
-
-		if(player.getY() >= 452){
-			camY = (int) player.getY();
-		}
+		
+		camY = 0;
 
 		cam.position.set(camX, camY, 0);
 
@@ -102,13 +112,15 @@ public class World implements Screen{
 		ArrayList<Enemy> toRemove = new  ArrayList<Enemy>();
 
 		for(Enemy enemy: enemies) {
-			if(player.hasCollided(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight()) == true){			
-				if(enemy.collisionSide(player.getX(), player.getY(), player.getWidth(), player.getHeight()) == Sides.TOP){
-					toRemove.add(enemy);
-					player.bounce();
-				}
-				else{
-					System.exit(0);
+			if(player.isAlive() == true){
+				if(player.hasCollided(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight()) == true){			
+					if(enemy.collisionSide(player.getX(), player.getY(), player.getWidth(), player.getHeight()) == Sides.TOP){
+						toRemove.add(enemy);
+						player.bounce();
+					}
+					else{
+						player.died();
+					}
 				}
 			}
 			for(Enemy otherEnemy: enemies) {
@@ -126,8 +138,6 @@ public class World implements Screen{
 			}
 
 
-
-			
 			if(enemy.hadFirstMove() == true && enemy.getX() + cam.viewportWidth > camX){
 				map.findAllBoundaries(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
 				enemy.move(delta, map.getLeftWall(), map.getRightWall(), map.getFloor(), map.getRoofY(), gravity);
@@ -138,6 +148,7 @@ public class World implements Screen{
 				enemy.draw(sr);
 			}
 		}
+		
 		//sr.rect(camX + cam.viewportWidth/2 - 10, 0, 10, 2000);
 		
 		sr.setColor(Color.BLACK);
@@ -175,8 +186,12 @@ public class World implements Screen{
 		for(Enemy deadEnemies: toRemove){
 			enemies.remove(deadEnemies);
 		}
-		if(count != 0) {
-			learner.run();
+		
+		if(count > 3) {
+			action = learner.calculateQ(deltaX, player.isAlive());
+			if(player.isAlive() == false){
+				player.revive();
+			}
 			count = 0;
 		}
 		count++;

@@ -41,12 +41,7 @@ public class Agent {
 	private final double alpha = 0.1; // Learning rate
 	private final double gamma = 0.9; // Eagerness - 0 looks in the near future, 1 looks in the distant future
 		
-	private double[][][][][][][][][] Q = new double[6][6][6][6][6][6][6][6][4]; 
-	// first 8 dimensions are for the different locations: top, top right, right etc. etc.
-	// 9th and last dimension is the possible actions it can take in ant given state: jump, left, right, nothing.
-	private int count = 0;
-	
-	
+	private double[][][][][][][][][] Q = new double[6][6][6][6][6][6][6][6][6]; 
 	public Agent(Player player, Map map, ArrayList<Enemy> enemies, boolean exploring) {
 		this.map = map;
 		this.enemies = enemies;
@@ -62,7 +57,7 @@ public class Agent {
 							for(int f = 0; f < 6; f++){
 								for(int g = 0; g < 6; g++){
 									for(int h = 0; h < 6; h++){
-										for(int i = 0; i < 4; i++){
+										for(int i = 0; i < 6; i++){
 											Q[a][b][c][d][e][f][g][h][i] = rand.nextDouble(); 											
 										}	
 									}	
@@ -82,7 +77,7 @@ public class Agent {
 	}
 	
 	public enum actions{
-		JUMP, LEFT, RIGHT, NONE;
+		JUMP, LEFT, RIGHT, NONE, JUMP_LEFT, JUMP_RIGHT;
 		//0 ,  1  ,   2  ,  3		
 	}
 	
@@ -137,18 +132,7 @@ public class Agent {
 		
 		//SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY,  (null)
 		//    0    ,       1       ,       2     ,       3       ,      4    ,    5
-		
-		
-		if(count < 2000){
-			count++;
-			System.out.println(count);
-		}
-		else{
-			System.out.println("HERE");
-			exploring = false;
-		}
-		
-		
+				
 		
 		int i = 0;
 		for(objs obj: state){
@@ -161,7 +145,7 @@ public class Agent {
 			i++;
 		}
 		
-		//System.out.printf("[%d, %d, %d, %d, %d, %d, %d, %d] %n", currentState[0], currentState[1], currentState[2], currentState[3], currentState[4], currentState[5], currentState[6], currentState[7]);
+		//System.out.printf("[%d, %d, %d, %d, %d, %d, %d, %d] %n", lastStateOnFloor[0], lastStateOnFloor[1], lastStateOnFloor[2], lastStateOnFloor[3], lastStateOnFloor[4], lastStateOnFloor[5], lastStateOnFloor[6], lastStateOnFloor[7]);
 		
 		//System.out.printf("top: %-14s  topRight: %-14s  right: %-14s  bottomRight: %-14s  bottom: %-14s  bottomLeft: %-14s  left: %-14s  topLeft: %-14s %n", top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);
 		
@@ -171,28 +155,28 @@ public class Agent {
 		//calculateQ(top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);	
 	}
 
-	public actions calculateQ(double deltaX, boolean alive) {
+	public actions calculateQ(double deltaX, boolean alive, boolean onFloor) {
 		findCurrentState();
 		Random rand = new Random();
 		double reward = 0;
 		if(deltaX > 0){
-			reward = 0.5;
+			reward = 0.6;
 		}
 		if(deltaX < 0){
-			reward = - 0.5;
+			reward = - 0.4;
 		}
 		if(deltaX == 0){
-			reward = -0.1;
+			reward = -0.15;
 		}
 		if(alive == false){
-			reward = -2;
+			reward = -3;
 		}
 		if(exploring == true){
 			if(rand.nextInt(2) == 0){
 				nextMove = findBestAction(currentState);
 			}
 			else{
-				int action = rand.nextInt(4);
+				int action = rand.nextInt(6);
 				if(action == 0){
 					nextMove = actions.JUMP;
 				}
@@ -205,29 +189,42 @@ public class Agent {
 				if(action == 3){
 					nextMove = actions.NONE;
 				}
+				if(action == 4){
+					nextMove = actions.JUMP_LEFT;
+				}
+				if(action == 5){
+					nextMove = actions.JUMP_RIGHT;
+				}
 			}
+			// Q(state,action)= Q(state,action) + alpha * (R(state,action) + gamma * Max(next state, all actions) - Q(state,action))
+			double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastMove.ordinal()];
+			Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q);
 		}
 		else{
 			nextMove = findBestAction(currentState);
 		}
-		
-		
-		// Q(state,action)= Q(state,action) + alpha * (R(state,action) + gamma * Max(next state, all actions) - Q(state,action))
-		double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastMove.ordinal()];
-		Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q); 
-		
-		
+
 		lastMove = nextMove;
 		return nextMove;
-			
-		
+				
+	}
+
+	public void changeExploring(){
+		if(exploring == true){
+			exploring = false;
+			System.out.println("OPTIMAL ROUTING");
+		}
+		else{
+			exploring = true;
+			System.out.println("EXPLORATIVE ROUTING");
+		}
 	}
 	
 	
 	private actions findBestAction(int[] state) {
 		double maxQ = 0;
-		int maxQindex = 5;
-		for(int i = 0; i < 4; i ++){
+		int maxQindex = 0;
+		for(int i = 0; i < 6; i ++){
 			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][i]);
 			if(maxQ != max2){
 				maxQindex = i;
@@ -240,7 +237,7 @@ public class Agent {
 
 	private double findMaxQ(int[] state){
 		double maxQ = 0;
-		for(int i = 0; i < 4; i ++){
+		for(int i = 0; i < 6; i ++){
 			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][i]);
 			maxQ = max2;
 		}

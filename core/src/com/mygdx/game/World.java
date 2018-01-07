@@ -8,9 +8,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.mygdx.entities.Enemy;
 import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
@@ -25,6 +25,7 @@ public class World implements Screen{
 
 	private OrthographicCamera cam;
 	private ShapeRenderer sr;
+	private SpriteBatch batch;
 
 	private float gravity = 3500.0f;
 	private int camX = 720;
@@ -36,15 +37,17 @@ public class World implements Screen{
 	private ArrayList<Enemy> enemies;
 	private Agent learner;
 	private Random rand;
+	
+	private MyButton exploring;
 
 	private String fileName;
 	private actions action = actions.NONE;
 	
 	private int count;
-	private int deathCount;
 
-	public World(ShapeRenderer sr, String fileName) {
+	public World(ShapeRenderer sr, String fileName, SpriteBatch batch) {
 		this.sr = sr;
+		this.batch = batch;
 		this.fileName = fileName;
 	}
 	
@@ -57,6 +60,7 @@ public class World implements Screen{
 		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
 		rand = new Random();
+		exploring = new MyButton("finished", 20, Constants.WINDOW_HEIGHT - 100);
 //		spawnRandomEnemies(30, 5, 5);
 		//enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
 		//enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
@@ -75,8 +79,12 @@ public class World implements Screen{
 	}
 
 	@Override
-	public void render(float delta) {	
-		System.out.print("  " + player.isAlive());
+	public void render(float delta) {
+		if(Gdx.input.justTouched() == true){
+				if(exploring.isHovering() == true){
+					learner.changeExploring();
+				}
+		}
 		
 		Gdx.gl.glClearColor(173/255f, 218/255f, 248/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -94,8 +102,6 @@ public class World implements Screen{
 				camY = (int) player.getY();
 			}
 		}
-		
-		camY = 0;
 
 		cam.position.set(camX, camY, 0);
 
@@ -182,13 +188,16 @@ public class World implements Screen{
 		sr.line(leftX, bottomY, rightX, topY);
 		
 		sr.end();
-
+		batch.begin();
+		exploring.draw(batch, Gdx.input.getX(), Gdx.input.getY());
+		batch.end();
+		
 		for(Enemy deadEnemies: toRemove){
 			enemies.remove(deadEnemies);
 		}
 		
-		if(count > 3) {
-			action = learner.calculateQ(deltaX, player.isAlive());
+		if(count > 10) {
+			action = learner.calculateQ(deltaX, player.isAlive(), player.onFloor());
 			if(player.isAlive() == false){
 				player.revive();
 			}
@@ -216,6 +225,7 @@ public class World implements Screen{
 	@Override
 	public void dispose() {	
 		sr.dispose();
+		batch.dispose();
 	}
 
 

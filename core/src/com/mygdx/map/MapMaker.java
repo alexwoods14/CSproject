@@ -192,10 +192,6 @@ public class MapMaker implements Screen, TextInputListener{
 		batch.begin();
 		for(MyButton button: buttons){
 			button.draw(batch, lastX, lastY);
-			if(button.equals(changeState)){
-				//System.out.printf("x: %d, %d   y: %d, %d   width: %.0f    height: %.0f   " + button.isHovering() + "%n", Gdx.input.getX(), button.getX() , (Constants.WINDOW_HEIGHT-Gdx.input.getY()), button.getY(), button.getWidth(), button.getHeight());
-				//System.out.println((Gdx.input.getX() > button.getX()) + "  " + (Gdx.input.getX() < button.getX() + button.getWidth()) + "  " + ((Constants.WINDOW_HEIGHT-Gdx.input.getY()) > button.getY()) + "  " + (Constants.WINDOW_HEIGHT-Gdx.input.getY() < button.getX() + button.getHeight()) + "   " + (Constants.WINDOW_HEIGHT-Gdx.input.getY()) + "   " + (button.getX() + button.getHeight()));
-			}
 		}
 		batch.end();
 		

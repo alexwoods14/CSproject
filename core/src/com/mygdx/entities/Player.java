@@ -11,17 +11,21 @@ import com.mygdx.game.Constants;
 public class Player extends Entity{
 	
 	private boolean alive = true;
+	private boolean touchingFloor = false;
 
 
 	public Player() {
 		height = 76;
 		width = 48;
-		x = 40*Constants.BLOCK_HEIGHT;
+		x = 50.0f;
 		y = 400.0f;
 		vertV = 0.0f;
 		horiV = 350.0f;
 	}
 	
+	public boolean onFloor(){
+		return touchingFloor;
+	}
 	
 	public void move(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall){
 		//System.out.println("X Value" + x);
@@ -61,9 +65,8 @@ public class Player extends Entity{
 		 if(y + vertV*delta + height > roofY){
 			vertV = -100;
 			y = roofY - height;
-		}
-		 
-		 
+		 }
+	 
 		if(y == 0){
 			died();
 		}	
@@ -72,7 +75,12 @@ public class Player extends Entity{
 	public float AImove(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall, actions action){
 		//System.out.println("X Value" + x);
 		float deltaX = 0;
-		if(action == actions.LEFT){
+		
+		if((action == actions.JUMP || action == actions.JUMP_LEFT || action == actions.JUMP_RIGHT) && y <= floorY){
+			vertV = 1250.0f;
+		}
+		
+		if(action == actions.LEFT || action == actions.JUMP_LEFT){
 			if(x - delta*horiV > leftWall){
 				deltaX =- delta*horiV;
 				x += deltaX;
@@ -82,7 +90,7 @@ public class Player extends Entity{
 			} 
 		}
 
-		if(action == actions.RIGHT){
+		if(action == actions.RIGHT|| action == actions.JUMP_RIGHT){
 			if(x + delta*horiV < rightWall){
 				deltaX = delta*horiV;
 				x += deltaX;
@@ -90,10 +98,6 @@ public class Player extends Entity{
 			else{
 				x = rightWall - 0.001f;
 			}
-		}
-
-		if(action == actions.JUMP && y <= floorY){
-			vertV = 1250.0f;
 		}
 
 		if(y > floorY){
@@ -115,6 +119,16 @@ public class Player extends Entity{
 			vertV = -100;
 			y = roofY - height;
 		}
+		if(x > 200*Constants.BLOCK_HEIGHT){
+			x = 50;
+		}
+		
+		 if(y == floorY && y > 0){
+			 touchingFloor = true;
+		 }
+		 else{
+			 touchingFloor = false;
+		 }
 
 		return deltaX;
 	}
@@ -134,12 +148,12 @@ public class Player extends Entity{
 
 	public void died() {
 		alive = false;
-		x = 20;
+		x = 0;
 		y = 400;
 	}
 	
 	public void revive(){
-		x = 20;
+		x = 0;
 		y = 400;
 		alive = true;
 	}

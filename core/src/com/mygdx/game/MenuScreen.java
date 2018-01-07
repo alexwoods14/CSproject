@@ -81,7 +81,7 @@ public class MenuScreen implements Screen, TextInputListener{
 	@Override
 	public void input(String text) {
 		if(text.endsWith(".txt") == true){
-			game.setScreen(new World(game.sr, text));
+			game.setScreen(new World(game.sr, text, batch));
 		}
 	}
 

@@ -12,6 +12,8 @@ public class Player extends Entity{
 	
 	private boolean alive = true;
 	private boolean touchingFloor = false;
+	private double deltaX;
+	private double deltaY;
 
 
 	public Player() {
@@ -72,10 +74,10 @@ public class Player extends Entity{
 		}	
 	}
 	
-	public float AImove(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall, actions action){
+	public void AImove(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall, actions action){
 		//System.out.println("X Value" + x);
-		float deltaX = 0;
-		
+		deltaY = 0;
+		deltaX = 0;
 		if((action == actions.JUMP || action == actions.JUMP_LEFT || action == actions.JUMP_RIGHT) && y <= floorY){
 			vertV = 1250.0f;
 		}
@@ -104,9 +106,9 @@ public class Player extends Entity{
 			vertV -= gravity * delta;
 		}
 
-		if(y + vertV*delta > floorY){
-			
+		if(y + vertV*delta > floorY){		
 			y += vertV * delta;
+			deltaY = vertV*delta;
 		}
 		else{
 			y = floorY;
@@ -129,8 +131,6 @@ public class Player extends Entity{
 		 else{
 			 touchingFloor = false;
 		 }
-
-		return deltaX;
 	}
 
 	public void bounce(){
@@ -161,5 +161,12 @@ public class Player extends Entity{
 
 	public boolean isAlive() {
 		return alive;
+	}
+
+	public double getDeltaX() {
+		return deltaX;
+	}
+	public double getDeltaY() {
+		return deltaY;
 	}
 }

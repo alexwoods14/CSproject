@@ -18,13 +18,13 @@ public class Agent {
 	private boolean exploring;
 	
 	private int side = Constants.BLOCK_HEIGHT;
-	private int straightRange = Constants.SIGHT_DISTANCE;
+	private int straightRange = Constants.SHORT_SIGHT_DISTANCE;
 	private int diagonalRange = (int) (Math.sqrt(0.5)*straightRange);
 	private int straightStep = Constants.BLOCK_HEIGHT/8;
 	private int diagonalStep = (int) (Math.sqrt(0.5)*straightStep);
 	
-	private int[] lastState = new int[8];
-	private int[] currentState = new int[8];
+	private int[] lastState = new int[9];
+	private int[] currentState = new int[9];
 	
 	private	objs top = null;
 	private	objs topRight = null;
@@ -34,6 +34,8 @@ public class Agent {
 	private	objs bottomLeft = null;
 	private	objs left = null;
 	private	objs topLeft = null;
+	private objs touchingFloor = objs.SOLID_BLOCK;
+
 	
 	private actions nextMove = actions.NONE;
 	private actions lastMove = actions.NONE;
@@ -41,25 +43,29 @@ public class Agent {
 	private final double alpha = 0.1; // Learning rate
 	private final double gamma = 0.9; // Eagerness - 0 looks in the near future, 1 looks in the distant future
 		
-	private double[][][][][][][][][] Q = new double[6][6][6][6][6][6][6][6][6]; 
+	private double[][][][][][][][][][] Q = new double[7][7][7][7][7][7][7][7][2][6]; 
 	public Agent(Player player, Map map, ArrayList<Enemy> enemies, boolean exploring) {
 		this.map = map;
 		this.enemies = enemies;
 		this.player = player;
 		this.exploring = exploring;
 		//random value for each state-action Q
-		Random rand = new Random();
-		for(int a = 0; a < 6; a++){
-			for(int b = 0; b < 6; b++){
-				for(int c = 0; c < 6; c++){
-					for(int d = 0; d < 6; d++){
-						for(int e = 0; e < 6; e++){
-							for(int f = 0; f < 6; f++){
-								for(int g = 0; g < 6; g++){
-									for(int h = 0; h < 6; h++){
-										for(int i = 0; i < 6; i++){
-											Q[a][b][c][d][e][f][g][h][i] = rand.nextDouble(); 											
+		//Random rand = new Random();
+		for(int a = 0; a < 7; a++){
+			for(int b = 0; b < 7; b++){
+				for(int c = 0; c < 7; c++){
+					for(int d = 0; d < 7; d++){
+						for(int e = 0; e < 7; e++){
+							for(int f = 0; f < 7; f++){
+								for(int g = 0; g < 7; g++){
+									for(int h = 0; h < 7; h++){
+										//action
+										for(int action = 0; action < 6; action++){
+											//Q[a][b][c][d][e][f][g][h][action] = rand.nextDouble();
+											Q[a][b][c][d][e][f][g][h][0][action] = 0.2;
+											Q[a][b][c][d][e][f][g][h][1][action] = 0.2;
 										}	
+
 									}	
 								}	
 							}	
@@ -69,13 +75,13 @@ public class Agent {
 			}
 		}
 	}
-	
+
 	private enum objs{
-		SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY;// (null)
-		//    0    ,       1       ,       2     ,       3       ,      4    ,    5
+		SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY, MAP_LIMIT;// (null)
+		//    0    ,       1       ,       2     ,       3       ,      4    ,    5    ,    6
 		// array places in the learning arrays^
 	}
-	
+
 	public enum actions{
 		JUMP, LEFT, RIGHT, NONE, JUMP_LEFT, JUMP_RIGHT;
 		//0 ,  1  ,   2  ,  3		
@@ -86,29 +92,30 @@ public class Agent {
 		Thread thread1 = new Thread(new Runnable() {
 		@Override
 			public void run() {
-				top = findTop();
-				topRight = findTopRight();
+				findTop();
+				findTopRight();
+				findTouchingFloor();
 			}
 		});
 		Thread thread2 = new Thread(new Runnable() {
 			@Override
 				public void run() {
-				right = findRight();
-				bottomRight = findBottomRight();
+				findRight();
+				findBottomRight();
 			}
 		});
 		Thread thread3 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				bottom = findBottom();
-				bottomLeft = findBottomLeft();
+				findBottom();
+				findBottomLeft();
 			}
 		});
 		Thread thread4 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				left = findLeft();
-				topLeft = findTopLeft();
+				findLeft();
+				findTopLeft();
 			}
 		}); 
 		thread1.start();
@@ -116,7 +123,7 @@ public class Agent {
 		thread3.start();
 		thread4.start();
 		
-		objs[] state = new objs[8];
+		objs[] state = new objs[9];
 		state[0] = top;
 		state[1] = topRight;
 		state[2] = right;
@@ -125,6 +132,7 @@ public class Agent {
 		state[5] = bottomLeft;
 		state[6] = left;
 		state[7] = topLeft;
+		state[8] = touchingFloor;
 		
 		
 		lastState = currentState;
@@ -155,24 +163,24 @@ public class Agent {
 		//calculateQ(top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);	
 	}
 
-	public actions calculateQ(double deltaX, boolean alive, boolean onFloor) {
+	public actions calculateQ(double deltaX, double deltaY, boolean alive, boolean onFloor) {
 		findCurrentState();
 		Random rand = new Random();
 		double reward = 0;
 		if(deltaX > 0){
-			reward = 0.6;
+			reward = 0.7;
 		}
 		if(deltaX < 0){
-			reward = - 0.4;
+			reward = -0.1;
 		}
 		if(deltaX == 0){
-			reward = -0.15;
+			reward = -0.4;
 		}
 		if(alive == false){
 			reward = -3;
 		}
 		if(exploring == true){
-			if(rand.nextInt(2) == 0){
+			if(rand.nextInt(6) != 0){
 				nextMove = findBestAction(currentState);
 			}
 			else{
@@ -197,8 +205,8 @@ public class Agent {
 				}
 			}
 			// Q(state,action)= Q(state,action) + alpha * (R(state,action) + gamma * Max(next state, all actions) - Q(state,action))
-			double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastMove.ordinal()];
-			Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q);
+			double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()];
+			Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q);
 		}
 		else{
 			nextMove = findBestAction(currentState);
@@ -225,7 +233,7 @@ public class Agent {
 		double maxQ = 0;
 		int maxQindex = 0;
 		for(int i = 0; i < 6; i ++){
-			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][i]);
+			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]);
 			if(maxQ != max2){
 				maxQindex = i;
 			}
@@ -238,14 +246,14 @@ public class Agent {
 	private double findMaxQ(int[] state){
 		double maxQ = 0;
 		for(int i = 0; i < 6; i ++){
-			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][i]);
+			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]);
 			maxQ = max2;
 		}
 		return maxQ;
 		
 	}
 
-	private objs findTop() {
+	private void findTop() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
@@ -282,10 +290,10 @@ public class Agent {
 			distanceFromCentre += straightStep;
 		}
 		
-		return toReturn;
+		top = toReturn;
 	}
 
-	private objs findTopRight() {
+	private void findTopRight() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
@@ -322,10 +330,10 @@ public class Agent {
 			distanceFromCentre += diagonalStep;
 		}
 
-		return toReturn;
+		topRight = toReturn;
 	}
 
-	private objs findRight() {
+	private void findRight() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
@@ -362,10 +370,10 @@ public class Agent {
 			distanceFromCentre += straightStep;
 		}
 		
-		return toReturn;
+		right = toReturn;
 	}
 
-	private objs findBottomRight() {
+	private void findBottomRight() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
@@ -401,11 +409,15 @@ public class Agent {
 
 			distanceFromCentre += diagonalStep;
 		}
+		
+		if(y-distanceFromCentre <= 0){
+			toReturn = objs.MAP_LIMIT;
+		}
 
-		return toReturn;
+		bottomRight = toReturn;
 	}
 
-	private objs findBottom() {
+	private void findBottom() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
@@ -442,10 +454,14 @@ public class Agent {
 			distanceFromCentre += straightStep;
 		}
 		
-		return toReturn;
+		if(y-distanceFromCentre <= 0){
+			toReturn = objs.MAP_LIMIT;
+		}
+		
+		bottom = toReturn;
 	}
 
-	private objs findBottomLeft() {
+	private void findBottomLeft() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
@@ -482,10 +498,14 @@ public class Agent {
 			distanceFromCentre += diagonalStep;
 		}
 
-		return toReturn;
+		if(y-distanceFromCentre <= 0 || x-distanceFromCentre <= 0){
+			toReturn = objs.MAP_LIMIT;
+		}
+		
+		bottomLeft = toReturn;
 	}
 
-	private objs findLeft() {
+	private void findLeft() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
@@ -522,10 +542,14 @@ public class Agent {
 			distanceFromCentre += straightStep;
 		}
 		
-		return toReturn;
+		if(x-distanceFromCentre <= 0){
+			toReturn = objs.MAP_LIMIT;
+		}
+		
+		left = toReturn;
 	}
 
-	private objs findTopLeft() {
+	private void findTopLeft() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = null;
@@ -561,8 +585,22 @@ public class Agent {
 
 			distanceFromCentre += diagonalStep;
 		}
+		
+		if(x-distanceFromCentre <= 0){
+			toReturn = objs.MAP_LIMIT;
+		}
 
-		return toReturn;
+		topLeft = toReturn;
+	}
+	
+	
+	private void findTouchingFloor(){
+		if(player.onFloor() == true){
+			touchingFloor = objs.values()[0];
+		}
+		else{
+			touchingFloor = objs.values()[1];
+		}
 	}
 	
 }

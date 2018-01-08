@@ -29,7 +29,7 @@ public class World implements Screen{
 
 	private float gravity = 3500.0f;
 	private int camX = 720;
-	private int camY = 452; 
+	private int camY = 410; 
 
 	private Player player;
 	
@@ -61,7 +61,7 @@ public class World implements Screen{
 		enemies = new ArrayList<Enemy>();
 		rand = new Random();
 		exploring = new MyButton("finished", 20, Constants.WINDOW_HEIGHT - 100);
-//		spawnRandomEnemies(30, 5, 5);
+		spawnRandomEnemies(5, 5, 5);
 		//enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
 		//enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
 		learner = new Agent(player, map, enemies, true);
@@ -81,28 +81,26 @@ public class World implements Screen{
 	@Override
 	public void render(float delta) {
 		if(Gdx.input.justTouched() == true){
-				if(exploring.isHovering() == true){
-					learner.changeExploring();
-				}
+			if(exploring.isHovering() == true){
+				learner.changeExploring();
+			}
 		}
-		
+
 		Gdx.gl.glClearColor(173/255f, 218/255f, 248/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		double deltaX = 0;
 		if(player.isAlive() == true){
 			map.findAllBoundaries(player.getX(), player.getY(), player.getWidth(), player.getHeight());
 			//player.move(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall());
-			deltaX = player.AImove(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall(), action);
-
+			player.AImove(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall(), action);
 			if(player.getX() >= 720){
 				camX = (int) player.getX();
 			}
 
-			if(player.getY() >= 452){
+			if(player.getY() >= cam.viewportHeight/2){
 				camY = (int) player.getY();
 			}
 		}
-
+		
 		cam.position.set(camX, camY, 0);
 
 		cam.update();
@@ -158,7 +156,7 @@ public class World implements Screen{
 		//sr.rect(camX + cam.viewportWidth/2 - 10, 0, 10, 2000);
 		
 		sr.setColor(Color.BLACK);
-		int range = Constants.SIGHT_DISTANCE;
+		int range = Constants.SHORT_SIGHT_DISTANCE;
 		//horizontal
 		float leftX = player.getX() + player.getWidth()/2 - range;
 		float rightX = player.getX() + player.getWidth()/2 + range;
@@ -196,8 +194,8 @@ public class World implements Screen{
 			enemies.remove(deadEnemies);
 		}
 		
-		if(count > 10) {
-			action = learner.calculateQ(deltaX, player.isAlive(), player.onFloor());
+		if(count > 3) {
+			action = learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive(), player.onFloor());
 			if(player.isAlive() == false){
 				player.revive();
 			}

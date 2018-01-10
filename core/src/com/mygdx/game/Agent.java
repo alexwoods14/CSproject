@@ -168,16 +168,16 @@ public class Agent {
 		Random rand = new Random();
 		double reward = 0;
 		if(deltaX > 0){
-			reward = 0.7;
+			reward = 0.5;
 		}
-		if(deltaX < 0){
-			reward = -0.1;
-		}
+//		if(deltaX < 0){
+//			reward = -0.1;
+//		}
 		if(deltaX == 0){
 			reward = -0.4;
 		}
 		if(alive == false){
-			reward = -3;
+			reward = -10;
 		}
 		if(exploring == true){
 			if(rand.nextInt(6) != 0){
@@ -204,14 +204,15 @@ public class Agent {
 					nextMove = actions.JUMP_RIGHT;
 				}
 			}
-			// Q(state,action)= Q(state,action) + alpha * (R(state,action) + gamma * Max(next state, all actions) - Q(state,action))
-			double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()];
-			Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q);
 		}
 		else{
 			nextMove = findBestAction(currentState);
 		}
 
+		// Q(state,action)= Q(state,action) + alpha * (R(state,action) + gamma * Max(next state, all actions) - Q(state,action))
+		double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()];
+		Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q);
+				
 		lastMove = nextMove;
 		return nextMove;
 				

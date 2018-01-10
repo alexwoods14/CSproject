@@ -148,13 +148,11 @@ public class Player extends Entity{
 
 	public void died() {
 		alive = false;
-		x = 0;
-		y = 400;
 	}
 	
 	public void revive(){
-		x = 0;
-		y = 400;
+		x = 50.0f;
+		y = 400.0f;
 		alive = true;
 	}
 

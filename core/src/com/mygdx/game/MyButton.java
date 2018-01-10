@@ -14,8 +14,8 @@ public class MyButton {
 	private float width;
 	
 	public MyButton(String fileName, int x, int y) {
-		this.active = new Texture(fileName + "_active.png");
-		this.inactive = new Texture(fileName  + "_inactive.png");
+		this.active = new Texture(Constants.ASSETS_FOLDER_LOCATION + fileName + "_active.png");
+		this.inactive = new Texture(Constants.ASSETS_FOLDER_LOCATION + fileName  + "_inactive.png");
 		width = this.active.getWidth();
 		height = this.active.getHeight();
 		this.x = x;

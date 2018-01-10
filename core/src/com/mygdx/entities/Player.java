@@ -20,7 +20,7 @@ public class Player extends Entity{
 		height = 76;
 		width = 48;
 		x = 50.0f;
-		y = 400.0f;
+		y = 100.0f;
 		vertV = 0.0f;
 		horiV = 350.0f;
 	}
@@ -123,6 +123,7 @@ public class Player extends Entity{
 		}
 		if(x > 200*Constants.BLOCK_HEIGHT){
 			x = 50;
+			y = 100.0f;
 		}
 		
 		 if(y == floorY && y > 0){
@@ -151,8 +152,8 @@ public class Player extends Entity{
 	}
 	
 	public void revive(){
-		x = 50.0f;
-		y = 400.0f;
+		x = 50;
+		y = 100;
 		alive = true;
 	}
 

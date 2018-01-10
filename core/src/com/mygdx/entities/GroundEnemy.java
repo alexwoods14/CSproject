@@ -13,7 +13,7 @@ public class GroundEnemy extends Enemy{
 	}
 	
 	public GroundEnemy(int x1, boolean nextBoolean, Map map) {
-		super(x1>10*Constants.BLOCK_HEIGHT? x1 : (x1+100)*x1, 500, nextBoolean);		
+		super(x1>10*Constants.BLOCK_HEIGHT? x1 : (x1+400), 500, nextBoolean);		
 		
 	}
 

@@ -61,7 +61,7 @@ public class World implements Screen{
 		enemies = new ArrayList<Enemy>();
 		rand = new Random();
 		exploring = new MyButton("finished", 20, Constants.WINDOW_HEIGHT - 100);
-		spawnRandomEnemies(10, 5, 5);
+		//spawnRandomEnemies(10, 5, 5);
 		//enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
 		//enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
 		learner = new Agent(player, map, enemies, true);
@@ -162,37 +162,36 @@ public class World implements Screen{
 			}
 		}
 		
-		//sr.rect(camX + cam.viewportWidth/2 - 10, 0, 10, 2000);
 		
-//		sr.setColor(Color.BLACK);
-//		int range = Constants.SHORT_SIGHT_DISTANCE;
-//		//horizontal
-//		float leftX = player.getX() + player.getWidth()/2 - range;
-//		float rightX = player.getX() + player.getWidth()/2 + range;
-//		float bottomY = player.getY() + player.getHeight()/2;
-//		float topY = player.getY() + player.getHeight()/2;
-//		sr.line(leftX, bottomY, rightX, topY);
-//		
-//		//Vertical
-//		leftX = player.getX() + player.getWidth()/2;
-//		rightX = player.getX() + player.getWidth()/2;
-//		bottomY = player.getY() + player.getHeight()/2 - range;
-//		topY = player.getY() + player.getHeight()/2 + range;
-//		sr.line(leftX, bottomY, rightX, topY);
-//		
-//		//diagonal bottom left to top right
-//		leftX = player.getX() + player.getWidth()/2  - (float)(Math.sqrt(0.5)*range);
-//		rightX = player.getX() + player.getWidth()/2 + (float)(Math.sqrt(0.5)*range);
-//		bottomY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
-//		topY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
-//		sr.line(leftX, bottomY, rightX, topY);
-//		
-//		//diagonal top left to bottom right
-//		leftX = player.getX() + player.getWidth()/2 - (float)(Math.sqrt(0.5)*range);
-//		rightX = player.getX() + player.getWidth()/2 + (float)(Math.sqrt(0.5)*range);
-//		bottomY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
-//		topY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
-//		sr.line(leftX, bottomY, rightX, topY);
+		sr.setColor(Color.BLACK);
+		int range = Constants.SHORT_SIGHT_DISTANCE;
+		//horizontal
+		float leftX = player.getX() + player.getWidth()/2 - range;
+		float rightX = player.getX() + player.getWidth()/2 + range;
+		float bottomY = player.getY() + player.getHeight()/2;
+		float topY = player.getY() + player.getHeight()/2;
+		sr.line(leftX, bottomY, rightX, topY);
+		
+		//Vertical
+		leftX = player.getX() + player.getWidth()/2;
+		rightX = player.getX() + player.getWidth()/2;
+		bottomY = player.getY() + player.getHeight()/2 - range;
+		topY = player.getY() + player.getHeight()/2 + range;
+		sr.line(leftX, bottomY, rightX, topY);
+		
+		//diagonal bottom left to top right
+		leftX = player.getX() + player.getWidth()/2  - (float)(Math.sqrt(0.5)*range);
+		rightX = player.getX() + player.getWidth()/2 + (float)(Math.sqrt(0.5)*range);
+		bottomY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
+		topY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
+		sr.line(leftX, bottomY, rightX, topY);
+		
+		//diagonal top left to bottom right
+		leftX = player.getX() + player.getWidth()/2 - (float)(Math.sqrt(0.5)*range);
+		rightX = player.getX() + player.getWidth()/2 + (float)(Math.sqrt(0.5)*range);
+		bottomY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
+		topY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
+		sr.line(leftX, bottomY, rightX, topY);
 		
 		sr.end();
 		batch.begin();
@@ -202,14 +201,14 @@ public class World implements Screen{
 		for(Enemy deadEnemies: toRemove){
 			enemies.remove(deadEnemies);
 		}
-		
+		learner.onFloor(player.onFloor());
 		if(count > 3) {
-			action = learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive(), player.onFloor());
+			action = learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive());
 			if(player.isAlive() == false){
 				player.revive();
-				enemies.clear();
-				spawnRandomEnemies(20, 5, 5);		
-			}
+//				enemies.clear();
+//				spawnRandomEnemies(20, 5, 5);
+				} 
 			count = 0;
 		}
 		count++;

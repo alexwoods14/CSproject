@@ -31,6 +31,14 @@ public class Player extends Entity{
 	
 	public void move(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall){
 		//System.out.println("X Value" + x);
+		
+		if(y == floorY && y > 0){
+			touchingFloor = true;
+		}
+		else{
+			touchingFloor = false;
+		}
+
 		if(Gdx.input.isKeyPressed(Keys.A) == true){
 			if(x - delta*horiV > leftWall){
 				x -= delta*horiV;
@@ -78,10 +86,18 @@ public class Player extends Entity{
 		//System.out.println("X Value" + x);
 		deltaY = 0;
 		deltaX = 0;
+		
+		if(y == floorY && y > 0){
+			touchingFloor = true;
+		}
+		else{
+			touchingFloor = false;
+		}
+
+		
 		if((action == actions.JUMP || action == actions.JUMP_LEFT || action == actions.JUMP_RIGHT) && y <= floorY){
 			vertV = 1250.0f;
 		}
-		
 		if(action == actions.LEFT || action == actions.JUMP_LEFT){
 			if(x - delta*horiV > leftWall){
 				deltaX =- delta*horiV;
@@ -125,13 +141,6 @@ public class Player extends Entity{
 			x = 50;
 			y = 100.0f;
 		}
-		
-		 if(y == floorY && y > 0){
-			 touchingFloor = true;
-		 }
-		 else{
-			 touchingFloor = false;
-		 }
 	}
 
 	public void bounce(){

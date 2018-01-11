@@ -16,6 +16,8 @@ public class Agent {
 	private ArrayList<Enemy> enemies;
 	private Player player;
 	private boolean exploring;
+	private boolean onFloor = false;
+	private boolean newState = true; 
 	
 	private int side = Constants.BLOCK_HEIGHT;
 	private int straightRange = Constants.SHORT_SIGHT_DISTANCE;
@@ -45,7 +47,8 @@ public class Agent {
 	private final double alpha = 0.1; // Learning rate
 	private final double gamma = 0.9; // Eagerness - 0 looks in the near future, 1 looks in the distant future
 		
-	private double[][][][][][][][][][] Q = new double[7][7][7][7][7][7][7][7][2][6]; 
+	private double[][][][][][][][][][] Q = new double[7][7][7][7][7][7][7][7][2][6];
+	
 	public Agent(Player player, Map map, ArrayList<Enemy> enemies, boolean exploring) {
 		this.map = map;
 		this.enemies = enemies;
@@ -124,7 +127,12 @@ public class Agent {
 		thread3.start();
 		thread4.start();
 		
-		findTouchingFloor();
+		if(onFloor == true){
+			touchingFloor = objs.SOLID_BLOCK;
+		}
+		else {
+			touchingFloor = objs.ROOFLESS_BLOCK;
+		}
 		
 		objs[] state = new objs[9];
 		state[0] = top;
@@ -158,15 +166,11 @@ public class Agent {
 		
 		//System.out.printf("[%d, %d, %d, %d, %d, %d, %d, %d] %n", lastStateOnFloor[0], lastStateOnFloor[1], lastStateOnFloor[2], lastStateOnFloor[3], lastStateOnFloor[4], lastStateOnFloor[5], lastStateOnFloor[6], lastStateOnFloor[7]);
 		
-		//System.out.printf("top: %-14s  topRight: %-14s  right: %-14s  bottomRight: %-14s  bottom: %-14s  bottomLeft: %-14s  left: %-14s  topLeft: %-14s %n", top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);
+		//System.out.printf("top: %-14s  topRight: %-14s  right: %-14s  bottomRight: %-14s  bottom: %-14s  bottomLeft: %-14s  left: %-14s  topLeft: %-14s onFloor: %-4s %n", top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft, touchingFloor == objs.SOLID_BLOCK ? "Yes" : "No");
 		
-		//System.out.println("bottom:" + bottom);
-		//System.out.printf("top: %-14s  right: %-14s  bottom: %-14s  left: %-14s%n", top, right, bottom, left);
-		
-		//calculateQ(top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);	
 	}
 
-	public actions calculateQ(double deltaX, double deltaY, boolean alive, boolean onFloor) {
+	public actions calculateQ(double deltaX, double deltaY, boolean alive) {
 		findCurrentState();
 		Random rand = new Random();
 		double reward = 0;
@@ -213,7 +217,7 @@ public class Agent {
 			nextMove = findBestAction(currentState);
 		}
 		
-		if(onFloor == true){
+		if(currentState[8] == 0 && player.getY() > 0){
 			lastStateOnGround = currentState;
 			lastMoveOnGround = nextMove;
 		}
@@ -223,19 +227,27 @@ public class Agent {
 		Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q);
 
 		lastMove = nextMove;
+		newState = true;
 		return nextMove;
 				
 	}
 
 	private void died() {
 		if(exploring == false){
-			System.out.printf("[%-14s, %-14s, %-14s, %-14s, %-14s, %-14s, %-14s, %-14s, %-14s]  %s %n", objs.values()[lastStateOnGround[0]], objs.values()[lastStateOnGround[1]], objs.values()[lastStateOnGround[2]], objs.values()[lastStateOnGround[3]], objs.values()[lastStateOnGround[4]], objs.values()[lastStateOnGround[5]], objs.values()[lastStateOnGround[6]], objs.values()[lastStateOnGround[7]], objs.values()[lastStateOnGround[8]], lastMoveOnGround);
+			System.out.printf("top: %-14s, topRight: %-14s, right: %-14s, bottomRight: %-14s, bottom: %-14s, bottomLeft: %-14s, Left: %-14s, topLeft: %-14s, touching floor: %-4s --- %s %n", objs.values()[lastStateOnGround[0]], objs.values()[lastStateOnGround[1]], objs.values()[lastStateOnGround[2]], objs.values()[lastStateOnGround[3]], objs.values()[lastStateOnGround[4]], objs.values()[lastStateOnGround[5]], objs.values()[lastStateOnGround[6]], objs.values()[lastStateOnGround[7]], lastStateOnGround[8] == 0 ? "yes" : "no", lastMoveOnGround);
 			double q = Q[lastStateOnGround[0]][lastStateOnGround[1]][lastStateOnGround[2]][lastStateOnGround[3]][lastStateOnGround[4]][lastStateOnGround[5]][lastStateOnGround[6]][lastStateOnGround[7]][lastStateOnGround[8]][lastMoveOnGround.ordinal()];
 			Q[lastStateOnGround[0]][lastStateOnGround[1]][lastStateOnGround[2]][lastStateOnGround[3]][lastStateOnGround[4]][lastStateOnGround[5]][lastStateOnGround[6]][lastStateOnGround[7]][lastStateOnGround[8]][lastMoveOnGround.ordinal()] = q + alpha * (-5 - q);
 		}
 		
 	}
-
+	
+	public void onFloor(boolean onFloor) {
+		if(onFloor != this.onFloor && newState == true) {
+			this.onFloor = onFloor;
+			newState = false;
+		}
+	}
+	
 	public void changeExploring(){
 		if(exploring == true){
 			exploring = false;
@@ -429,7 +441,7 @@ public class Agent {
 			distanceFromCentre += diagonalStep;
 		}
 		
-		if(y-distanceFromCentre <= 0){
+		if(y-distanceFromCentre <= 0 && toReturn.equals(objs.NONE)){
 			toReturn = objs.MAP_LIMIT;
 		}
 
@@ -473,7 +485,7 @@ public class Agent {
 			distanceFromCentre += straightStep;
 		}
 		
-		if(y-distanceFromCentre <= 0){
+		if(y-distanceFromCentre <= 0 && toReturn.equals(objs.NONE)){
 			toReturn = objs.MAP_LIMIT;
 		}
 		
@@ -517,7 +529,7 @@ public class Agent {
 			distanceFromCentre += diagonalStep;
 		}
 
-		if(y-distanceFromCentre <= 0 || x-distanceFromCentre <= 0){
+		if((y-diagonalRange <= 0) && toReturn.equals(objs.NONE)){
 			toReturn = objs.MAP_LIMIT;
 		}
 		
@@ -561,7 +573,7 @@ public class Agent {
 			distanceFromCentre += straightStep;
 		}
 		
-		if(x-distanceFromCentre <= 0){
+		if(x-distanceFromCentre <= 0 && toReturn.equals(objs.NONE)){
 			toReturn = objs.MAP_LIMIT;
 		}
 		
@@ -605,21 +617,10 @@ public class Agent {
 			distanceFromCentre += diagonalStep;
 		}
 		
-		if(x-distanceFromCentre <= 0){
+		if(x-distanceFromCentre <= 0 && toReturn.equals(objs.NONE)){
 			toReturn = objs.MAP_LIMIT;
 		}
 
 		topLeft = toReturn;
 	}
-	
-	
-	private void findTouchingFloor(){
-		if(player.onFloor() == true){
-			touchingFloor = objs.values()[0];
-		}
-		else{
-			touchingFloor = objs.values()[1];
-		}
-	}
-	
 }

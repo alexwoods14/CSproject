@@ -46,7 +46,7 @@ public class Agent {
 	
 	private final double alpha = 0.1; // Learning rate
 	private final double gamma = 0.9; // Eagerness - 0 looks in the near future, 1 looks in the distant future
-		
+	
 	private double[][][][][][][][][][] Q = new double[7][7][7][7][7][7][7][7][2][6];
 	
 	public Agent(Player player, Map map, ArrayList<Enemy> enemies, boolean exploring) {
@@ -146,7 +146,7 @@ public class Agent {
 		state[8] = touchingFloor;
 		
 		
-		lastState = currentState;
+		lastState = currentState.clone();
 
 
 		//SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY,  (null)
@@ -175,20 +175,20 @@ public class Agent {
 		Random rand = new Random();
 		double reward = 0;
 		if(deltaX > 0){
-			reward = 0.5;
+			reward = 0.7;
 		}
-//		if(deltaX < 0){
-//			reward = -0.1;
-//		}
+		if(deltaX < 0){
+			reward = -0.3;
+		}
 		if(deltaX == 0){
-			reward = -0.4;
+			reward = -0.5;
 		}
 		if(alive == false){
 			died();
 			reward = -10;
 		}
 		if(exploring == true){
-			if(rand.nextInt(3) != 0){
+			if(rand.nextInt(5) != 0){
 				nextMove = findBestAction(currentState);
 			}
 			else{
@@ -217,8 +217,9 @@ public class Agent {
 			nextMove = findBestAction(currentState);
 		}
 		
-		if(currentState[8] == 0 && player.getY() > 0){
-			lastStateOnGround = currentState;
+		if(currentState[8] == 0){
+			//System.out.println("****");
+			lastStateOnGround = currentState.clone();
 			lastMoveOnGround = nextMove;
 		}
 
@@ -234,7 +235,7 @@ public class Agent {
 
 	private void died() {
 		if(exploring == false){
-			System.out.printf("top: %-14s, topRight: %-14s, right: %-14s, bottomRight: %-14s, bottom: %-14s, bottomLeft: %-14s, Left: %-14s, topLeft: %-14s, touching floor: %-4s --- %s %n", objs.values()[lastStateOnGround[0]], objs.values()[lastStateOnGround[1]], objs.values()[lastStateOnGround[2]], objs.values()[lastStateOnGround[3]], objs.values()[lastStateOnGround[4]], objs.values()[lastStateOnGround[5]], objs.values()[lastStateOnGround[6]], objs.values()[lastStateOnGround[7]], lastStateOnGround[8] == 0 ? "yes" : "no", lastMoveOnGround);
+			System.out.printf("top: %-14s| topRight: %-14s| right: %-14s| bottomRight: %-14s| bottom: %-14s| bottomLeft: %-14s| Left: %-14s| topLeft: %-14s| touching floor: %-4s --- %s %n", objs.values()[lastStateOnGround[0]], objs.values()[lastStateOnGround[1]], objs.values()[lastStateOnGround[2]], objs.values()[lastStateOnGround[3]], objs.values()[lastStateOnGround[4]], objs.values()[lastStateOnGround[5]], objs.values()[lastStateOnGround[6]], objs.values()[lastStateOnGround[7]], lastStateOnGround[8] == 0 ? "yes" : "no", lastMoveOnGround);
 			double q = Q[lastStateOnGround[0]][lastStateOnGround[1]][lastStateOnGround[2]][lastStateOnGround[3]][lastStateOnGround[4]][lastStateOnGround[5]][lastStateOnGround[6]][lastStateOnGround[7]][lastStateOnGround[8]][lastMoveOnGround.ordinal()];
 			Q[lastStateOnGround[0]][lastStateOnGround[1]][lastStateOnGround[2]][lastStateOnGround[3]][lastStateOnGround[4]][lastStateOnGround[5]][lastStateOnGround[6]][lastStateOnGround[7]][lastStateOnGround[8]][lastMoveOnGround.ordinal()] = q + alpha * (-5 - q);
 		}

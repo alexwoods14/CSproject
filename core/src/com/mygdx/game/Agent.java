@@ -170,7 +170,7 @@ public class Agent {
 		
 	}
 
-	public actions calculateQ(double deltaX, double deltaY, boolean alive) {
+	public actions calculateQ(double deltaX, double deltaY, boolean alive, int randomness) {
 		findCurrentState();
 		Random rand = new Random();
 		double reward = 0;
@@ -188,7 +188,7 @@ public class Agent {
 			reward = -10;
 		}
 		if(exploring == true){
-			if(rand.nextInt(4) != 0){
+			if(rand.nextInt(101) >= randomness){
 				nextMove = findBestAction(currentState);
 			}
 			else{

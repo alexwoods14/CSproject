@@ -27,8 +27,8 @@ public class World implements Screen{
 	
 
 	private float gravity = 3600.0f;
-	private int camX = 720;
-	private int camY = 410; 
+	private int camX = Constants.WINDOW_WIDTH/2;
+	private int camY = Constants.WINDOW_HEIGHT/2; 
 
 	private Player player;
 	
@@ -65,7 +65,7 @@ public class World implements Screen{
 		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
 		exploring = new MyButton("finished", 20, Constants.WINDOW_HEIGHT - 100);
-		randomness = new Slider();
+		randomness = new Slider(20, Constants.WINDOW_HEIGHT - 80, "randomness");
 		currentTime = new Date();
 		startTime = new Date();
 		reset();
@@ -128,18 +128,18 @@ public class World implements Screen{
 			map.findAllBoundaries(player.getX(), player.getY(), player.getWidth(), player.getHeight());
 			//player.move(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall());
 			player.AImove(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall(), action);
-			if(player.getX() >= 720){
+			if(player.getX() >= Constants.WINDOW_WIDTH/2){
 				camX = (int) player.getX();
 			}
 			else{
-				camX = 720;
+				camX = Constants.WINDOW_WIDTH/2;
 			}
 
-			if(player.getY() >= cam.viewportHeight/2){
+			if(player.getY() >= Constants.WINDOW_HEIGHT/2){
 				camY = (int) player.getY();
 			}
 			else{
-				camY = (int) (cam.viewportHeight/2);
+				camY = Constants.WINDOW_HEIGHT/2;
 			}
 		}
 		
@@ -228,11 +228,12 @@ public class World implements Screen{
 //		bottomY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
 //		topY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
 //		sr.line(leftX, bottomY, rightX, topY);
+
 		
 		randomness.draw(sr, cam, Gdx.input.isTouched());
-		
 		sr.end();
 		batch.begin();
+		randomness.drawLabel(batch);
 		//exploring.draw(batch, Gdx.input.getX(), Gdx.input.getY());
 		batch.end();
 		
@@ -241,7 +242,7 @@ public class World implements Screen{
 		}
 		learner.onFloor(player.onFloor());
 		if(count > 3) {
-			action = learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive());
+			action = learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive(), randomness.getPercentage());
 			if(player.isAlive() == false){
 				reset();
 			} 

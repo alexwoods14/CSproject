@@ -3,19 +3,32 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Slider {
-	private final float x = 20;
-	private final float y = Constants.WINDOW_HEIGHT - 40;
+	private float x;
+	private float y;
 	private final float lineHeight = 10;
 	private final float lineLength = 200;
-	private float draggerWidth = 10;
-	private float draggerHeight = 35;
-	private float draggerX = x + 30;
-	private final float draggerY = y+lineHeight/2 - draggerHeight/2;
+	private final float draggerWidth = 10;
+	private final float draggerHeight = 35;
+	private float draggerX;
+	private float draggerY;
 	private boolean hovering = false;
 	private boolean currentlyDragging = false;
+	private int percentage = 0;
+	private Texture text;
+	
+	public Slider(float x, float y, String texture) {
+		this.x = x;
+		this.y = y;
+		text = new Texture(texture + ".png");
+		draggerX = x;
+		draggerY = y+lineHeight/2 - draggerHeight/2;
+	}
+	
 	
 	public void draw(ShapeRenderer sr, OrthographicCamera cam, boolean isClicked){
 		float mouseX = Gdx.input.getX();
@@ -34,13 +47,17 @@ public class Slider {
 		sr.setColor(Color.GRAY);
 		sr.rect(draggerX + cam.position.x - cam.viewportWidth/2, draggerY + cam.position.y - cam.viewportHeight/2, draggerWidth, draggerHeight);
 	}
+	
+	public void drawLabel(SpriteBatch batch){
+		batch.draw(text, x, y + 30);
+	}
 
 	private void moveDragger(float mouseX) {
-		if(mouseX > x && mouseX < x + lineLength){
+		if(mouseX - draggerWidth/2 > x && mouseX - draggerWidth/2 < x + lineLength){
 			draggerX = mouseX - draggerWidth/2;
 		}
 		else{
-			if(mouseX < x){
+			if(mouseX - draggerWidth/2 <= x){
 				draggerX = x;
 			}
 			else{
@@ -48,6 +65,11 @@ public class Slider {
 			}
 		}
 		currentlyDragging = true;
+		calculatePercentage();
+	}
+
+	private void calculatePercentage() {
+		percentage = (int) +(((draggerX - x)/lineLength)*100);
 	}
 
 	private void isHovering(float mouseX, float mouseY) {
@@ -58,5 +80,9 @@ public class Slider {
 		else{
 			hovering = false;
 		}
+	}
+	
+	public int getPercentage(){
+		return percentage ;
 	}
 }

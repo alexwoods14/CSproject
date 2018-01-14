@@ -17,10 +17,10 @@ public class Agent {
 	private Player player;
 	private boolean exploring;
 	private boolean onFloor = false;
-	private boolean newState = true; 
+	private boolean newState = true;
 	
 	private int side = Constants.BLOCK_HEIGHT;
-	private int straightRange = Constants.SHORT_SIGHT_DISTANCE;
+	private int straightRange = Constants.SIGHT_DISTANCE;
 	private int diagonalRange = (int) (Math.sqrt(0.5)*straightRange);
 	private int straightStep = Constants.BLOCK_HEIGHT/8;
 	private int diagonalStep = (int) (Math.sqrt(0.5)*straightStep);
@@ -188,7 +188,7 @@ public class Agent {
 			reward = -10;
 		}
 		if(exploring == true){
-			if(rand.nextInt(5) != 0){
+			if(rand.nextInt(4) != 0){
 				nextMove = findBestAction(currentState);
 			}
 			else{
@@ -235,7 +235,7 @@ public class Agent {
 
 	private void died() {
 		if(exploring == false){
-			System.out.printf("top: %-14s| topRight: %-14s| right: %-14s| bottomRight: %-14s| bottom: %-14s| bottomLeft: %-14s| Left: %-14s| topLeft: %-14s| touching floor: %-4s --- %s %n", objs.values()[lastStateOnGround[0]], objs.values()[lastStateOnGround[1]], objs.values()[lastStateOnGround[2]], objs.values()[lastStateOnGround[3]], objs.values()[lastStateOnGround[4]], objs.values()[lastStateOnGround[5]], objs.values()[lastStateOnGround[6]], objs.values()[lastStateOnGround[7]], lastStateOnGround[8] == 0 ? "yes" : "no", lastMoveOnGround);
+			//System.out.printf("top: %-14s| topRight: %-14s| right: %-14s| bottomRight: %-14s| bottom: %-14s| bottomLeft: %-14s| Left: %-14s| topLeft: %-14s| touching floor: %-4s --- %s %n", objs.values()[lastStateOnGround[0]], objs.values()[lastStateOnGround[1]], objs.values()[lastStateOnGround[2]], objs.values()[lastStateOnGround[3]], objs.values()[lastStateOnGround[4]], objs.values()[lastStateOnGround[5]], objs.values()[lastStateOnGround[6]], objs.values()[lastStateOnGround[7]], lastStateOnGround[8] == 0 ? "yes" : "no", lastMoveOnGround);
 			double q = Q[lastStateOnGround[0]][lastStateOnGround[1]][lastStateOnGround[2]][lastStateOnGround[3]][lastStateOnGround[4]][lastStateOnGround[5]][lastStateOnGround[6]][lastStateOnGround[7]][lastStateOnGround[8]][lastMoveOnGround.ordinal()];
 			Q[lastStateOnGround[0]][lastStateOnGround[1]][lastStateOnGround[2]][lastStateOnGround[3]][lastStateOnGround[4]][lastStateOnGround[5]][lastStateOnGround[6]][lastStateOnGround[7]][lastStateOnGround[8]][lastMoveOnGround.ordinal()] = q + alpha * (-5 - q);
 		}

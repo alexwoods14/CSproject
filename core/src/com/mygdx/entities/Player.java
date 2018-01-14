@@ -19,7 +19,7 @@ public class Player extends Entity{
 	public Player() {
 		height = 76;
 		width = 48;
-		x = 50.0f;
+		x = 1.0f;
 		y = 100.0f;
 		vertV = 0.0f;
 		horiV = 350.0f;
@@ -160,9 +160,33 @@ public class Player extends Entity{
 		alive = false;
 	}
 	
-	public void revive(){
-		x = 50;
-		y = 100;
+	public void revive(int nextX){
+		int side = Constants.BLOCK_HEIGHT;
+		if(nextX == 0){
+			x = 1;
+			y = 2*side + 5;
+		}
+		if(nextX == 1){
+			x = 46*side;
+			y = 2*side + 5;
+		}
+		if(nextX == 2){
+			x = 65*side - 5;
+			y = 2*side + 5;
+		}
+		if(nextX == 3){
+			x = 74*side;
+			y = 2*side + 5;
+		}
+		if(nextX == 4){
+			x = 100*side;
+			y = 8*side + 5;
+		}
+		if(nextX == 5){
+			x = 128*side;
+			y = 2*side + 5;
+		}
+		
 		alive = true;
 	}
 

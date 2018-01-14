@@ -1,11 +1,9 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
-import java.util.Random;
-
+import java.util.Date;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,8 +24,9 @@ public class World implements Screen{
 	private OrthographicCamera cam;
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
+	
 
-	private float gravity = 3500.0f;
+	private float gravity = 3600.0f;
 	private int camX = 720;
 	private int camY = 410; 
 
@@ -36,14 +35,20 @@ public class World implements Screen{
 	private Map map;
 	private ArrayList<Enemy> enemies;
 	private Agent learner;
-	private Random rand;
 	
 	private MyButton exploring;
+	private Slider randomness;
 
 	private String fileName;
 	private actions action = actions.NONE;
 	
 	private int count;
+	private Date startTime;
+	private Date startOfRunTime;
+	private Date currentTime;
+	private boolean changed = false;
+	private int deathCount = 0;
+
 
 	public World(ShapeRenderer sr, String fileName, SpriteBatch batch) {
 		this.sr = sr;
@@ -55,13 +60,15 @@ public class World implements Screen{
 	
 	@Override
 	public void show() {
-		cam = new OrthographicCamera(1440, 810);
+		cam = new OrthographicCamera(1280, 720);
 		player = new Player();
 		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
-		rand = new Random();
 		exploring = new MyButton("finished", 20, Constants.WINDOW_HEIGHT - 100);
-		//spawnRandomEnemies(10, 5, 5);
+		randomness = new Slider();
+		currentTime = new Date();
+		startTime = new Date();
+		reset();
 		//enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
 		//enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
 		learner = new Agent(player, map, enemies, true);
@@ -72,10 +79,39 @@ public class World implements Screen{
 		
 	}
 
-	private void spawnRandomEnemies(int ground, int sine, int vert) {
-		for(int i = 0; i < ground; i++){
-			enemies.add(new GroundEnemy(rand.nextInt(150)*Constants.BLOCK_HEIGHT, rand.nextBoolean(), map));
-		}		
+	private void spawnEnemies() {
+		int side = Constants.BLOCK_HEIGHT;
+		
+		//ground enemies
+		enemies.add(new GroundEnemy(14*side, 5*side + 5, false));
+		enemies.add(new GroundEnemy(25*side, 2*side + 5, false));
+		enemies.add(new GroundEnemy(40*side, 8*side + 5, true));
+		enemies.add(new GroundEnemy(33*side, 5*side + 5, false));
+		enemies.add(new GroundEnemy(59*side, 2*side + 5, true));
+		enemies.add(new GroundEnemy(62*side, 2*side + 5, false));
+		enemies.add(new GroundEnemy(80*side, 2*side + 5, true));
+		enemies.add(new GroundEnemy(81*side, 4*side + 5, false));
+		enemies.add(new GroundEnemy(84*side, 6*side + 5, true));
+		enemies.add(new GroundEnemy(94*side, 6*side + 5, false));
+		enemies.add(new GroundEnemy(105*side, 8*side + 5, false));
+		enemies.add(new GroundEnemy(125*side, 4*side + 5, true));
+		enemies.add(new GroundEnemy(122*side, 5*side + 5, false));
+		enemies.add(new GroundEnemy(145*side, 2*side + 5, false));
+		enemies.add(new GroundEnemy(143*side, 4*side + 5, false));
+		enemies.add(new GroundEnemy(141*side, 6*side + 5, false));
+		enemies.add(new GroundEnemy(139*side, 9*side + 5, false));
+		
+		//vertical flying enemies
+		enemies.add(new VerticalFlyingEnemy(24*side, 9*side, 6*side, 1.5f));
+		enemies.add(new VerticalFlyingEnemy(42*side, 10*side, 5*side, 2.0f));
+		enemies.add(new VerticalFlyingEnemy(73*side, 7*side, 5*side, 1.0f));
+		enemies.add(new VerticalFlyingEnemy(93*side, 10*side, 7*side, 1.5f));
+		enemies.add(new VerticalFlyingEnemy(154*side, 12*side, 8*side, 1.5f));
+		
+		//sinusoidal flying enemies
+		enemies.add(new SineFlyingEnemy(12*side, 12*side, 9*side, 1.0f, 5*side));
+		enemies.add(new SineFlyingEnemy(54*side, 10*side, 6*side, 1.0f, 7*side));
+		enemies.add(new SineFlyingEnemy(116*side, 8*side, 12*side, 1.0f, 8*side));
 	}
 
 	@Override
@@ -115,7 +151,7 @@ public class World implements Screen{
 		sr.begin(ShapeType.Line);
 
 		sr.setProjectionMatrix(cam.combined);
-		//		System.out.println("X: " + Gdx.input.getX() + "   Y: " + (1080 - Gdx.input.getY()));
+		//System.out.println("X: " + Gdx.input.getX() + "   Y: " + (1080 - Gdx.input.getY()));
 		player.draw(sr);
 		map.draw(sr);
 		
@@ -163,39 +199,41 @@ public class World implements Screen{
 		}
 		
 		
-		sr.setColor(Color.BLACK);
-		int range = Constants.SHORT_SIGHT_DISTANCE;
-		//horizontal
-		float leftX = player.getX() + player.getWidth()/2 - range;
-		float rightX = player.getX() + player.getWidth()/2 + range;
-		float bottomY = player.getY() + player.getHeight()/2;
-		float topY = player.getY() + player.getHeight()/2;
-		sr.line(leftX, bottomY, rightX, topY);
+//		sr.setColor(Color.BLACK);
+//		int range = Constants.SHORT_SIGHT_DISTANCE;
+//		//horizontal
+//		float leftX = player.getX() + player.getWidth()/2 - range;
+//		float rightX = player.getX() + player.getWidth()/2 + range;
+//		float bottomY = player.getY() + player.getHeight()/2;
+//		float topY = player.getY() + player.getHeight()/2;
+//		sr.line(leftX, bottomY, rightX, topY);
+//		
+//		//Vertical
+//		leftX = player.getX() + player.getWidth()/2;
+//		rightX = player.getX() + player.getWidth()/2;
+//		bottomY = player.getY() + player.getHeight()/2 - range;
+//		topY = player.getY() + player.getHeight()/2 + range;
+//		sr.line(leftX, bottomY, rightX, topY);
+//		
+//		//diagonal bottom left to top right
+//		leftX = player.getX() + player.getWidth()/2  - (float)(Math.sqrt(0.5)*range);
+//		rightX = player.getX() + player.getWidth()/2 + (float)(Math.sqrt(0.5)*range);
+//		bottomY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
+//		topY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
+//		sr.line(leftX, bottomY, rightX, topY);
+//		
+//		//diagonal top left to bottom right
+//		leftX = player.getX() + player.getWidth()/2 - (float)(Math.sqrt(0.5)*range);
+//		rightX = player.getX() + player.getWidth()/2 + (float)(Math.sqrt(0.5)*range);
+//		bottomY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
+//		topY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
+//		sr.line(leftX, bottomY, rightX, topY);
 		
-		//Vertical
-		leftX = player.getX() + player.getWidth()/2;
-		rightX = player.getX() + player.getWidth()/2;
-		bottomY = player.getY() + player.getHeight()/2 - range;
-		topY = player.getY() + player.getHeight()/2 + range;
-		sr.line(leftX, bottomY, rightX, topY);
-		
-		//diagonal bottom left to top right
-		leftX = player.getX() + player.getWidth()/2  - (float)(Math.sqrt(0.5)*range);
-		rightX = player.getX() + player.getWidth()/2 + (float)(Math.sqrt(0.5)*range);
-		bottomY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
-		topY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
-		sr.line(leftX, bottomY, rightX, topY);
-		
-		//diagonal top left to bottom right
-		leftX = player.getX() + player.getWidth()/2 - (float)(Math.sqrt(0.5)*range);
-		rightX = player.getX() + player.getWidth()/2 + (float)(Math.sqrt(0.5)*range);
-		bottomY = player.getY() + player.getHeight()/2 + (float)(Math.sqrt(0.5)*range);
-		topY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
-		sr.line(leftX, bottomY, rightX, topY);
+		randomness.draw(sr, cam, Gdx.input.isTouched());
 		
 		sr.end();
 		batch.begin();
-		exploring.draw(batch, Gdx.input.getX(), Gdx.input.getY());
+		//exploring.draw(batch, Gdx.input.getX(), Gdx.input.getY());
 		batch.end();
 		
 		for(Enemy deadEnemies: toRemove){
@@ -205,13 +243,35 @@ public class World implements Screen{
 		if(count > 3) {
 			action = learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive());
 			if(player.isAlive() == false){
-				player.revive();
-//				enemies.clear();
-//				spawnRandomEnemies(20, 5, 5);
-				} 
+				reset();
+			} 
 			count = 0;
 		}
 		count++;
+		
+		currentTime = new Date();
+		
+		if((currentTime.getTime() - startOfRunTime.getTime()) >= 120000){
+			reset();
+		}
+		
+		
+	}
+	
+	private void reset(){
+		if(deathCount > 5){
+			deathCount = 0;
+		}
+		player.revive(deathCount);
+		deathCount ++;
+		enemies.clear();
+		spawnEnemies();
+		startOfRunTime = new Date();
+		if((currentTime.getTime() - startTime.getTime()) > 7200000 && changed == false){
+			learner.changeExploring();
+			changed  = true;
+		}
+		
 	}
 
 	@Override	

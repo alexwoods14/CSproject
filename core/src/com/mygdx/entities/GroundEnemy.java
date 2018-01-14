@@ -1,7 +1,6 @@
 package com.mygdx.entities;
 
 import com.mygdx.game.Constants;
-import com.mygdx.map.Map;
 
 public class GroundEnemy extends Enemy{
 	
@@ -12,7 +11,7 @@ public class GroundEnemy extends Enemy{
 		vertV = 0.0f;
 	}
 	
-	public GroundEnemy(int x1, boolean nextBoolean, Map map) {
+	public GroundEnemy(int x1, boolean nextBoolean) {
 		super(x1>10*Constants.BLOCK_HEIGHT? x1 : (x1+400), 500, nextBoolean);		
 		
 	}

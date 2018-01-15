@@ -71,7 +71,6 @@ public class Enemy extends Entity{
 				vertV = -vertV;
 			}
 		}
-		
 	}
 	
 	public boolean hadFirstMove() {

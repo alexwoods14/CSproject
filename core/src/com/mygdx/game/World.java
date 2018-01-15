@@ -43,10 +43,8 @@ public class World implements Screen{
 	private actions action = actions.NONE;
 	
 	private int count;
-	private Date startTime;
 	private Date startOfRunTime;
 	private Date currentTime;
-	private boolean changed = false;
 	private int deathCount = 0;
 
 
@@ -67,7 +65,7 @@ public class World implements Screen{
 		exploring = new MyButton("finished", 20, Constants.WINDOW_HEIGHT - 100);
 		randomness = new Slider(20, Constants.WINDOW_HEIGHT - 80, "randomness");
 		currentTime = new Date();
-		startTime = new Date();
+		new Date();
 		reset();
 		//enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
 		//enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
@@ -185,8 +183,13 @@ public class World implements Screen{
 
 
 			if(enemy.hadFirstMove() == true && enemy.getX() + cam.viewportWidth > camX){
-				map.findAllBoundaries(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
-				enemy.move(delta, map.getLeftWall(), map.getRightWall(), map.getFloor(), map.getRoofY(), gravity);
+				if(enemy.getX() >= 0 && enemy.getY() > 0){
+					map.findAllBoundaries(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+					enemy.move(delta, map.getLeftWall(), map.getRightWall(), map.getFloor(), map.getRoofY(), gravity);
+				}
+				else{
+					toRemove.add(enemy);
+				}
 				if(enemy.getY() == 0){
 					toRemove.add(enemy);
 				}
@@ -267,12 +270,7 @@ public class World implements Screen{
 		deathCount ++;
 		enemies.clear();
 		spawnEnemies();
-		startOfRunTime = new Date();
-		if((currentTime.getTime() - startTime.getTime()) > 7200000 && changed == false){
-			learner.changeExploring();
-			changed  = true;
-		}
-		
+		startOfRunTime = new Date();		
 	}
 
 	@Override	

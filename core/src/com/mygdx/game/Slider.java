@@ -18,14 +18,14 @@ public class Slider {
 	private float draggerY;
 	private boolean hovering = false;
 	private boolean currentlyDragging = false;
-	private int percentage = 0;
+	private int percentage = 50;
 	private Texture text;
 	
 	public Slider(float x, float y, String texture) {
 		this.x = x;
 		this.y = y;
 		text = new Texture(texture + ".png");
-		draggerX = x;
+		draggerX = x + lineLength/2;
 		draggerY = y+lineHeight/2 - draggerHeight/2;
 	}
 	

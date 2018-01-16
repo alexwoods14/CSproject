@@ -1,9 +1,11 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -19,14 +21,16 @@ public class Slider {
 	private boolean hovering = false;
 	private boolean currentlyDragging = false;
 	private int percentage = 50;
-	private Texture text;
+	private String text;
+	private BitmapFont font;
 	
-	public Slider(float x, float y, String texture) {
+	public Slider(float x, float y, String text) {
 		this.x = x;
 		this.y = y;
-		text = new Texture(texture + ".png");
+		this.text = text;
 		draggerX = x + lineLength/2;
 		draggerY = y+lineHeight/2 - draggerHeight/2;
+		font = new BitmapFont();
 	}
 	
 	
@@ -49,7 +53,9 @@ public class Slider {
 	}
 	
 	public void drawLabel(SpriteBatch batch){
-		batch.draw(text, x, y + 30);
+//		batch.draw(text, x, y + 30);
+		font.draw(batch, text + percentage, x + 10, y + 45);
+		
 	}
 
 	private void moveDragger(float mouseX) {

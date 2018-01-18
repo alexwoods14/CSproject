@@ -163,30 +163,31 @@ public class Map {
 		return floor;
 	}
 	
-	public float findStartingFloor(int xindex){
+	public float findStartingFloor(float x, int width){
 		float floor = 0;
-		boolean foundFloor = false;
-		int i = 1;
-		int yindex = 24*side;
-		//System.out.println(yindex);
-		while(foundFloor == false){
-			if(yindex >= Constants.MAP_HEIGHT){
-				foundFloor = true;
+		boolean leftFound = false;
+		boolean rightFound = false;
+		int i = 0;
+		int leftX = (int) (x/side);
+		int rightX = (int) ((x+width)/side);
+		while(leftFound == false && rightFound == false){
+			if(leftFound  == false){
+				if(grid[leftX][i] == null){
+					leftFound = true;
+					floor = (i+1)*side;
+				}
 			}
-			else{
-				if(yindex - i > 0){
-					if(grid[xindex][yindex - i] != null){
-						floor = grid[xindex][yindex - i].getY() + side;
-						foundFloor = true;
-					}
-				}      
-				i++;
+			if(rightFound == false) {
+				if(grid[rightX][i] == null){
+					rightFound = true;
+					floor = (i+1)*side;
+				}
 			}
+			i++;
 		}
-
 		return floor;
 	}
-	
+
 	public float findRoof(int xindex, int yindex){
 		float roof = 10000;
 		boolean foundRoof = false;

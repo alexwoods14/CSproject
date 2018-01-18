@@ -63,7 +63,7 @@ public class World implements Screen{
 		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
 		exploring = new MyButton("finished", 20, Constants.WINDOW_HEIGHT - 100);
-		randomness = new Slider(20, Constants.WINDOW_HEIGHT - 80, "Randomness: ");
+		randomness = new Slider(20, Constants.WINDOW_HEIGHT - 80, "randomness");
 		currentTime = new Date();
 		new Date();
 		reset();
@@ -266,7 +266,7 @@ public class World implements Screen{
 		if(deathCount > 5){
 			deathCount = 0;
 		}
-		player.revive(deathCount);
+		player.revive(deathCount, map);
 		deathCount ++;
 		enemies.clear();
 		spawnEnemies();

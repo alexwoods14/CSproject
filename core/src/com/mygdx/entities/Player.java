@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.game.Agent.actions;
 import com.mygdx.game.Constants;
+import com.mygdx.map.Map;
 
 public class Player extends Entity{
 	
@@ -160,33 +161,11 @@ public class Player extends Entity{
 		alive = false;
 	}
 	
-	public void revive(int nextX){
-		int side = Constants.BLOCK_HEIGHT;
-		if(nextX == 0){
-			x = 1;
-			y = 2*side + 5;
+	public void revive(int nextX, Map map){
+		if(x >= 0 && x < 200*Constants.BLOCK_HEIGHT) {
+			x += Constants.BLOCK_HEIGHT;
+			y = map.findStartingFloor(x, width);
 		}
-		if(nextX == 1){
-			x = 46*side;
-			y = 2*side + 5;
-		}
-		if(nextX == 2){
-			x = 65*side - 5;
-			y = 2*side + 5;
-		}
-		if(nextX == 3){
-			x = 74*side;
-			y = 2*side + 5;
-		}
-		if(nextX == 4){
-			x = 100*side;
-			y = 8*side + 5;
-		}
-		if(nextX == 5){
-			x = 128*side;
-			y = 2*side + 5;
-		}
-		
 		alive = true;
 	}
 

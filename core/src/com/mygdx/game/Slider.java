@@ -21,16 +21,18 @@ public class Slider {
 	private boolean hovering = false;
 	private boolean currentlyDragging = false;
 	private int percentage = 50;
-	private String text;
+	private Texture text;
 	private BitmapFont font;
 	
 	public Slider(float x, float y, String text) {
 		this.x = x;
 		this.y = y;
-		this.text = text;
+		this.text = new Texture(Constants.ASSETS_FOLDER_LOCATION + text + ".png");
 		draggerX = x + lineLength/2;
 		draggerY = y+lineHeight/2 - draggerHeight/2;
 		font = new BitmapFont();
+		font.setColor(Color.BLACK);
+		font.getData().scale(0.7f);
 	}
 	
 	
@@ -53,8 +55,8 @@ public class Slider {
 	}
 	
 	public void drawLabel(SpriteBatch batch){
-//		batch.draw(text, x, y + 30);
-		font.draw(batch, text + percentage, x + 10, y + 45);
+		batch.draw(text, x, y + 30);
+		font.draw(batch,  percentage + "%", x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
 		
 	}
 

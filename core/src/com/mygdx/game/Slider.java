@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class Slider {
 	private float x;
@@ -49,6 +50,7 @@ public class Slider {
 			currentlyDragging = false;
 		}
 		sr.setColor(Color.LIGHT_GRAY);
+		sr.set(ShapeType.Filled);
 		sr.rect(x + cam.position.x - cam.viewportWidth/2, y + cam.position.y - cam.viewportHeight/2, lineLength, lineHeight);
 		sr.setColor(Color.GRAY);
 		sr.rect(draggerX + cam.position.x - cam.viewportWidth/2, draggerY + cam.position.y - cam.viewportHeight/2, draggerWidth, draggerHeight);

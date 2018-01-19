@@ -14,6 +14,7 @@ public class MyGDXGame extends Game{
 	public void create () {
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
+		//this.setScreen(new MenuScreen(this));
 		this.setScreen(new World(sr, "map2.txt", batch));
 		this.dispose();
 	}

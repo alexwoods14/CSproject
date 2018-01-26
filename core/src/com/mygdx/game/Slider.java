@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,11 +20,12 @@ public class Slider {
 	private float draggerY;
 	private boolean hovering = false;
 	private boolean currentlyDragging = false;
-	private int percentage = 50;
+	private double decimal = 0.50;
 	private Texture text;
 	private BitmapFont font;
+	private boolean asPercent;
 	
-	public Slider(float x, float y, String text) {
+	public Slider(float x, float y, String text, boolean asPercentage) {
 		this.x = x;
 		this.y = y;
 		this.text = new Texture(Constants.ASSETS_FOLDER_LOCATION + text + ".png");
@@ -34,12 +34,18 @@ public class Slider {
 		font = new BitmapFont();
 		font.setColor(Color.BLACK);
 		font.getData().scale(0.7f);
+		asPercent = asPercentage;
 	}
-	
 	
 	public void draw(ShapeRenderer sr, OrthographicCamera cam, boolean isClicked){
 		float mouseX = Gdx.input.getX();
 		float mouseY = (Constants.WINDOW_HEIGHT - Gdx.input.getY());
+		float xOffset = 0;
+		float yOffset = 0;
+		if(cam != null) {
+			xOffset = cam.position.x - cam.viewportWidth/2;
+			yOffset = cam.position.y - cam.viewportHeight/2;
+		}
 		if(isClicked == true && currentlyDragging == false){
 			isHovering(mouseX, mouseY);
 		}
@@ -51,15 +57,20 @@ public class Slider {
 		}
 		sr.setColor(Color.LIGHT_GRAY);
 		sr.set(ShapeType.Filled);
-		sr.rect(x + cam.position.x - cam.viewportWidth/2, y + cam.position.y - cam.viewportHeight/2, lineLength, lineHeight);
+		sr.rect(x + xOffset, y + yOffset, lineLength, lineHeight);
 		sr.setColor(Color.GRAY);
-		sr.rect(draggerX + cam.position.x - cam.viewportWidth/2, draggerY + cam.position.y - cam.viewportHeight/2, draggerWidth, draggerHeight);
+		sr.rect(draggerX + xOffset, draggerY + yOffset, draggerWidth, draggerHeight);
 	}
 	
 	public void drawLabel(SpriteBatch batch){
-		batch.draw(text, x, y + 30);
-		font.draw(batch,  percentage + "%", x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
-		
+		batch.draw(text, x - 10, y + 30);
+
+		if(asPercent == true) {
+			font.draw(batch, (int) (decimal*100) + "%", x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
+		}
+		else {
+			font.draw(batch, "" + decimal, x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
+		}
 	}
 
 	private void moveDragger(float mouseX) {
@@ -75,12 +86,13 @@ public class Slider {
 			}
 		}
 		currentlyDragging = true;
-		calculatePercentage();
+		calculateDecimal();
 	}
 
-	private void calculatePercentage() {
-		percentage = (int) +(((draggerX - x)/lineLength)*100);
+	private void calculateDecimal() {
+		decimal = (draggerX - x)/lineLength;
 	}
+	
 
 	private void isHovering(float mouseX, float mouseY) {
 		//System.out.printf("mouseX: %f   mouseY: %f  draggerX: %f  draggerY: %f  %n", mouseX, mouseY, draggerX, draggerY);
@@ -93,6 +105,9 @@ public class Slider {
 	}
 	
 	public int getPercentage(){
-		return percentage ;
+		return (int) (decimal*100);
+	}
+	public double getDecimal() {
+		return decimal;
 	}
 }

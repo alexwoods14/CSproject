@@ -44,8 +44,8 @@ public class Agent {
 	private actions lastMove = actions.NONE;
 	private actions lastMoveOnGround = actions.NONE;
 	
-	private final double alpha = 0.1; // Learning rate
-	private final double gamma = 0.9; // Eagerness - 0 looks in the near future, 1 looks in the distant future
+	private final double alpha = 0.1;
+	private final double gamma = 0.9;
 	
 	private double[][][][][][][][][][] Q = new double[7][7][7][7][7][7][7][7][2][6];
 	

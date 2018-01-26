@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.screens.AIsettingsScreen;
 import com.mygdx.screens.MenuScreen;
 
 public class MyGDXGame extends Game{
@@ -15,7 +16,8 @@ public class MyGDXGame extends Game{
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
 		//this.setScreen(new MenuScreen(this));
-		this.setScreen(new World(sr, "map2.txt", batch));
+		//this.setScreen(new World(sr, "map2.txt", batch));
+		this.setScreen(new AIsettingsScreen(this));
 		this.dispose();
 	}
 

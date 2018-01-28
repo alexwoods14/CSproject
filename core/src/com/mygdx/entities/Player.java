@@ -163,7 +163,7 @@ public class Player extends Entity{
 	
 	public void revive(int nextX, Map map){
 		if(x >= 0 && x < 200*Constants.BLOCK_HEIGHT) {
-			x += Constants.BLOCK_HEIGHT;
+			x += Constants.BLOCK_HEIGHT*3;
 			y = map.findStartingFloor(x, width);
 		}
 		alive = true;

@@ -67,8 +67,8 @@ public class Agent {
 										//action
 										for(int action = 0; action < 6; action++){
 											//Q[a][b][c][d][e][f][g][h][action] = rand.nextDouble();
-											Q[a][b][c][d][e][f][g][h][0][action] = 0.5;
-											Q[a][b][c][d][e][f][g][h][1][action] = 0.5;
+											Q[a][b][c][d][e][f][g][h][0][action] = 0.7;
+											Q[a][b][c][d][e][f][g][h][1][action] = 0.7;
 										}	
 
 									}	
@@ -174,19 +174,25 @@ public class Agent {
 		findCurrentState();
 		Random rand = new Random();
 		double reward = 0;
-		if(deltaX > 0){
-			reward = 0.7;
-		}
-		if(deltaX < 0){
-			reward = -0.3;
-		}
-		if(deltaX == 0){
-			reward = -0.5;
-		}
+//		if(deltaX > 0){
+//			reward = 0.7;
+//		}
+//		if(deltaX < 0){
+//			reward = -0.3;
+//		}
+//		if(deltaX == 0){
+//			reward = -0.5;
+//		}
 		if(alive == false){
-			died();
-			reward = -10;
+			//died();
+			reward = -25;
 		}
+		else{
+			if(player.getX() > 170*Constants.BLOCK_HEIGHT){
+				reward = 50;
+			}
+		}
+		
 		if(exploring == true){
 			if(rand.nextInt(101) >= randomness){
 				nextMove = findBestAction(currentState);

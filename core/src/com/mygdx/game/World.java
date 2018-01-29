@@ -122,7 +122,7 @@ public class World implements Screen{
 
 		Gdx.gl.glClearColor(173/255f, 218/255f, 248/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		if(player.isAlive() == true){
+		if(player.isAlive() == true && player.getY() > 0){
 			map.findAllBoundaries(player.getX(), player.getY(), player.getWidth(), player.getHeight());
 			//player.move(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall());
 			player.AImove(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall(), action);

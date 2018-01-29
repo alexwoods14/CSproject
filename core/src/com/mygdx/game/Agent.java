@@ -174,24 +174,24 @@ public class Agent {
 		findCurrentState();
 		Random rand = new Random();
 		double reward = 0;
-//		if(deltaX > 0){
-//			reward = 0.7;
-//		}
-//		if(deltaX < 0){
-//			reward = -0.3;
-//		}
-//		if(deltaX == 0){
-//			reward = -0.5;
-//		}
+		if(deltaX > 0){
+			reward = 0.1;
+		}
+		if(deltaX < 0){
+			reward = -3;
+		}
+		if(deltaX == 0){
+			reward = -5;
+		}
 		if(alive == false){
 			//died();
 			reward = -25;
 		}
-		else{
-			if(player.getX() > 170*Constants.BLOCK_HEIGHT){
-				reward = 50;
-			}
-		}
+//		else{
+//			if(player.getX() > 170*Constants.BLOCK_HEIGHT){
+//				reward = 50;
+//			}
+//		}
 		
 		if(exploring == true){
 			if(rand.nextInt(101) >= randomness){

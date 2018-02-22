@@ -338,28 +338,28 @@ public class Agent {
 	}
 
 	private void findTopRight() {
-		boolean found = false;
+		boolean found = false;   // whether an object has been found in this direction
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;
-		float y = player.getY() + player.getHeight()/2;
-		while(found == false && distanceFromCentre <= diagonalRange){
+		float x = player.getX() + player.getWidth()/2;   // centre x of agent
+		float y = player.getY() + player.getHeight()/2;  // centre y of agent
+		while(found == false && distanceFromCentre <= diagonalRange){  //while nothing is found and still in range
 			int blockX = (int) ((x + distanceFromCentre)/side);
-			int blockY = (int) ((y + distanceFromCentre)/side);
+			int blockY = (int) ((y + distanceFromCentre)/side);  //block x and y used to search map class in that position
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
 				found = true;				
-			}
-			if(block == 'R') {
+			}										// if returned value for map.get() is not 'N', found = true
+			if(block == 'R') {						// and return is updated to corresponding 'obj' enum.
 				toReturn = objs.ROOFLESS_BLOCK;
 				found = true;
 			}
-			for(Enemy enemy: enemies) {
+			for(Enemy enemy: enemies) {			// if a block is not found in that position, it tries looping through all enemies.
 				if(enemy.crossesPoint(x+distanceFromCentre, y+distanceFromCentre) == true) {
 					found = true;
-					if(enemy.getClass() == GroundEnemy.class){
-						toReturn = objs.GROUND_ENEMY;
+					if(enemy.getClass() == GroundEnemy.class){	// if it is found in that spot, found = true, return is updated
+						toReturn = objs.GROUND_ENEMY;			// and the loop is broken 
 					}
 					if(enemy.getClass() == SineFlyingEnemy.class){
 						toReturn = objs.SINE_ENEMY;
@@ -370,8 +370,8 @@ public class Agent {
 					break;
 				}
 			}
-
-			distanceFromCentre += diagonalStep;
+						// if nothing is found, the distance away from the agent is increased and it searches that position next loop
+			distanceFromCentre += diagonalStep;	
 		}
 
 		topRight = toReturn;

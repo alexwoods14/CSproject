@@ -350,8 +350,8 @@ public class Agent {
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
 				found = true;				
-			}										// if returned value for map.get() is not 'N', found = true
-			if(block == 'R') {						// and return is updated to corresponding 'obj' enum.
+			}					   // if returned value for map.get() is not 'N', found = true
+			if(block == 'R') {			   // and return is updated to corresponding 'obj' enum.
 				toReturn = objs.ROOFLESS_BLOCK;
 				found = true;
 			}

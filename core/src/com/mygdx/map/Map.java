@@ -264,8 +264,8 @@ public class Map {
 
 	public void draw(ShapeRenderer sr){
 		sr.setAutoShapeType(true);
-		sr.set(ShapeType.Line);
-		sr.setColor(Color.RED);
+		sr.set(ShapeType.Filled);
+		sr.setColor(Color.FOREST);
 		for(int j = 0; j < Constants.MAP_HEIGHT; j++){
 			for(int i = 0; i< Constants.MAP_WIDTH; i++){
 				if(grid[i][j] != null){

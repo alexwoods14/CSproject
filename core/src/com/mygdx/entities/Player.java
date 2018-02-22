@@ -130,9 +130,7 @@ public class Player extends Entity{
 		else{
 			y = floorY;
 			vertV = 0;
-			if(floorY == 0){
-				this.died();
-			}
+			
 		}
 		if(y + vertV*delta + height > roofY){
 			vertV = -100;
@@ -141,6 +139,10 @@ public class Player extends Entity{
 		if(x > 200*Constants.BLOCK_HEIGHT){
 			x = 50;
 			y = 100.0f;
+		}
+		
+		if(y <= 0){
+			this.died();
 		}
 	}
 

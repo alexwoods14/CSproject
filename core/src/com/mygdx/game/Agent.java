@@ -345,7 +345,7 @@ public class Agent {
 		float y = player.getY() + player.getHeight()/2;  // centre y of agent
 		while(found == false && distanceFromCentre <= diagonalRange){  //while nothing is found and still in range
 			int blockX = (int) ((x + distanceFromCentre)/side);
-			int blockY = (int) ((y + distanceFromCentre)/side);  //block x and y used to search map class in that position
+			int blockY = (int) ((y + distanceFromCentre)/side);  //block x and y used by map
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -355,11 +355,11 @@ public class Agent {
 				toReturn = objs.ROOFLESS_BLOCK;
 				found = true;
 			}
-			for(Enemy enemy: enemies) {			// if a block is not found in that position, it tries looping through all enemies.
+			for(Enemy enemy: enemies) {			// Loops through all enemies.
 				if(enemy.crossesPoint(x+distanceFromCentre, y+distanceFromCentre) == true) {
 					found = true;
-					if(enemy.getClass() == GroundEnemy.class){	// if it is found in that spot, found = true, return is updated
-						toReturn = objs.GROUND_ENEMY;			// and the loop is broken 
+					if(enemy.getClass() == GroundEnemy.class){	// if enemy found
+						toReturn = objs.GROUND_ENEMY;			 
 					}
 					if(enemy.getClass() == SineFlyingEnemy.class){
 						toReturn = objs.SINE_ENEMY;
@@ -370,7 +370,7 @@ public class Agent {
 					break;
 				}
 			}
-						// if nothing is found, the distance away from the agent is increased and it searches that position next loop
+						// if nothing is found, the distance away from the agent is increased
 			distanceFromCentre += diagonalStep;	
 		}
 

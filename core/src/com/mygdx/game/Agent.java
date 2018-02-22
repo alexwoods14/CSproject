@@ -83,7 +83,6 @@ public class Agent {
 	private enum objs{
 		SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY, NONE
 		//    0    ,       1       ,       2     ,       3       ,      4    ,    5
-		// array places in the learning arrays^
 	}
 
 	public enum actions{

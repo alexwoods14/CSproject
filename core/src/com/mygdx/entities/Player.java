@@ -31,8 +31,8 @@ public class Player extends Entity{
 	}
 	
 	public void move(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall){
-		//System.out.println("X Value" + x);
 		
+		//sets the touchingFloor variable depending on whether it is currently on floor or not
 		if(y == floorY && y > 0){
 			touchingFloor = true;
 		}

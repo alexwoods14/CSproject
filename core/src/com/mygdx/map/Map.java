@@ -39,13 +39,13 @@ public class Map {
 	}
 	
 	public char get(int i, int j){
-		char toReturn = 'N';
+		char toReturn = 'N';   //standard return variable 'N' stands for nothing
 		if(i > 0 && i < Constants.MAP_WIDTH && j > 0 && j < Constants.MAP_HEIGHT){
-			if(grid[i][j] != null) {
+			if(grid[i][j] != null) {         	//checks that block at coordinates (i,j) is not empty
 				if(grid[i][j].getClass() == SolidBlock.class){
 					toReturn = 'S';
 				}
-
+				
 				if(grid[i][j].getClass() == RooflessBlock.class){
 					toReturn = 'R';
 				}
@@ -264,8 +264,8 @@ public class Map {
 
 	public void draw(ShapeRenderer sr){
 		sr.setAutoShapeType(true);
-		sr.set(ShapeType.Line);
-		sr.setColor(Color.RED);
+		sr.set(ShapeType.Filled);
+		sr.setColor(Color.FOREST);
 		for(int j = 0; j < Constants.MAP_HEIGHT; j++){
 			for(int i = 0; i< Constants.MAP_WIDTH; i++){
 				if(grid[i][j] != null){

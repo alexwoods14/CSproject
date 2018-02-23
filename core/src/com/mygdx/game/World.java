@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -203,7 +204,7 @@ public class World implements Screen{
 		
 		
 //		sr.setColor(Color.BLACK);
-//		int range = Constants.SHORT_SIGHT_DISTANCE;
+//		int range = Constants.SIGHT_DISTANCE;
 //		//horizontal
 //		float leftX = player.getX() + player.getWidth()/2 - range;
 //		float rightX = player.getX() + player.getWidth()/2 + range;
@@ -243,9 +244,12 @@ public class World implements Screen{
 		for(Enemy deadEnemies: toRemove){
 			enemies.remove(deadEnemies);
 		}
+		
+		
 		learner.onFloor(player.onFloor());
-		if(count > 3) {
-			action = learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive(), randomness.getPercentage());
+		if(count > 5) {
+			learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive(), randomness.getPercentage());
+			action = learner.getAction();
 			if(player.isAlive() == false){
 				reset();
 			} 
@@ -263,7 +267,7 @@ public class World implements Screen{
 	}
 	
 	private void reset(){
-		if(deathCount > 5){
+		if(deathCount > 3){
 			deathCount = 0;
 		}
 		player.revive(deathCount, map);

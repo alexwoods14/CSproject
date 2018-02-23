@@ -79,8 +79,8 @@ public class Entity {
 	}
 	
 	public boolean crossesPoint(float x2, float y2) {
-		if(x2 > x && x2 < x + width && y2 > y && y2 < y + height){
-			return true;		
+		if(x2 > x && x2 < x + width && y2 > y && y2 < y + height){   
+			return true;		// if the point lays within the enemy, true is returned
 		}
 		else{
 			return false;

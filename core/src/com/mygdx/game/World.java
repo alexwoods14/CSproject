@@ -250,6 +250,7 @@ public class World implements Screen{
 		if(count > 5) {
 			learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive(), randomness.getPercentage());
 			action = learner.getAction();
+			player.newState();
 			if(player.isAlive() == false){
 				reset();
 			} 

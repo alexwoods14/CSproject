@@ -15,6 +15,7 @@ public class Player extends Entity{
 	private boolean touchingFloor = false;
 	private double deltaX;
 	private double deltaY;
+	private boolean newState = true;
 
 
 	public Player() {
@@ -23,7 +24,7 @@ public class Player extends Entity{
 		x = 1.0f;
 		y = 100.0f;
 		vertV = 0.0f;
-		horiV = 350.0f;
+		horiV = 300.0f;
 	}
 	
 	public boolean onFloor(){
@@ -84,9 +85,12 @@ public class Player extends Entity{
 	}
 	
 	public void AImove(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall, actions action){
-		//System.out.println("X Value" + x);
-		deltaY = 0;
-		deltaX = 0;
+		
+		if(newState = true){
+			deltaY = 0;
+			deltaX = 0;
+			newState = false;
+		}
 		
 		if(y == floorY && y > 0){
 			touchingFloor = true;
@@ -102,7 +106,7 @@ public class Player extends Entity{
 		if(action == actions.LEFT || action == actions.JUMP_LEFT){
 			if(x - delta*horiV > leftWall){
 				deltaX =- delta*horiV;
-				x += deltaX;
+				x -= delta*horiV;
 			}
 			else{
 				x = leftWall +  0.001f;
@@ -111,8 +115,8 @@ public class Player extends Entity{
 
 		if(action == actions.RIGHT|| action == actions.JUMP_RIGHT){
 			if(x + delta*horiV < rightWall){
-				deltaX = delta*horiV;
-				x += deltaX;
+				deltaX += delta*horiV;
+				x += delta*horiV;
 			}
 			else{
 				x = rightWall - 0.001f;
@@ -125,7 +129,7 @@ public class Player extends Entity{
 
 		if(y + vertV*delta > floorY){		
 			y += vertV * delta;
-			deltaY = vertV*delta;
+			deltaY += vertV*delta;
 		}
 		else{
 			y = floorY;
@@ -181,5 +185,8 @@ public class Player extends Entity{
 	}
 	public double getDeltaY() {
 		return deltaY;
+	}
+	public void newState(){
+		newState = true;
 	}
 }

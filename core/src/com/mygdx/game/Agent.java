@@ -213,24 +213,7 @@ public class Agent {
 			else{
 				action = rand.nextInt(4);
 			}
-			if(action == 0){
-				nextMove = actions.JUMP;
-			}
-			if(action == 1){
-				nextMove = actions.LEFT;
-			}
-			if(action == 2){
-				nextMove = actions.RIGHT;
-			}
-			if(action == 3){
-				nextMove = actions.NONE;
-			}
-			if(action == 4){
-				nextMove = actions.JUMP_LEFT;
-			}
-			if(action == 5){
-				nextMove = actions.JUMP_RIGHT;
-			}
+			nextMove = actions.values()[action];
 		}
 
 

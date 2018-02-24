@@ -211,7 +211,7 @@ public class Agent {
 				action = rand.nextInt(6);
 			}
 			else{
-				action = rand.nextInt(4);
+				action = rand.nextInt(3);
 			}
 			nextMove = actions.values()[action];
 		}

@@ -75,10 +75,10 @@ public class Slider {
 
 	private void moveDragger(float mouseX) {
 		if(mouseX - draggerWidth/2 > x && mouseX - draggerWidth/2 < x + lineLength){
-			draggerX = mouseX - draggerWidth/2;
+			draggerX = mouseX - draggerWidth/2;	// move middle of dragger to mouseX
 		}
 		else{
-			if(mouseX - draggerWidth/2 <= x){
+			if(mouseX - draggerWidth/2 <= x){ // if mouseX is less than left edge of slider
 				draggerX = x;
 			}
 			else{

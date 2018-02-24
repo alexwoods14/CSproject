@@ -15,7 +15,6 @@ public class Agent {
 	private Map map;
 	private ArrayList<Enemy> enemies;
 	private Player player;
-	private boolean exploring;
 	private boolean onFloor = false;
 	private boolean newState = true;
 	
@@ -47,11 +46,10 @@ public class Agent {
 	
 	private double[][][][][][][][][][] Q = new double[6][6][6][6][6][6][6][6][2][6];
 	
-	public Agent(Player player, Map map, ArrayList<Enemy> enemies, boolean exploring) {
+	public Agent(Player player, Map map, ArrayList<Enemy> enemies) {
 		this.map = map;
 		this.enemies = enemies;
 		this.player = player;
-		this.exploring = exploring;
 		
 		//random value for each state-action Q
 		//Random rand = new Random();
@@ -203,44 +201,39 @@ public class Agent {
 //		}
 		
 
-		
-		if(exploring == true){
-			if(rand.nextInt(101) >= randomness){
-				nextMove = findBestAction(currentState);
-			}
-			else{
-				int action;
-				if(currentState[8] == 0){
-					action = rand.nextInt(6);
-				}
-				else{
-					action = rand.nextInt(4);
-				}
-				if(action == 0){
-					nextMove = actions.JUMP;
-				}
-				if(action == 1){
-					nextMove = actions.LEFT;
-				}
-				if(action == 2){
-					nextMove = actions.RIGHT;
-				}
-				if(action == 3){
-					nextMove = actions.NONE;
-				}
-				if(action == 4){
-					nextMove = actions.JUMP_LEFT;
-				}
-				if(action == 5){
-					nextMove = actions.JUMP_RIGHT;
-				}
-			}
-		}
-		else{
+
+		if(rand.nextInt(101) >= randomness){
 			nextMove = findBestAction(currentState);
 		}
-		
-		
+		else{
+			int action;
+			if(currentState[8] == 0){
+				action = rand.nextInt(6);
+			}
+			else{
+				action = rand.nextInt(4);
+			}
+			if(action == 0){
+				nextMove = actions.JUMP;
+			}
+			if(action == 1){
+				nextMove = actions.LEFT;
+			}
+			if(action == 2){
+				nextMove = actions.RIGHT;
+			}
+			if(action == 3){
+				nextMove = actions.NONE;
+			}
+			if(action == 4){
+				nextMove = actions.JUMP_LEFT;
+			}
+			if(action == 5){
+				nextMove = actions.JUMP_RIGHT;
+			}
+		}
+
+
 
 		// Q(state,action)= Q(state,action) + alpha * (R(state,action) + gamma * Max(next state, all actions) - Q(state,action))
 		double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()];
@@ -261,16 +254,7 @@ public class Agent {
 		}
 	}
 	
-	public void changeExploring(){
-		if(exploring == true){
-			exploring = false;
-			System.out.println("OPTIMAL ROUTING");
-		}
-		else{
-			exploring = true;
-			System.out.println("EXPLORATIVE ROUTING");
-		}
-	}
+
 	
 	
 	private actions findBestAction(int[] state) {

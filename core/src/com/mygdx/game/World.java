@@ -37,7 +37,6 @@ public class World implements Screen{
 	private ArrayList<Enemy> enemies;
 	private Agent learner;
 	
-	private MyButton exploring;
 	private Slider randomness;
 
 	private String fileName;
@@ -63,14 +62,13 @@ public class World implements Screen{
 		player = new Player();
 		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
-		exploring = new MyButton("finished", 20, Constants.WINDOW_HEIGHT - 100);
 		randomness = new Slider(20, Constants.WINDOW_HEIGHT - 80, "randomness", true);
 		currentTime = new Date();
 		new Date();
 		reset();
 		//enemies.add(new VerticalFlyingEnemy(300, 500, 400, 2));
 		//enemies.add(new SineFlyingEnemy(400, 500, 400, 1, 400));
-		learner = new Agent(player, map, enemies, true);
+		learner = new Agent(player, map, enemies);
 //		int side = Constants.BLOCK_HEIGHT;
 //		enemies.add(new GroundEnemy((int) (30.5*side ), 4*side, false));  
 //		enemies.add(new GroundEnemy((int) (34.5*side), 7*side, false));
@@ -115,11 +113,6 @@ public class World implements Screen{
 
 	@Override
 	public void render(float delta) {
-		if(Gdx.input.justTouched() == true){
-			if(exploring.isHovering() == true){
-				learner.changeExploring();
-			}
-		}
 
 		Gdx.gl.glClearColor(173/255f, 218/255f, 248/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

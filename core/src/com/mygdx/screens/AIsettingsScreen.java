@@ -29,7 +29,7 @@ public class AIsettingsScreen implements Screen{
 	
 	@Override
 	public void show() {
-		learningRate = new Slider(500, 300, "learning_rate", false);
+		learningRate = new Slider(500, 400, "learning_rate", false);
 		eagerness = new Slider(500, 600, "eagerness", false);
 	}
 

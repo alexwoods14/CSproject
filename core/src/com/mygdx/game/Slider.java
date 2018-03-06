@@ -90,7 +90,8 @@ public class Slider {
 	}
 
 	private void calculateDecimal() {
-		decimal = (draggerX - x)/lineLength;
+		decimal = Math.floor(((draggerX - x)/lineLength)*100)/100;
+		System.out.println(decimal);
 	}
 	
 

@@ -14,12 +14,16 @@ import com.mygdx.game.Slider;
 
 public class AIsettingsScreen implements Screen{
 	
-
 	private MyGDXGame game;
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
 	private Slider learningRate;
 	private Slider eagerness;
+	private Slider dieReward;
+	private Slider moveRightReward;
+	private Slider moveLeftReward;
+	private Slider moveUpReward;
+	private Slider moveDownReward;
 	
 	public AIsettingsScreen(MyGDXGame game) {
 		this.batch = game.batch;
@@ -29,8 +33,13 @@ public class AIsettingsScreen implements Screen{
 	
 	@Override
 	public void show() {
-		learningRate = new Slider(500, 400, "learning_rate", false);
-		eagerness = new Slider(500, 600, "eagerness", false);
+		learningRate = new Slider(500, 400, "learning_rate", false, 0, 1);
+		eagerness = new Slider(500, 600, "eagerness", false, -4, 4);
+//		dieReward = new Slider(500, 400, "learning_rate", false, 5);
+//		moveRightReward = new Slider(500, 600, "eagerness", false, 5);
+//		moveLeftReward = new Slider(500, 600, "eagerness", false, 5);
+//		moveUpReward = new Slider(500, 600, "eagerness", false, 5);
+//		moveDownReward = new Slider(500, 600, "eagerness", false, 5);
 	}
 
 	@Override

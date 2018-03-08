@@ -62,7 +62,7 @@ public class World implements Screen{
 		player = new Player();
 		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
-		randomness = new Slider(20, Constants.WINDOW_HEIGHT - 80, "randomness", true);
+		randomness = new Slider(20, Constants.WINDOW_HEIGHT - 80, "randomness", true, 0, 1);
 		currentTime = new Date();
 		new Date();
 		reset();

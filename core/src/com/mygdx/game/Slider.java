@@ -20,14 +20,18 @@ public class Slider {
 	private float draggerY;
 	private boolean hovering = false;
 	private boolean currentlyDragging = false;
-	private double decimal = 0.50;
+	private double decimal;
 	private Texture text;
 	private BitmapFont font;
 	private boolean asPercent;
+	private int lowerLimit;
+	private int upperLimit;
 	
-	public Slider(float x, float y, String text, boolean asPercentage) {
+	public Slider(float x, float y, String text, boolean asPercentage, int lowerLimit, int upperLimit) {
 		this.x = x;
 		this.y = y;
+		this.lowerLimit = lowerLimit;
+		this.upperLimit = upperLimit;
 		this.text = new Texture(Constants.ASSETS_FOLDER_LOCATION + text + ".png");
 		draggerX = x + lineLength/2;
 		draggerY = y+lineHeight/2 - draggerHeight/2;
@@ -35,6 +39,7 @@ public class Slider {
 		font.setColor(Color.BLACK);
 		font.getData().scale(0.7f);
 		asPercent = asPercentage;
+		calculateDecimal();
 	}
 	
 	public void draw(ShapeRenderer sr, OrthographicCamera cam, boolean isClicked){
@@ -90,7 +95,9 @@ public class Slider {
 	}
 
 	private void calculateDecimal() {
-		decimal = Math.floor(((draggerX - x)/lineLength)*100)/100;
+		decimal = (draggerX - x)/lineLength;
+		decimal = lowerLimit + decimal*(upperLimit - lowerLimit);
+		decimal = Math.floor(decimal*100)/100;
 		System.out.println(decimal);
 	}
 	

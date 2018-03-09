@@ -226,12 +226,10 @@ public class World implements Screen{
 //		topY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
 //		sr.line(leftX, bottomY, rightX, topY);
 
-		
-		randomness.draw(sr, cam, Gdx.input.isTouched());
-		sr.end();
 		batch.begin();
-		randomness.drawLabel(batch);
-		//exploring.draw(batch, Gdx.input.getX(), Gdx.input.getY());
+		randomness.draw(sr, cam, Gdx.input.isTouched());
+	//	randomness.drawLabel(batch);
+		sr.end();
 		batch.end();
 		
 		for(Enemy deadEnemies: toRemove){

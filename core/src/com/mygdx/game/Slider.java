@@ -65,16 +65,23 @@ public class Slider {
 		sr.rect(x + xOffset, y + yOffset, lineLength, lineHeight);
 		sr.setColor(Color.GRAY);
 		sr.rect(draggerX + xOffset, draggerY + yOffset, draggerWidth, draggerHeight);
+		
 	}
 	
-	public void drawLabel(SpriteBatch batch){
+	public void drawLabel(SpriteBatch batch, Slider slider){
 		batch.draw(text, x - 10, y + 30);
 
+		font.draw(batch, "WORK PLS", 100, 300);
+		
 		if(asPercent == true) {
 			font.draw(batch, (int) (decimal*100) + "%", x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
+			System.out.println("*");
 		}
 		else {
 			font.draw(batch, "" + decimal, x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
+			if(this.equals(slider)) {
+				font.draw(batch, "WORK PLS", 0, 0);
+			}
 		}
 	}
 
@@ -98,7 +105,6 @@ public class Slider {
 		decimal = (draggerX - x)/lineLength;
 		decimal = lowerLimit + decimal*(upperLimit - lowerLimit);
 		decimal = Math.floor(decimal*100)/100;
-		System.out.println(decimal);
 	}
 	
 

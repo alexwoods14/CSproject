@@ -19,11 +19,12 @@ public class AIsettingsScreen implements Screen{
 	private SpriteBatch batch;
 	private Slider learningRate;
 	private Slider eagerness;
-	private Slider dieReward;
+	private Slider deathReward;
 	private Slider moveRightReward;
 	private Slider moveLeftReward;
-	private Slider moveUpReward;
-	private Slider moveDownReward;
+//	private Slider moveUpReward;
+//	private Slider moveDownReward;
+	private ArrayList<Slider> sliders;
 	
 	public AIsettingsScreen(MyGDXGame game) {
 		this.batch = game.batch;
@@ -33,13 +34,26 @@ public class AIsettingsScreen implements Screen{
 	
 	@Override
 	public void show() {
-		learningRate = new Slider(500, 400, "learning_rate", false, 0, 1);
-		eagerness = new Slider(500, 600, "eagerness", false, -4, 4);
-//		dieReward = new Slider(500, 400, "learning_rate", false, 5);
-//		moveRightReward = new Slider(500, 600, "eagerness", false, 5);
-//		moveLeftReward = new Slider(500, 600, "eagerness", false, 5);
-//		moveUpReward = new Slider(500, 600, "eagerness", false, 5);
-//		moveDownReward = new Slider(500, 600, "eagerness", false, 5);
+		learningRate = new Slider(100, 400, "learning_rate", false, 0, 1);
+		eagerness = new Slider(100, 600, "eagerness", false, -4, 4);
+		deathReward = new Slider(100, 200, "death_reward", false, -5, 0);
+		moveRightReward = new Slider(500, 600, "move_right_reward", false, 0, 5);
+		moveLeftReward = new Slider(500, 400, "move_left_reward", false, 0, 5);
+
+//		sliders = new ArrayList<Slider>();
+		
+//		sliders.add(deathReward);
+//		sliders.add(eagerness);
+//		sliders.add(learningRate);
+//		sliders.add(moveRightReward);
+//		sliders.add(moveLeftReward);
+
+//		sliders.add(new Slider(100, 400, "learning_rate", false, 0, 1));
+//		sliders.add(new Slider(100, 600, "eagerness", false, -4, 4));
+//		sliders.add(new Slider(100, 200, "death_reward", false, -5, 0));
+//		sliders.add(new Slider(500, 600, "move_right_reward", false, 0, 5));
+//		sliders.add(new Slider(500, 400, "move_left_reward", false, 0, 5));
+
 	}
 
 	@Override
@@ -49,12 +63,26 @@ public class AIsettingsScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		sr.begin(ShapeType.Filled);
+		batch.begin();
+//		for(Slider slider: sliders) {
+//			if(slider != null){
+//				slider.draw(sr, null, Gdx.input.isTouched());
+//				slider.drawLabel(batch);
+//			}
+//		}
 		learningRate.draw(sr, null, Gdx.input.isTouched());
 		eagerness.draw(sr, null, Gdx.input.isTouched());
+		moveLeftReward.draw(sr, null, Gdx.input.isTouched());
+		moveRightReward.draw(sr, null, Gdx.input.isTouched());
+		deathReward.draw(sr, null, Gdx.input.isTouched());
+		learningRate.drawLabel(batch, deathReward);
+		eagerness.drawLabel(batch, deathReward);
+		moveLeftReward.drawLabel(batch, deathReward);
+		moveRightReward.drawLabel(batch, deathReward);
+		deathReward.drawLabel(batch, deathReward);
+		
+		
 		sr.end();
-		batch.begin();
-		learningRate.drawLabel(batch);
-		eagerness.drawLabel(batch);
 		batch.end();
 	}
 

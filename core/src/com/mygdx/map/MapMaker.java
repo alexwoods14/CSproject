@@ -220,10 +220,11 @@ public class MapMaker implements Screen, TextInputListener{
 			}
 			layers.add(j, row);
 		}
+
+		//System.out.println(Constants.ASSETS_FOLDER_LOCATION  + fileName);
+
+		PrintWriter writer;
 		
-				System.out.println(Constants.ASSETS_FOLDER_LOCATION  + fileName);
-		
-				PrintWriter writer;
 		try {
 			writer = new PrintWriter( Constants.ASSETS_FOLDER_LOCATION + fileName);
 			for(int j = 0; j < mapHeight; j++){

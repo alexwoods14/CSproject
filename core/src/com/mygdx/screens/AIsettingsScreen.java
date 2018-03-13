@@ -75,13 +75,13 @@ public class AIsettingsScreen implements Screen{
 		moveLeftReward.draw(sr, null, Gdx.input.isTouched());
 		moveRightReward.draw(sr, null, Gdx.input.isTouched());
 		deathReward.draw(sr, null, Gdx.input.isTouched());
-		learningRate.drawLabel(batch, deathReward);
-		eagerness.drawLabel(batch, deathReward);
-		moveLeftReward.drawLabel(batch, deathReward);
-		moveRightReward.drawLabel(batch, deathReward);
-		deathReward.drawLabel(batch, deathReward);
+		//learningRate.drawLabel(batch, deathReward);
+		//eagerness.drawLabel(batch, deathReward);
+		//moveLeftReward.drawLabel(batch, deathReward);
+		//moveRightReward.drawLabel(batch, deathReward);
+		//deathReward.drawLabel(batch, deathReward);
 		
-		
+
 		sr.end();
 		batch.end();
 	}

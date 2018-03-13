@@ -228,7 +228,7 @@ public class World implements Screen{
 
 		batch.begin();
 		randomness.draw(sr, cam, Gdx.input.isTouched());
-	//	randomness.drawLabel(batch);
+		randomness.drawLabel(batch);
 		sr.end();
 		batch.end();
 		

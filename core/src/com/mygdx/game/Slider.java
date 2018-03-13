@@ -68,10 +68,9 @@ public class Slider {
 		
 	}
 	
-	public void drawLabel(SpriteBatch batch, Slider slider){
+	public void drawLabel(SpriteBatch batch){
 		batch.draw(text, x - 10, y + 30);
 
-		font.draw(batch, "WORK PLS", 100, 300);
 		
 		if(asPercent == true) {
 			font.draw(batch, (int) (decimal*100) + "%", x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
@@ -79,9 +78,7 @@ public class Slider {
 		}
 		else {
 			font.draw(batch, "" + decimal, x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
-			if(this.equals(slider)) {
-				font.draw(batch, "WORK PLS", 0, 0);
-			}
+			
 		}
 	}
 

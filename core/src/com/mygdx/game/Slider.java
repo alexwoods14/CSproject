@@ -27,18 +27,18 @@ public class Slider {
 	private int lowerLimit;
 	private int upperLimit;
 	
-	public Slider(float x, float y, String text, boolean asPercentage, int lowerLimit, int upperLimit) {
-		this.x = x;
+	public Slider(float x, float y, String text, boolean asPercent, int lowerLimit, int upperLimit) {
+		this.x = x - lineLength/2;
 		this.y = y;
 		this.lowerLimit = lowerLimit;
 		this.upperLimit = upperLimit;
 		this.text = new Texture(Constants.ASSETS_FOLDER_LOCATION + text + ".png");
-		draggerX = x + lineLength/2;
-		draggerY = y+lineHeight/2 - draggerHeight/2;
+		draggerX = this.x + lineLength/2;
+		draggerY = this.y + lineHeight/2 - draggerHeight/2;
 		font = new BitmapFont();
 		font.setColor(Color.BLACK);
 		font.getData().scale(0.7f);
-		asPercent = asPercentage;
+		this.asPercent = asPercent;
 		calculateDecimal();
 	}
 	
@@ -74,7 +74,6 @@ public class Slider {
 		
 		if(asPercent == true) {
 			font.draw(batch, (int) (decimal*100) + "%", x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);
-			System.out.println("*");
 		}
 		else {
 			font.draw(batch, "" + decimal, x + text.getWidth() , y + 30 + text.getHeight()/2 + font.getCapHeight()/2);

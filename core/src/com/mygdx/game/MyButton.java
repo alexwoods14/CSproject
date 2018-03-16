@@ -8,18 +8,18 @@ public class MyButton {
 	private Texture active;
 	private Texture inactive;
 	private boolean isHovering = false;
-	private int x = 0;
-	private int y = 0;
-	private float height;
-	private float width;
+	private float x = 0;
+	private float y = 0;
+	private int height;
+	private int width;
 	
-	public MyButton(String fileName, int x, int y) {
+	public MyButton(String fileName, float x, float y) {
 		this.active = new Texture(Constants.ASSETS_FOLDER_LOCATION + fileName + "_active.png");
 		this.inactive = new Texture(Constants.ASSETS_FOLDER_LOCATION + fileName  + "_inactive.png");
 		width = this.active.getWidth();
 		height = this.active.getHeight();
-		this.x = x;
-		this.y = y;
+		this.x = x - width/2;
+		this.y = y - height/2;
 		
 	}
 
@@ -38,16 +38,16 @@ public class MyButton {
 			batch.draw(inactive, x, y);
 		}
 	}
-	public int getX(){
+	public float getX(){
 		return x;
 	}
-	public int getY(){
+	public float getY(){
 		return y;
 	}
-	public float getWidth(){
+	public int getWidth(){
 		return width;
 	}
-	public float getHeight(){
+	public int getHeight(){
 		return height;
 	}
 

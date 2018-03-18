@@ -155,7 +155,7 @@ public class Agent {
 
 
 		//SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY,  (null)
-		//    0    ,       1       ,       2     ,       3       ,      4    ,    5
+		//      0    ,       1       ,       2     ,       3       ,      4    ,    5
 				
 		
 		int i = 0;
@@ -228,6 +228,10 @@ public class Agent {
 
 	public actions getAction(){
 		return nextMove;
+	}
+	
+	public int[] getState(){
+		return currentState;
 	}
 	
 	public void onFloor(boolean onFloor) {

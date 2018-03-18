@@ -23,8 +23,8 @@ public class AIsettingsScreen implements Screen{
 	private Slider deathReward;
 	private Slider moveRightReward;
 	private Slider moveLeftReward;
-	private Slider moveUpReward;
-	private Slider moveDownReward;
+//	private Slider moveUpReward;
+//	private Slider moveDownReward;
 	private Slider initialRandomness;
 	
 	private MyButton done;
@@ -49,8 +49,8 @@ public class AIsettingsScreen implements Screen{
 		moveRightReward = new Slider(2*width/3 - width/6, height/3 - height/6, "move_right_reward", false, -5, 5);
 		
 		deathReward = new Slider(width - width/6, height - height/6, "death_reward", false, -5, 0);
-		moveDownReward = new Slider(width - width/6, 2*height/3 - height/6, "move_up_reward", false, -5, 5);
-		moveUpReward = new Slider(width - width/6, height/3 - height/6, "move_up_reward", false, -5, 5);
+//		moveDownReward = new Slider(width - width/6, 2*height/3 - height/6, "move_up_reward", false, -5, 5);
+//		moveUpReward = new Slider(width - width/6, height/3 - height/6, "move_up_reward", false, -5, 5);
 
 		sliders = new ArrayList<Slider>();
 		
@@ -59,8 +59,8 @@ public class AIsettingsScreen implements Screen{
 		sliders.add(learningRate);
 		sliders.add(moveRightReward);
 		sliders.add(moveLeftReward);
-		sliders.add(moveUpReward);
-		sliders.add(moveDownReward);
+//		sliders.add(moveUpReward);
+//		sliders.add(moveDownReward);
 		sliders.add(initialRandomness);
 		
 		done = new MyButton("done", 2*width/3 - width/6, 2*height/3 - height/6);

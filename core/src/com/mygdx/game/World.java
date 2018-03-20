@@ -71,7 +71,7 @@ public class World implements Screen{
 		new Date();
 		reset();
 		learner = new Agent(player, map, enemies);		
-		direction = new Texture(Constants.ASSETS_FOLDER_LOCATION + "arrow.png");
+		direction = new Texture("arrow.png");
 		
 	}
 

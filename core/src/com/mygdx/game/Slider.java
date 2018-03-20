@@ -32,7 +32,7 @@ public class Slider {
 		this.y = y;
 		this.lowerLimit = lowerLimit;
 		this.upperLimit = upperLimit;
-		this.text = new Texture(Constants.ASSETS_FOLDER_LOCATION + text + ".png");
+		this.text = new Texture(text + ".png");
 		draggerX = this.x + lineLength/2;
 		draggerY = this.y + lineHeight/2 - draggerHeight/2;
 		font = new BitmapFont();

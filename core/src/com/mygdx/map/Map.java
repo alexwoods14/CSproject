@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -55,26 +57,19 @@ public class Map {
 	}
 
 	public Map(String fileName) {
-		grid = new Block[Constants.MAP_WIDTH][Constants.MAP_HEIGHT];
-		Scanner reader = null;
-		try {
-			reader = new Scanner(new File(Constants.ASSETS_FOLDER_LOCATION + fileName));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		for (int j = 0; j < Constants.MAP_HEIGHT; j++) {
-			String line = null;
-			if(reader.hasNextLine() == true){
-				line = reader.nextLine();
-			}
-			else{
-				break;
-			}
-			for(int i = 0; i < Constants.MAP_WIDTH; i++){
-				char next = line.charAt(i);
-				//System.out.print(next);
+		FileHandle file = Gdx.files.internal(fileName);
+		
+		String text = file.readString();
+		System.out.println(text.length());
+		
+		
+		grid = new Block[Constants.MAP_WIDTH][Constants.MAP_HEIGHT];
+		
+		
+		for(int j = 0; j < Constants.MAP_HEIGHT; j++) {
+			for(int i = 0; i < Constants.MAP_WIDTH; i++) {
+				char next = text.charAt(i + j*(2+Constants.MAP_WIDTH));
 				if(next == 'N'){
 					grid[i][j] = null;
 				}
@@ -85,9 +80,44 @@ public class Map {
 					grid[i][j] = new RooflessBlock(i, j);
 				}
 			}
-			//System.out.println();
+			System.out.println();
 		}
-		reader.close();	
+	
+		
+		
+//		Scanner reader = null;
+//		try {
+//			reader = new Scanner(new File(Constants.ASSETS_FOLDER_LOCATION + fileName));
+//			
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		for (int j = 0; j < Constants.MAP_HEIGHT; j++) {
+//			String line = null;
+//			if(reader.hasNextLine() == true){
+//				line = reader.nextLine();
+//			}
+//			else{
+//				break;
+//			}
+//			for(int i = 0; i < Constants.MAP_WIDTH; i++){
+//				char next = line.charAt(i);
+//				//System.out.print(next);
+//				if(next == 'N'){
+//					grid[i][j] = null;
+//				}
+//				if(next == 'S'){
+//					grid[i][j] = new SolidBlock(i, j);
+//				}
+//				if(next == 'R'){
+//					grid[i][j] = new RooflessBlock(i, j);
+//				}
+//			}
+//			//System.out.println();
+//		}
+//		reader.close();	
 		
 		
 	}

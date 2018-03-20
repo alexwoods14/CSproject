@@ -15,7 +15,7 @@ import com.mygdx.game.Slider;
 
 public class AIsettingsScreen implements Screen{
 	
-	private MyGDXGame game;
+	//private MyGDXGame game;
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
 	private Slider learningRate;
@@ -36,7 +36,7 @@ public class AIsettingsScreen implements Screen{
 	public AIsettingsScreen(MyGDXGame game) {
 		this.batch = game.batch;
 		this.sr = game.sr;
-		this.game = game;
+		//this.game = game;
 	}
 	
 	@Override

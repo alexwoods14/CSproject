@@ -15,16 +15,17 @@ public class Player extends Entity{
 	private boolean touchingFloor = false;
 	private double deltaX;
 	private double deltaY;
-	private boolean newState = true;
+	private boolean newState;
 
 
 	public Player() {
 		height = 76;
 		width = 48;
 		x = 1.0f;
-		y = 100.0f;
+		y = 300.0f;
 		vertV = 0.0f;
 		horiV = 300.0f;
+		newState = true;
 	}
 	
 	public boolean onFloor(){
@@ -86,7 +87,7 @@ public class Player extends Entity{
 	
 	public void AImove(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall, actions action){
 		
-		if(newState = true){
+		if(newState == true){
 			deltaY = 0;
 			deltaX = 0;
 			newState = false;
@@ -170,7 +171,7 @@ public class Player extends Entity{
 	public void revive(int nextX, Map map){
 		if(x >= 0 && x < 200*Constants.BLOCK_HEIGHT) {
 			x = 1.0f;
-			y = map.findStartingFloor(x, width);
+			y = 300;
 		}
 		alive = true;
 	}

@@ -21,7 +21,7 @@ public class Agent {
 	private int side = Constants.BLOCK_HEIGHT;
 	private int straightRange = Constants.SIGHT_DISTANCE;
 	private int diagonalRange = (int) (Math.sqrt(0.5)*straightRange);
-	private int straightStep = Constants.BLOCK_HEIGHT/8;
+	private int straightStep = 5;
 	private int diagonalStep = (int) (Math.sqrt(0.5)*straightStep);
 	
 	private int[] lastState = new int[9];

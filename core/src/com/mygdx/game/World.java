@@ -115,6 +115,10 @@ public class World implements Screen{
 
 		Gdx.gl.glClearColor(173/255f, 218/255f, 248/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		
+		
+		
 		if(player.isAlive() == true && player.getY() > 0){
 			map.findAllBoundaries(player.getX(), player.getY(), player.getWidth(), player.getHeight());
 			//player.move(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall());
@@ -140,11 +144,60 @@ public class World implements Screen{
 		//System.out.println("camX: " + camX + "  camX + viewportWidth: " + (camX + cam.viewportWidth));
 
 		sr.begin(ShapeType.Line);
-
+		sr.setAutoShapeType(true);
 		sr.setProjectionMatrix(cam.combined);
+		
+		
+		
+		
+		
 		//System.out.println("X: " + Gdx.input.getX() + "   Y: " + (1080 - Gdx.input.getY()));
 		player.draw(sr);
 		map.draw(sr);
+		
+		
+		int[] temp = learner.getState();
+		state[0][0] = temp[7];
+		state[1][0] = temp[0];
+		state[2][0] = temp[1];
+		state[0][1] = temp[6];
+//		state[1][1] = temp[0];
+		state[2][1] = temp[2];
+		state[0][2] = temp[5];
+		state[1][2] = temp[4];
+		state[2][2] = temp[3];
+		
+		//SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY,  (null)
+		//      0    ,       1       ,       2     ,       3       ,      4    ,    5		
+		
+		float xDueToCam = cam.position.x - cam.viewportWidth/2;
+		float yDueToCam = cam.position.y - cam.viewportHeight/2;
+		for(int i = 0; i < 3; i++){
+			for(int j = 0; j < 3; j++){
+				if(i != 1 || j != 1){
+					sr.set(ShapeType.Filled);
+					if(state[i][2-j] == 0){
+						sr.setColor(Color.OLIVE);					
+					}
+					if(state[i][2-j] == 2 || state[i][2-j] == 3 || state[i][2-j] == 4){
+						sr.setColor(Color.FIREBRICK);
+					}
+					if(state[i][2-j] == 1){
+						sr.setColor(Color.TEAL);
+					}
+					if(state[i][2-j] == 5){
+
+					}
+					else{
+						sr.rect(xDueToCam + 70+i*45, yDueToCam + 320+j*45, 40, 40);
+					}
+					sr.set(ShapeType.Line);
+					sr.setColor(Color.BLACK);
+					sr.rect(xDueToCam + 70+i*45, yDueToCam + 320+j*45, 40, 40);
+				}
+			}
+		}
+		
 		
 		ArrayList<Enemy> toRemove = new  ArrayList<Enemy>();
 
@@ -225,65 +278,25 @@ public class World implements Screen{
 //		topY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
 //		sr.line(leftX, bottomY, rightX, topY);
 
-		int[] temp = learner.getState();
-		state[0][0] = temp[7];
-		state[1][0] = temp[0];
-		state[2][0] = temp[1];
-		state[0][1] = temp[6];
-//		state[1][1] = temp[0];
-		state[2][1] = temp[2];
-		state[0][2] = temp[5];
-		state[1][2] = temp[4];
-		state[2][2] = temp[3];
-		
-		//SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY,  (null)
-		//      0    ,       1       ,       2     ,       3       ,      4    ,    5
-		float xOffset = cam.position.x - cam.viewportWidth/2;
-		float yOffset = cam.position.y - cam.viewportHeight/2;
-		for(int i = 0; i < 3; i++){
-			for(int j = 0; j < 3; j++){
-				if(i != 1 || j != 1){
-					sr.set(ShapeType.Filled);
-					if(state[i][2-j] == 0){
-						sr.setColor(Color.OLIVE);					
-					}
-					if(state[i][2-j] == 2 || state[i][2-j] == 3 || state[i][2-j] == 4){
-						sr.setColor(Color.FIREBRICK);
-					}
-					if(state[i][2-j] == 1){
-						sr.setColor(Color.TEAL);
-					}
-					if(state[i][2-j] == 5){
-
-					}
-					else{
-						sr.rect(xOffset + 70+i*45, yOffset + 320+j*45, 40, 40);
-					}
-					sr.set(ShapeType.Line);
-					sr.setColor(Color.BLACK);
-					sr.rect(xOffset + 70+i*45, yOffset + 320+j*45, 40, 40);
-				}
-			}
-		}
 		
 		
-		
-		
-		batch.begin();
 		int angle = 0;
 		if(action == actions.RIGHT){angle = 0;}
 		if(action == actions.LEFT){angle = 180;}
 		if(action == actions.JUMP){angle = 90;}
 		if(action == actions.JUMP_LEFT){angle = 135;}
 		if(action == actions.JUMP_RIGHT){angle = 45;}
-		if(action == actions.NONE){
-		}
-		else{
+		
+		
+		batch.begin();
+		
+		if(action != actions.NONE) {
 			batch.draw(direction, 60, Constants.WINDOW_HEIGHT - 220, direction.getWidth()/2, direction.getHeight()/2, direction.getWidth(), direction.getHeight(), 1, 1, angle, 0, 0, direction.getWidth(), direction.getHeight(), false, false);
 		}
 		
 		randomness.drawLabel(batch);
 		randomness.draw(sr, cam, Gdx.input.isTouched());
+		
 		batch.end();
 		sr.end();
 		

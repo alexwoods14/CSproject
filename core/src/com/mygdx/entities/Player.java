@@ -21,8 +21,8 @@ public class Player extends Entity{
 	public Player() {
 		height = 76;
 		width = 48;
-		x = 1.0f;
-		y = 300.0f;
+		x = 1000.0f;
+		y = 1.0f;
 		vertV = 0.0f;
 		horiV = 300.0f;
 		newState = true;

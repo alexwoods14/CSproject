@@ -17,7 +17,6 @@ public class Player extends Entity{
 	private double deltaY;
 	private boolean newState;
 
-
 	public Player() {
 		height = 76;
 		width = 48;
@@ -163,19 +162,17 @@ public class Player extends Entity{
 		sr.setColor(Color.BLACK);
 	}
 
-
 	public void died() {
 		alive = false;
 	}
 	
 	public void revive(int nextX, Map map){
 		if(x >= 0 && x < 200*Constants.BLOCK_HEIGHT) {
-			x = 1.0f;
-			y = 300;
+			x = 100.0f;
+			y = 310;
 		}
 		alive = true;
 	}
-
 
 	public boolean isAlive() {
 		return alive;
@@ -184,9 +181,11 @@ public class Player extends Entity{
 	public double getDeltaX() {
 		return deltaX;
 	}
+	
 	public double getDeltaY() {
 		return deltaY;
 	}
+
 	public void newState(){
 		newState = true;
 	}

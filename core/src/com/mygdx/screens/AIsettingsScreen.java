@@ -12,10 +12,11 @@ import com.mygdx.game.Constants;
 import com.mygdx.game.MyButton;
 import com.mygdx.game.MyGDXGame;
 import com.mygdx.game.Slider;
+import com.mygdx.game.World;
 
 public class AIsettingsScreen implements Screen{
 	
-	//private MyGDXGame game;
+	private MyGDXGame game;
 	private ShapeRenderer sr;
 	private SpriteBatch batch;
 	private Slider learningRate;
@@ -36,7 +37,7 @@ public class AIsettingsScreen implements Screen{
 	public AIsettingsScreen(MyGDXGame game) {
 		this.batch = game.batch;
 		this.sr = game.sr;
-		//this.game = game;
+		this.game = game;
 	}
 	
 	@Override
@@ -86,6 +87,13 @@ public class AIsettingsScreen implements Screen{
 		}
 		batch.end();
 		sr.end();
+		
+		if(Gdx.input.isTouched() == true) {
+			if(done.isHovering() == true) {
+				
+				game.setScreen(new World(sr, "map2.txt", batch));
+			}
+		}
 		
 		
 //		learningRate.draw(sr, null, Gdx.input.isTouched());

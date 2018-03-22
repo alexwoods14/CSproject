@@ -37,7 +37,6 @@ public class Agent {
 	private	objs topLeft = null;
 	private objs touchingFloor = objs.SOLID_BLOCK;
 	
-	
 	private actions nextMove = actions.NONE;
 	private actions lastMove = actions.NONE;
 	
@@ -175,7 +174,6 @@ public class Agent {
 		
 	}
 	
-
 	public void calculateQ(double deltaX, double deltaY, boolean alive, int randomness) {
 		findCurrentState();
 		Random rand = new Random();
@@ -240,10 +238,7 @@ public class Agent {
 			newState = false;
 		}
 	}
-	
-
-	
-	
+		
 	private actions findBestAction(int[] state) {
 		double maxQ = 0;
 		int maxQindex = 0;

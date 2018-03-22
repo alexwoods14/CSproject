@@ -15,8 +15,8 @@ public class MyGDXGame extends Game{
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
 		//this.setScreen(new MenuScreen(this));
-		this.setScreen(new World(sr, "map3.txt", batch));
-		//this.setScreen(new AIsettingsScreen(this));
+		//this.setScreen(new World(sr, "map3.txt", batch));
+		this.setScreen(new AIsettingsScreen(this));
 		this.dispose();
 	}
 

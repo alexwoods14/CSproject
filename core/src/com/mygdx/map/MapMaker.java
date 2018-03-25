@@ -4,10 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,6 +18,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyButton;
+import com.mygdx.game.MyGDXGame;
+import com.mygdx.screens.MenuScreen;
 
 public class MapMaker implements Screen, TextInputListener{
 	
@@ -40,16 +44,17 @@ public class MapMaker implements Screen, TextInputListener{
 	private ArrayList<MyButton> buttons;
 	private MyButton finished;
 	private MyButton changeState;
+
+	private MyGDXGame game;
+
+	private boolean backToMenu;
 	
-	public MapMaker(ShapeRenderer sr, SpriteBatch batch) {
-		this.sr = sr;
-		this.batch = batch;
-	}
-	
-	@Override
-	public void show() {
-			
-		cam = new OrthographicCamera(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+	public MapMaker(MyGDXGame game) {
+		this.sr = game.sr;
+		this.batch = game.batch;
+		this.game = game;
+		
+		cam = game.cam;
 		solidGrid = new boolean[mapHeight][mapWidth];
 		rooflessGrid = new boolean[mapHeight][mapWidth];
 		for(int j = 0; j < mapHeight; j ++){
@@ -59,12 +64,16 @@ public class MapMaker implements Screen, TextInputListener{
 			}
 		}
 		layers = new ArrayList<ArrayList<Character>>();
-		finished = new MyButton("finished", 20, 20);
-		changeState = new MyButton("tile_state", 20, Constants.WINDOW_HEIGHT - 100);
+		finished = new MyButton("done", 120, 110);
+		changeState = new MyButton("tile_state", 170, Constants.WINDOW_HEIGHT - 100);
 		buttons = new ArrayList<MyButton>();
 		buttons.add(finished);
 		buttons.add(changeState);	
-		
+	}
+	
+	@Override
+	public void show() {
+
 	}
 
 	@Override
@@ -100,6 +109,7 @@ public class MapMaker implements Screen, TextInputListener{
 							System.out.println("HERE");
 							Gdx.input.getTextInput(this, "Enter a map name:", "", "mapname.txt");
 							input = true;
+							
 						}
 						if(button.equals(changeState) == true){
 							if(isSolid == true){
@@ -194,6 +204,9 @@ public class MapMaker implements Screen, TextInputListener{
 			button.draw(batch, lastX, lastY);
 		}
 		batch.end();
+		if(backToMenu == true) {
+			game.setScreen(new MenuScreen(game));
+		}
 		
 	}
 	
@@ -220,23 +233,38 @@ public class MapMaker implements Screen, TextInputListener{
 			}
 			layers.add(j, row);
 		}
-
-		//System.out.println(Constants.ASSETS_FOLDER_LOCATION  + fileName);
-
-		PrintWriter writer;
 		
-		try {
-			writer = new PrintWriter( Constants.ASSETS_FOLDER_LOCATION + fileName);
-			for(int j = 0; j < mapHeight; j++){
-				for(int i = 0; i < mapWidth; i++){
-					writer.print(layers.get(j).get(i));
-				}
-				writer.println();
-			}
-			writer.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		
+		if(Gdx.files.local(fileName).exists() == true) {
+			Gdx.files.local(fileName).delete();
 		}
+		
+		
+		FileHandle file = Gdx.files.local(fileName);
+		
+		for(int j = 0; j < mapHeight; j++){
+			for(int i = 0; i < mapWidth; i++){
+				file.writeString(layers.get(j).get(i).toString(), true);
+			}
+		}
+		backToMenu = true;
+		
+
+
+//		PrintWriter writer;
+//		
+//		try {
+//			writer = new PrintWriter( Constants.ASSETS_FOLDER_LOCATION + fileName);
+//			for(int j = 0; j < mapHeight; j++){
+//				for(int i = 0; i < mapWidth; i++){
+//					writer.print(layers.get(j).get(i));
+//				}
+//				writer.println();
+//			}
+//			writer.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override

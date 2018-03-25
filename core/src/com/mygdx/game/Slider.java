@@ -26,7 +26,7 @@ public class Slider {
 	private boolean asPercent;
 	private int lowerLimit;
 	private int upperLimit;
-	
+
 	public Slider(float x, float y, String text, boolean asPercent, int lowerLimit, int upperLimit) {
 		this.x = x - lineLength/2;
 		this.y = y;

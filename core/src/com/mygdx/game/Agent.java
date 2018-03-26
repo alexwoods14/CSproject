@@ -136,6 +136,23 @@ public class Agent extends Player{
 			vertV = 1250.0f;
 		}
 		
+		if(y > floorY){
+			vertV -= gravity * delta;
+		}
+
+		if(y + vertV*delta > floorY){		
+			y += vertV * delta;
+		}
+		else{
+			y = floorY;
+			vertV = 0;
+			
+		}
+		
+		if(y + vertV*delta + height > roofY){
+			vertV = -100;
+			y = roofY - height;
+		}
 		if(nextMove == actions.LEFT || nextMove == actions.JUMP_LEFT){
 			if(x - delta*horiV > leftWall){
 				deltaX -= delta*horiV;
@@ -156,22 +173,7 @@ public class Agent extends Player{
 			}
 		}
 
-		if(y > floorY){
-			vertV -= gravity * delta;
-		}
-
-		if(y + vertV*delta > floorY){		
-			y += vertV * delta;
-		}
-		else{
-			y = floorY;
-			vertV = 0;
-			
-		}
-		if(y + vertV*delta + height > roofY){
-			vertV = -100;
-			y = roofY - height;
-		}
+		
 		if(x > 200*Constants.BLOCK_HEIGHT){
 			aliveSinceLastState = false;
 		}
@@ -256,7 +258,7 @@ public class Agent extends Player{
 		randomness.drawLabel(batch);
 		
 
-		if(count > 4) {
+		if(count > 3) {
 			this.calculateQ();
 			count = 0;
 			if(alive == false) {
@@ -403,7 +405,7 @@ public class Agent extends Player{
 		double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()];
 		Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q);
 
-		System.out.printf(" %-7s :  %.4f  :  %.1f  :     deltaX: %.2f %n", lastMove, Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()], reward, deltaX);
+		//System.out.printf(" %-7s :  %.4f  :  %.1f  :     deltaX: %.2f %n", lastMove, Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()], reward, deltaX);
 		
 		lastState = currentState.clone();
 		lastMove = nextMove;
@@ -415,14 +417,14 @@ public class Agent extends Player{
 	private actions findBestAction(int[] state) {
 		double maxQ = -1000000;
 		int maxQindex = 2;
-//		int limit;
-//		if(state[8] == 1) {
-//			limit = 6;
-//		}
-//		else {
-//			limit = 3;
-//		}
-		for(int i = 0; i < 6; i ++){
+		int limit;
+		if(state[8] == 1) {
+			limit = 6;
+		}
+		else {
+			limit = 3;
+		}
+		for(int i = 0; i < limit; i ++){
 			if(maxQ < Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]){
 				maxQindex = i;
 				maxQ = Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i];
@@ -434,7 +436,14 @@ public class Agent extends Player{
 
 	private double findMaxQ(int[] state){
 		double maxQ = -10000000;
-		for(int i = 0; i < 6; i ++){
+		int limit;
+		if(state[8] == 1) {
+			limit = 6;
+		}
+		else {
+			limit = 3;
+		}
+		for(int i = 0; i < limit; i ++){
 			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]);
 			maxQ = max2;
 		}

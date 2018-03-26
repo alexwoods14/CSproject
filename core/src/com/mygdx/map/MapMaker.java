@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -48,6 +50,10 @@ public class MapMaker implements Screen, TextInputListener{
 	private MyGDXGame game;
 
 	private boolean backToMenu;
+
+	private boolean saveMap;
+
+	private String fileName;
 	
 	public MapMaker(MyGDXGame game) {
 		this.sr = game.sr;
@@ -204,6 +210,11 @@ public class MapMaker implements Screen, TextInputListener{
 			button.draw(batch, lastX, lastY);
 		}
 		batch.end();
+		
+		if(saveMap == true) {
+			saveMap();
+		}
+		
 		if(backToMenu == true) {
 			game.setScreen(new MenuScreen(game));
 		}
@@ -211,7 +222,7 @@ public class MapMaker implements Screen, TextInputListener{
 	}
 	
 
-	private void saveMap(String fileName){
+	private void saveMap(){
 		// R = roof-less
 		// S = solid
 		// N = none/null
@@ -247,6 +258,7 @@ public class MapMaker implements Screen, TextInputListener{
 				file.writeString(layers.get(j).get(i).toString(), true);
 			}
 		}
+		
 		backToMenu = true;
 		
 
@@ -287,7 +299,13 @@ public class MapMaker implements Screen, TextInputListener{
 
 	@Override
 	public void input(String text) {
-		saveMap(text);
+		if(text.endsWith(".txt") == true) {
+			saveMap = true;
+			fileName = text;
+		}
+		else {
+			input = false;
+		}
 	}
 
 	@Override

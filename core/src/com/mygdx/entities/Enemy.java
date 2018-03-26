@@ -3,10 +3,25 @@ package com.mygdx.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.mygdx.map.Map;
 
 public class Enemy extends Entity{
 
 	protected boolean hadFirstMove = false;
+	
+	public Enemy(float x, Map map, boolean startsRight) {		
+		height = 64;
+		width = 48;
+		this.x = x;
+		this.y = map.findStartingFloor(x, width);
+		vertV = 0.0f;
+		if(startsRight == true) {
+			horiV = 100.0f;
+		}
+		else {
+			horiV = -100.0f;
+		}
+	}	
 	
 	public Enemy(float x, float y, boolean startsRight) {		
 		height = 64;

@@ -99,7 +99,7 @@ public class Player extends Entity{
 	}
 
 	public void revive(Map map){
-		x = 10.0f;
+		x = Constants.BLOCK_HEIGHT;
 		y = map.findStartingFloor(x, width);
 		alive = true;
 	}

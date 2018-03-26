@@ -82,34 +82,34 @@ public class World implements Screen{
 		int side = Constants.BLOCK_HEIGHT;
 		
 		//ground enemies
-		enemies.add(new GroundEnemy(14*side, 5*side + 5, false));
-		enemies.add(new GroundEnemy(25*side, 2*side + 5, false));
-		enemies.add(new GroundEnemy(40*side, 8*side + 5, true));
-		enemies.add(new GroundEnemy(33*side, 5*side + 5, false));
-		enemies.add(new GroundEnemy(59*side, 2*side + 5, true));
-		enemies.add(new GroundEnemy(62*side, 2*side + 5, false));
-		enemies.add(new GroundEnemy(80*side, 2*side + 5, true));
-		enemies.add(new GroundEnemy(81*side, 4*side + 5, false));
-		enemies.add(new GroundEnemy(84*side, 6*side + 5, true));
-		enemies.add(new GroundEnemy(94*side, 6*side + 5, false));
-		enemies.add(new GroundEnemy(105*side, 8*side + 5, false));
-		enemies.add(new GroundEnemy(125*side, 4*side + 5, true));
-		enemies.add(new GroundEnemy(122*side, 5*side + 5, false));
-		enemies.add(new GroundEnemy(145*side, 2*side + 5, false));
-		enemies.add(new GroundEnemy(143*side, 4*side + 5, false));
-		enemies.add(new GroundEnemy(141*side, 6*side + 5, false));
-		enemies.add(new GroundEnemy(139*side, 9*side + 5, false));
+		enemies.add(new GroundEnemy(14*side, map, false));
+		enemies.add(new GroundEnemy(25*side, map, false));
+		enemies.add(new GroundEnemy(40*side, map, true));
+		enemies.add(new GroundEnemy(33*side, map, false));
+		enemies.add(new GroundEnemy(59*side, map, true));
+		enemies.add(new GroundEnemy(62*side, map, false));
+		enemies.add(new GroundEnemy(80*side, map, true));
+		enemies.add(new GroundEnemy(81*side, map, false));
+		enemies.add(new GroundEnemy(84*side, map, true));
+		enemies.add(new GroundEnemy(94*side, map, false));
+		enemies.add(new GroundEnemy(105*side, map, false));
+		enemies.add(new GroundEnemy(125*side, map, true));
+		enemies.add(new GroundEnemy(122*side, map, false));
+		enemies.add(new GroundEnemy(145*side, map, false));
+		enemies.add(new GroundEnemy(143*side, map, false));
+		enemies.add(new GroundEnemy(141*side, map, false));
+		enemies.add(new GroundEnemy(139*side, map, false));
 		
 		//vertical flying enemies
 		enemies.add(new VerticalFlyingEnemy(24*side, 9*side, 6*side, 1.5f));
-		enemies.add(new VerticalFlyingEnemy(42*side, 10*side, 5*side, 2.0f));
+		enemies.add(new VerticalFlyingEnemy(44*side, 10*side, 6*side, 2.0f));
 		enemies.add(new VerticalFlyingEnemy(73*side, 7*side, 5*side, 1.0f));
 		enemies.add(new VerticalFlyingEnemy(93*side, 10*side, 7*side, 1.5f));
 		enemies.add(new VerticalFlyingEnemy(154*side, 12*side, 8*side, 1.5f));
 		
 		//sinusoidal flying enemies
 		enemies.add(new SineFlyingEnemy(12*side, 12*side, 9*side, 1.0f, 5*side));
-		enemies.add(new SineFlyingEnemy(54*side, 10*side, 6*side, 1.0f, 7*side));
+		enemies.add(new SineFlyingEnemy(56*side, 11*side, 7*side, 1.0f, 5*side));
 		enemies.add(new SineFlyingEnemy(116*side, 8*side, 12*side, 1.0f, 8*side));
 	}
 

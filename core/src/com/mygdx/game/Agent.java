@@ -97,7 +97,6 @@ public class Agent extends Player{
 									for(int h = 0; h < 6; h++){
 										//action
 										for(int action = 0; action < 6; action++){
-											//Q[a][b][c][d][e][f][g][h][action] = rand.nextDouble();
 											Q[a][b][c][d][e][f][g][h][0][action] = 0.5;
 											Q[a][b][c][d][e][f][g][h][1][action] = 0.5;
 										}	

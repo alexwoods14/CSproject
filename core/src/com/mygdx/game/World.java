@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -16,7 +14,6 @@ import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
 import com.mygdx.entities.SineFlyingEnemy;
 import com.mygdx.entities.VerticalFlyingEnemy;
-import com.mygdx.game.Agent.actions;
 import com.mygdx.map.Map;
 import com.mygdx.map.Block.Sides;
 
@@ -31,47 +28,53 @@ public class World implements Screen{
 	private float gravity = 3600.0f;
 	private int camX = Constants.WINDOW_WIDTH/2;
 	private int camY = Constants.WINDOW_HEIGHT/2; 
-
-	private Player player;
 	
 	private Map map;
 	private ArrayList<Enemy> enemies;
-	private Agent learner;
+	private Player player;
 	
-	private Slider randomness;
+	
 
 	private String fileName;
-	private actions action = actions.NONE;
 	
-	private int count;
-	private Date startOfRunTime;
-	private Date currentTime;
-	private int deathCount = 0;
-	private Texture direction;
-	private int[][] state;
+	
+	
+	private boolean AI = false;
 
-
-	public World(ShapeRenderer sr, String fileName, SpriteBatch batch) {
+	public World(ShapeRenderer sr, String fileName, SpriteBatch batch) {	
+		startUp(sr, fileName, batch);
+		player = new Player();
+		reset();
+	}
+	
+//	private Slider learningRate;
+//	private Slider eagerness;
+//	private Slider deathReward;
+//	private Slider moveRightReward;
+//	private Slider moveLeftReward;
+//	private Slider moveUpReward;
+//	private Slider moveDownReward;
+//	private Slider initialRandomness; 
+	
+	public World(ShapeRenderer sr, String fileName, SpriteBatch batch, double eagerness, double learningRate, double deathReward, double rightReward, double leftReward, double upReward, double downReward, double stationaryReward) {
+		startUp(sr, fileName, batch);
+		player = new Agent(map, enemies, eagerness, learningRate, deathReward, rightReward, leftReward, upReward, downReward, stationaryReward);
+		reset();
+	}
+	
+	public void startUp(ShapeRenderer sr, String fileName, SpriteBatch batch) {
 		this.sr = sr;
 		this.batch = batch;
 		this.fileName = fileName;
-	}
-	
-    
-	
-	@Override
-	public void show() {
+		
 		cam = new OrthographicCamera(1280, 720);
-		state = new int[3][3];
-		player = new Player();
+
 		map = new Map(fileName);
 		enemies = new ArrayList<Enemy>();
-		randomness = new Slider(140, Constants.WINDOW_HEIGHT - 80, "randomness", true, 0, 1);
-		currentTime = new Date();
-		new Date();
-		reset();
-		learner = new Agent(player, map, enemies);		
-		direction = new Texture("arrow.png");
+	}
+		
+	@Override
+	public void show() {
 		
 	}
 
@@ -79,34 +82,34 @@ public class World implements Screen{
 		int side = Constants.BLOCK_HEIGHT;
 		
 		//ground enemies
-		enemies.add(new GroundEnemy(14*side, 5*side + 5, false));
-		enemies.add(new GroundEnemy(25*side, 2*side + 5, false));
-		enemies.add(new GroundEnemy(40*side, 8*side + 5, true));
-		enemies.add(new GroundEnemy(33*side, 5*side + 5, false));
-		enemies.add(new GroundEnemy(59*side, 2*side + 5, true));
-		enemies.add(new GroundEnemy(62*side, 2*side + 5, false));
-		enemies.add(new GroundEnemy(80*side, 2*side + 5, true));
-		enemies.add(new GroundEnemy(81*side, 4*side + 5, false));
-		enemies.add(new GroundEnemy(84*side, 6*side + 5, true));
-		enemies.add(new GroundEnemy(94*side, 6*side + 5, false));
-		enemies.add(new GroundEnemy(105*side, 8*side + 5, false));
-		enemies.add(new GroundEnemy(125*side, 4*side + 5, true));
-		enemies.add(new GroundEnemy(122*side, 5*side + 5, false));
-		enemies.add(new GroundEnemy(145*side, 2*side + 5, false));
-		enemies.add(new GroundEnemy(143*side, 4*side + 5, false));
-		enemies.add(new GroundEnemy(141*side, 6*side + 5, false));
-		enemies.add(new GroundEnemy(139*side, 9*side + 5, false));
+		enemies.add(new GroundEnemy(14*side, map, false));
+		enemies.add(new GroundEnemy(25*side, map, false));
+		enemies.add(new GroundEnemy(40*side, map, true));
+		enemies.add(new GroundEnemy(33*side, map, false));
+		enemies.add(new GroundEnemy(59*side, map, true));
+		enemies.add(new GroundEnemy(62*side, map, false));
+		enemies.add(new GroundEnemy(80*side, map, true));
+		enemies.add(new GroundEnemy(81*side, map, false));
+		enemies.add(new GroundEnemy(84*side, map, true));
+		enemies.add(new GroundEnemy(94*side, map, false));
+		enemies.add(new GroundEnemy(105*side, map, false));
+		enemies.add(new GroundEnemy(125*side, map, true));
+		enemies.add(new GroundEnemy(122*side, map, false));
+		enemies.add(new GroundEnemy(145*side, map, false));
+		enemies.add(new GroundEnemy(143*side, map, false));
+		enemies.add(new GroundEnemy(141*side, map, false));
+		enemies.add(new GroundEnemy(139*side, map, false));
 		
 		//vertical flying enemies
 		enemies.add(new VerticalFlyingEnemy(24*side, 9*side, 6*side, 1.5f));
-		enemies.add(new VerticalFlyingEnemy(42*side, 10*side, 5*side, 2.0f));
+		enemies.add(new VerticalFlyingEnemy(44*side, 10*side, 6*side, 2.0f));
 		enemies.add(new VerticalFlyingEnemy(73*side, 7*side, 5*side, 1.0f));
 		enemies.add(new VerticalFlyingEnemy(93*side, 10*side, 7*side, 1.5f));
 		enemies.add(new VerticalFlyingEnemy(154*side, 12*side, 8*side, 1.5f));
 		
 		//sinusoidal flying enemies
 		enemies.add(new SineFlyingEnemy(12*side, 12*side, 9*side, 1.0f, 5*side));
-		enemies.add(new SineFlyingEnemy(54*side, 10*side, 6*side, 1.0f, 7*side));
+		enemies.add(new SineFlyingEnemy(56*side, 11*side, 7*side, 1.0f, 5*side));
 		enemies.add(new SineFlyingEnemy(116*side, 8*side, 12*side, 1.0f, 8*side));
 	}
 
@@ -114,15 +117,11 @@ public class World implements Screen{
 	public void render(float delta) {
 
 		Gdx.gl.glClearColor(173/255f, 218/255f, 248/255f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		
-		
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	
 		
 		if(player.isAlive() == true && player.getY() > 0){
 			map.findAllBoundaries(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-			//player.move(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall());
-			player.AImove(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall(), action);
+			player.move(delta, gravity, map.getFloor(), map.getRoofY(), map.getLeftWall(), map.getRightWall());
 			if(player.getX() >= Constants.WINDOW_WIDTH/2){
 				camX = (int) player.getX();
 			}
@@ -143,62 +142,9 @@ public class World implements Screen{
 		cam.update();
 		//System.out.println("camX: " + camX + "  camX + viewportWidth: " + (camX + cam.viewportWidth));
 
-		sr.begin(ShapeType.Line);
-		sr.setAutoShapeType(true);
-		sr.setProjectionMatrix(cam.combined);
-		
-		
-		
-		
 		
 		//System.out.println("X: " + Gdx.input.getX() + "   Y: " + (1080 - Gdx.input.getY()));
-		player.draw(sr);
-		map.draw(sr);
-		
-		
-		int[] temp = learner.getState();
-		state[0][0] = temp[7];
-		state[1][0] = temp[0];
-		state[2][0] = temp[1];
-		state[0][1] = temp[6];
-//		state[1][1] = temp[0];
-		state[2][1] = temp[2];
-		state[0][2] = temp[5];
-		state[1][2] = temp[4];
-		state[2][2] = temp[3];
-		
-		//SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY,  (null)
-		//      0    ,       1       ,       2     ,       3       ,      4    ,    5		
-		
-		float xDueToCam = cam.position.x - cam.viewportWidth/2;
-		float yDueToCam = cam.position.y - cam.viewportHeight/2;
-		for(int i = 0; i < 3; i++){
-			for(int j = 0; j < 3; j++){
-				if(i != 1 || j != 1){
-					sr.set(ShapeType.Filled);
-					if(state[i][2-j] == 0){
-						sr.setColor(Color.OLIVE);					
-					}
-					if(state[i][2-j] == 2 || state[i][2-j] == 3 || state[i][2-j] == 4){
-						sr.setColor(Color.FIREBRICK);
-					}
-					if(state[i][2-j] == 1){
-						sr.setColor(Color.TEAL);
-					}
-					if(state[i][2-j] == 5){
-
-					}
-					else{
-						sr.rect(xDueToCam + 70+i*45, yDueToCam + 320+j*45, 40, 40);
-					}
-					sr.set(ShapeType.Line);
-					sr.setColor(Color.BLACK);
-					sr.rect(xDueToCam + 70+i*45, yDueToCam + 320+j*45, 40, 40);
-				}
-			}
-		}
-		
-		
+				
 		ArrayList<Enemy> toRemove = new  ArrayList<Enemy>();
 
 		for(Enemy enemy: enemies) {
@@ -221,7 +167,6 @@ public class World implements Screen{
 					if(Math.abs((enemy.getX()/map.getSide()) - (otherEnemy.getX()/map.getSide())) < 2){
 						if(enemy.hasCollided(otherEnemy.getX(), otherEnemy.getY(), otherEnemy.getWidth(), otherEnemy.getHeight()) == true){
 							enemy.reverseDirection();
-							//enemy.moveOutOfWay();
 						}
 					}
 				}
@@ -243,7 +188,6 @@ public class World implements Screen{
 			
 			if(enemy.getX() < camX + cam.viewportWidth/2){
 				enemy.firstMove();
-				enemy.draw(sr);
 			}
 		}
 		
@@ -278,64 +222,41 @@ public class World implements Screen{
 //		topY = player.getY() + player.getHeight()/2  - (float)(Math.sqrt(0.5)*range);
 //		sr.line(leftX, bottomY, rightX, topY);
 
-		
-		
-		int angle = 0;
-		if(action == actions.RIGHT){angle = 0;}
-		if(action == actions.LEFT){angle = 180;}
-		if(action == actions.JUMP){angle = 90;}
-		if(action == actions.JUMP_LEFT){angle = 135;}
-		if(action == actions.JUMP_RIGHT){angle = 45;}
-		
-		
-		batch.begin();
-		
-		if(action != actions.NONE) {
-			batch.draw(direction, 60, Constants.WINDOW_HEIGHT - 220, direction.getWidth()/2, direction.getHeight()/2, direction.getWidth(), direction.getHeight(), 1, 1, angle, 0, 0, direction.getWidth(), direction.getHeight(), false, false);
-		}
-		
-		randomness.drawLabel(batch);
-		randomness.draw(sr, cam, Gdx.input.isTouched());
-		
-		batch.end();
-		sr.end();
-		
-		
 		for(Enemy deadEnemies: toRemove){
 			enemies.remove(deadEnemies);
 		}
 		
 		
-		learner.onFloor(player.onFloor());
-		if(count > 5) {
-			learner.calculateQ(player.getDeltaX(), player.getDeltaY(), player.isAlive(), randomness.getPercentage());
-			action = learner.getAction();
-			player.newState();
-			if(player.isAlive() == false){
-				reset();
-			} 
-			count = 0;
+		sr.begin(ShapeType.Line);
+		sr.setAutoShapeType(true);
+		sr.setProjectionMatrix(cam.combined);
+		
+		map.draw(sr);
+		for(Enemy enemy: enemies) {
+			enemy.draw(sr);
 		}
-		count++;
 		
-		currentTime = new Date();
+		player.draw(sr, cam);			
 		
-		if((currentTime.getTime() - startOfRunTime.getTime()) >= 120000){
+		sr.end();
+		
+		batch.begin();
+		player.draw(batch);
+		batch.end();
+		
+		
+		if(player.isAlive() == false) {
 			reset();
 		}
+		
 		
 		
 	}
 	
 	private void reset(){
-		if(deathCount > 3){
-			deathCount = 0;
-		}
-		player.revive(deathCount, map);
-		deathCount ++;
+		player.revive(map);
 		enemies.clear();
 		spawnEnemies();
-		startOfRunTime = new Date();		
 	}
 
 	@Override	

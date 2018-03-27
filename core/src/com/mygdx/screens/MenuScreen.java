@@ -2,6 +2,8 @@ package com.mygdx.screens;
 
 import java.util.ArrayList;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
@@ -21,20 +23,23 @@ public class MenuScreen implements Screen, TextInputListener{
 	private SpriteBatch batch;
 	private ArrayList<MyButton> buttons;
 	private boolean input = false;
+	private String fileName;
+	private boolean AI;
 	
 	public MenuScreen(MyGDXGame game) {
 		this.batch = game.batch;
 		this.game = game;
 		input = false;
-	}
-	
-	@Override
-	public void show() {
 		buttons = new ArrayList<MyButton>();
 		mapMakerButton = new MyButton("map_button", Constants.WINDOW_WIDTH/2 + 200, 300);
 		playButton = new MyButton("play_button", Constants.WINDOW_WIDTH/2 - 200, 300);
 		buttons.add(mapMakerButton);
 		buttons.add(playButton);
+	}
+	
+	@Override
+	public void show() {
+		
 	}
 
 	@Override
@@ -49,11 +54,14 @@ public class MenuScreen implements Screen, TextInputListener{
 					//this.dispose();
 					this.pause();
 					if(button.equals(mapMakerButton)){
-						game.setScreen(new MapMaker(game.sr, game.batch));
+						this.hide();
+						game.setScreen(new MapMaker(game));
 					}
 					if(button.equals(playButton) && input == false){
-						Gdx.input.getTextInput(this, "Enter a map name:", "", "mapname.txt");
 						input = true;
+						AI = true;
+						Gdx.input.getTextInput(this, "Enter a map name:", "", "mapname.txt");
+						
 					}
 				}
 			}
@@ -63,6 +71,11 @@ public class MenuScreen implements Screen, TextInputListener{
 			button.draw(batch, Gdx.input.getX(), Gdx.input.getY());
 		}
 		batch.end();
+		
+		if(fileName!= null && AI == true) {
+			game.setScreen(new AIsettingsScreen(game, fileName));
+		}
+						
 	}
 
 	@Override
@@ -84,9 +97,14 @@ public class MenuScreen implements Screen, TextInputListener{
 
 	@Override
 	public void input(String text) {
-		if(text.endsWith(".txt") == true){
-			game.setScreen(new World(game.sr, text, batch));
+		if(Gdx.files.internal(text).exists() == true){
+			fileName = text;
 		}
+		else {
+			input = false;
+			AI = false;
+		}
+		
 	}
 
 	@Override

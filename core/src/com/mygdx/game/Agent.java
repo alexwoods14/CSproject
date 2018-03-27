@@ -1,8 +1,16 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.entities.Enemy;
 import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
@@ -10,13 +18,24 @@ import com.mygdx.entities.SineFlyingEnemy;
 import com.mygdx.entities.VerticalFlyingEnemy;
 import com.mygdx.map.Map;
 
-public class Agent {
+public class Agent extends Player{
 	
 	private Map map;
 	private ArrayList<Enemy> enemies;
-	private Player player;
-	private boolean onFloor = false;
-	private boolean newState = true;
+	private Slider randomness;
+	private Texture direction;
+	
+	private double deathReward;
+	private double rightReward;
+	private double leftReward;
+	private double upReward;
+	private double downReward;
+	private double stationaryReward;
+	
+	private int count;
+	private Date startOfRunTime;
+	private Date currentTime;
+	private boolean aliveSinceLastState;
 	
 	private int side = Constants.BLOCK_HEIGHT;
 	private int straightRange = Constants.SIGHT_DISTANCE;
@@ -24,6 +43,8 @@ public class Agent {
 	private int straightStep = 5;
 	private int diagonalStep = (int) (Math.sqrt(0.5)*straightStep);
 	
+	private double deltaX;
+	private double deltaY;
 	private int[] lastState = new int[9];
 	private int[] currentState = new int[9];
 	
@@ -35,20 +56,34 @@ public class Agent {
 	private	objs bottomLeft = null;
 	private	objs left = null;
 	private	objs topLeft = null;
-	private objs touchingFloor = objs.SOLID_BLOCK;
+	private objs onFloor = objs.SOLID_BLOCK;
 	
 	private actions nextMove = actions.NONE;
 	private actions lastMove = actions.NONE;
 	
-	private final double alpha = 0.1;
-	private final double gamma = 0.9;
+	private final double alpha;
+	private final double gamma;
 	
 	private double[][][][][][][][][][] Q = new double[6][6][6][6][6][6][6][6][2][6];
 	
-	public Agent(Player player, Map map, ArrayList<Enemy> enemies) {
+	public Agent(Map map, ArrayList<Enemy> enemies, double eagerness, double learningRate, double deathReward,
+		     double rightReward, double leftReward, double upReward, double downReward, double stationaryReward) {
+		super();
 		this.map = map;
 		this.enemies = enemies;
-		this.player = player;
+		
+		this.randomness = new Slider(140, Constants.WINDOW_HEIGHT - 80, "randomness", true, 0, 1);
+		alpha = learningRate;
+		gamma = eagerness;
+		this.deathReward = deathReward;
+		this.rightReward = rightReward;
+		this.leftReward = leftReward;
+		this.upReward = upReward;
+		this.downReward = downReward;
+		this.stationaryReward = stationaryReward;
+		
+		startOfRunTime = new Date();
+		direction = new Texture("arrow.png");
 		
 		//random value for each state-action Q
 		//Random rand = new Random();
@@ -62,9 +97,8 @@ public class Agent {
 									for(int h = 0; h < 6; h++){
 										//action
 										for(int action = 0; action < 6; action++){
-											//Q[a][b][c][d][e][f][g][h][action] = rand.nextDouble();
-											Q[a][b][c][d][e][f][g][h][0][action] = 0.7;
-											Q[a][b][c][d][e][f][g][h][1][action] = 0.7;
+											Q[a][b][c][d][e][f][g][h][0][action] = 0.5;
+											Q[a][b][c][d][e][f][g][h][1][action] = 0.5;
 										}	
 
 									}	
@@ -81,10 +115,167 @@ public class Agent {
 		SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY, NONE
 		//    0    ,       1       ,       2     ,       3       ,      4    ,    5
 	}
-
+	
 	public enum actions{
 		LEFT, RIGHT, NONE, JUMP, JUMP_LEFT, JUMP_RIGHT;
 		//0 ,  1  ,   2  ,  3  ,    4     ,      5
+	}
+	
+	@Override
+	public void move(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall) {
+		if(touchingFloor == false){
+					
+			if(y == floorY && y > 0){
+				touchingFloor = true;
+			}
+			
+		}
+
+		
+		if((nextMove == actions.JUMP || nextMove == actions.JUMP_LEFT || nextMove == actions.JUMP_RIGHT) && y == floorY){
+			vertV = 1250.0f;
+		}
+		
+		if(y > floorY){
+			vertV -= gravity * delta;
+		}
+
+		if(y + vertV*delta > floorY){		
+			y += vertV * delta;
+		}
+		else{
+			y = floorY;
+			vertV = 0;
+			
+		}
+		
+		if(y + vertV*delta + height > roofY){
+			vertV = -100;
+			y = roofY - height;
+		}
+		if(nextMove == actions.LEFT || nextMove == actions.JUMP_LEFT){
+			if(x - delta*horiV > leftWall){
+				deltaX -= delta*horiV;
+				x -= delta*horiV;
+			}
+			else{
+				x = leftWall +  0.001f;
+			} 
+		}
+
+		if(nextMove == actions.RIGHT|| nextMove == actions.JUMP_RIGHT){
+			if(x + delta*horiV < rightWall){
+				deltaX += delta*horiV;
+				x += delta*horiV;
+			}
+			else{
+				x = rightWall - 0.001f;
+			}
+		}
+
+		
+		if(x > 200*Constants.BLOCK_HEIGHT){
+			aliveSinceLastState = false;
+		}
+		
+		deltaY += vertV*delta;
+		
+		if(y <= 0){
+			died();
+		}
+		
+	}
+	
+	public void draw(ShapeRenderer sr, OrthographicCamera cam) {
+		super.draw(sr, cam);
+		int[][] toDraw = new int[3][3];
+		toDraw[0][0] = currentState[7];
+		toDraw[1][0] = currentState[0];
+		toDraw[2][0] = currentState[1];
+		toDraw[0][1] = currentState[6];
+		toDraw[2][1] = currentState[2];
+		toDraw[0][2] = currentState[5];
+		toDraw[1][2] = currentState[4];
+		toDraw[2][2] = currentState[3];
+		
+		//SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY,  (null)
+		//      0    ,       1       ,       2     ,       3       ,      4    ,    5		
+		
+		float xDueToCam = cam.position.x - cam.viewportWidth/2;
+		float yDueToCam = cam.position.y - cam.viewportHeight/2;
+		for(int i = 0; i < 3; i++){
+			for(int j = 0; j < 3; j++){
+				if(i != 1 || j != 1){
+					sr.set(ShapeType.Filled);
+					if(toDraw[i][2-j] == 0){
+						sr.setColor(Color.OLIVE);					
+					}
+					if(toDraw[i][2-j] == 2 || toDraw[i][2-j] == 3 || toDraw[i][2-j] == 4){
+						sr.setColor(Color.FIREBRICK);
+					}
+					if(toDraw[i][2-j] == 1){
+						sr.setColor(Color.TEAL);
+					}
+					if(toDraw[i][2-j] == 5){
+
+					}
+					else{
+						sr.rect(xDueToCam + 70+i*45, yDueToCam + 320+j*45, 40, 40);
+					}
+					sr.set(ShapeType.Line);
+					sr.setColor(Color.BLACK);
+					sr.rect(xDueToCam + 70+i*45, yDueToCam + 320+j*45, 40, 40);
+				}
+				else {
+//					if(currentState[8] == 1) {
+//						sr.setColor(Color.PINK);
+//					}
+//					else {
+//						sr.setColor(Color.YELLOW);
+//					}
+//					sr.set(ShapeType.Filled);
+//					sr.rect(xDueToCam + 70+45, yDueToCam + 320+45, 40, 40);
+				}
+			}
+		}
+		
+		randomness.draw(sr, cam, Gdx.input.isTouched());
+		
+	
+	}
+	
+	public void draw(SpriteBatch batch) {
+		int angle = 0;
+		if(nextMove == actions.RIGHT){angle = 0;}
+		if(nextMove == actions.LEFT){angle = 180;}
+		if(nextMove == actions.JUMP){angle = 90;}
+		if(nextMove == actions.JUMP_LEFT){angle = 135;}
+		if(nextMove == actions.JUMP_RIGHT){angle = 45;}	
+		
+		if(nextMove != actions.NONE) {
+			batch.draw(direction, 60, Constants.WINDOW_HEIGHT - 220, direction.getWidth()/2, direction.getHeight()/2, direction.getWidth(), direction.getHeight(), 1, 1, angle, 0, 0, direction.getWidth(), direction.getHeight(), false, false);
+		}	
+		randomness.drawLabel(batch);
+		
+
+		if(count > 3) {
+			this.calculateQ();
+			count = 0;
+			if(alive == false) {
+				aliveSinceLastState = false;
+			}
+			else {
+				aliveSinceLastState = true;
+			}
+		}
+		count++;
+
+		currentTime = new Date();
+
+		if((currentTime.getTime() - startOfRunTime.getTime()) >= 90000){
+			died();
+		}
+		
 	}
 	
 	private void findCurrentState(){
@@ -126,16 +317,15 @@ public class Agent {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		if(onFloor == true){
-			touchingFloor = objs.SOLID_BLOCK;
+		if(touchingFloor == true){
+			onFloor = objs.ROOFLESS_BLOCK;
 		}
 		else {
-			touchingFloor = objs.ROOFLESS_BLOCK;
+			onFloor = objs.SOLID_BLOCK;
 		}
 		
 		objs[] state = new objs[9];
@@ -147,10 +337,10 @@ public class Agent {
 		state[5] = bottomLeft;
 		state[6] = left;
 		state[7] = topLeft;
-		state[8] = touchingFloor;
+		state[8] = onFloor;
 		
 		
-		lastState = currentState.clone();
+		//lastState = currentState.clone();
 
 
 		//SOLID_BLOCK, ROOFLESS_BLOCK, GROUND_ENEMY, VERTICAL_ENEMY, SINE_ENEMY,  (null)
@@ -174,38 +364,35 @@ public class Agent {
 		
 	}
 	
-	public void calculateQ(double deltaX, double deltaY, boolean alive, int randomness) {
+	private void calculateQ() {
 		findCurrentState();
 		Random rand = new Random();
 		double reward = 0;
 		if(deltaX > 0){
-			reward = 3;
+			reward += rightReward;
 		}
 		if(deltaX < 0){
-			reward = -3;
+			reward += leftReward;
 		}
-		if(deltaX == 0){
-			reward = -3;
+		if(deltaX == 0) {
+			reward = stationaryReward;
+		}
+		if(deltaY > 0) {
+			reward += upReward;
+		}
+		if(deltaY < 0) {
+			reward += downReward;
 		}
 		if(alive == false){
-			//died();
-			reward = -10;
+			reward = deathReward;
 		}
 		
-//		else{
-//			if(player.getX() > 170*Constants.BLOCK_HEIGHT){
-//				reward = 50;
-//			}
-//		}
-		
-
-
-		if(rand.nextInt(101) >= randomness){
+		if(rand.nextDouble() >= randomness.getDecimal()){
 			nextMove = findBestAction(currentState);
 		}
 		else{
 			int action;
-			if(currentState[8] == 0){
+			if(currentState[8] == 1){
 				action = rand.nextInt(6);
 			}
 			else{
@@ -214,48 +401,49 @@ public class Agent {
 			nextMove = actions.values()[action];
 		}
 
-
-
 		// Q(state,action)= Q(state,action) + alpha * (R(state,action) + gamma * Max(next state, all actions) - Q(state,action))
 		double q = Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()];
 		Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()] = q + alpha * (reward + gamma*findMaxQ(currentState) - q);
 
+		//System.out.printf(" %-7s :  %.4f  :  %.1f  :     deltaX: %.2f %n", lastMove, Q[lastState[0]][lastState[1]][lastState[2]][lastState[3]][lastState[4]][lastState[5]][lastState[6]][lastState[7]][lastState[8]][lastMove.ordinal()], reward, deltaX);
+		
+		lastState = currentState.clone();
 		lastMove = nextMove;
-		newState = true;				
-	}
-
-	public actions getAction(){
-		return nextMove;
-	}
-	
-	public int[] getState(){
-		return currentState;
-	}
-	
-	public void onFloor(boolean onFloor) {
-		if(onFloor != this.onFloor && newState == true) {
-			this.onFloor = onFloor;
-			newState = false;
-		}
+		deltaX = 0;
+		deltaY = 0;
+		touchingFloor = false;
 	}
 		
 	private actions findBestAction(int[] state) {
-		double maxQ = 0;
-		int maxQindex = 0;
-		for(int i = 0; i < 6; i ++){
-			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]);
-			if(maxQ != max2){
+		double maxQ = -1000000;
+		int maxQindex = 2;
+		int limit;
+		if(state[8] == 1) {
+			limit = 6;
+		}
+		else {
+			limit = 3;
+		}
+		for(int i = 0; i < limit; i ++){
+			if(maxQ < Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]){
 				maxQindex = i;
+				maxQ = Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i];
 			}
-			maxQ = max2;
 		}
 		actions next = actions.values()[maxQindex];		
 		return next;
 	}
 
 	private double findMaxQ(int[] state){
-		double maxQ = 0;
-		for(int i = 0; i < 6; i ++){
+		double maxQ = -10000000;
+		int limit;
+		if(state[8] == 1) {
+			limit = 6;
+		}
+		else {
+			limit = 3;
+		}
+		for(int i = 0; i < limit; i ++){
 			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]);
 			maxQ = max2;
 		}
@@ -263,15 +451,25 @@ public class Agent {
 		
 	}
 
+	public void revive(Map map) {
+		super.revive(map);
+		aliveSinceLastState = true;
+		startOfRunTime = new Date();
+	}
+		
+	public boolean isAlive() {
+		return aliveSinceLastState;
+	}
+	
 	private void findTop() {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;
-		float y = player.getY() + player.getHeight()/2;
+		float midX = x + width/2;
+		float midY = y + height/2;
 		while(found == false && distanceFromCentre <= straightRange){
-			int blockX = (int) (x/side);
-			int blockY = (int) ((y + distanceFromCentre)/side);
+			int blockX = (int) (midX/side);
+			int blockY = (int) ((midY + distanceFromCentre)/side);
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -282,7 +480,7 @@ public class Agent {
 				found = true;
 			}
 			for(Enemy enemy: enemies) {
-				if(enemy.crossesPoint(x, y+distanceFromCentre) == true) {
+				if(enemy.crossesPoint(midX, midY+distanceFromCentre) == true) {
 					found = true;
 					if(enemy.getClass() == GroundEnemy.class){
 						toReturn = objs.GROUND_ENEMY;
@@ -307,11 +505,11 @@ public class Agent {
 		boolean found = false;   // whether an object has been found in this direction
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;   // centre x of agent
-		float y = player.getY() + player.getHeight()/2;  // centre y of agent
+		float midX = x + width/2;				// centre x of agent
+		float midY = y + height/2;  			// centre y of agent
 		while(found == false && distanceFromCentre <= diagonalRange){  //while nothing is found and still in range
-			int blockX = (int) ((x + distanceFromCentre)/side);
-			int blockY = (int) ((y + distanceFromCentre)/side);  //block x and y used by map
+			int blockX = (int) ((midX + distanceFromCentre)/side);
+			int blockY = (int) ((midY + distanceFromCentre)/side);  //block x and y used by map
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -322,7 +520,7 @@ public class Agent {
 				found = true;
 			}
 			for(Enemy enemy: enemies) {			// Loops through all enemies.
-				if(enemy.crossesPoint(x+distanceFromCentre, y+distanceFromCentre) == true) {
+				if(enemy.crossesPoint(midX+distanceFromCentre, midY+distanceFromCentre) == true) {
 					found = true;
 					if(enemy.getClass() == GroundEnemy.class){	// if enemy found
 						toReturn = objs.GROUND_ENEMY;			 
@@ -347,11 +545,11 @@ public class Agent {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;
-		float y = player.getY() + player.getHeight()/2;
+		float midX = x + width/2;
+		float midY = y + height/2;
 		while(found == false && distanceFromCentre <= straightRange){
-			int blockX = (int) ((x + distanceFromCentre)/side);
-			int blockY = (int) (y/side);
+			int blockX = (int) ((midX + distanceFromCentre)/side);
+			int blockY = (int) (midY/side);
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -362,7 +560,7 @@ public class Agent {
 				found = true;
 			}
 			for(Enemy enemy: enemies) {
-				if(enemy.crossesPoint(x+distanceFromCentre, y) == true) {
+				if(enemy.crossesPoint(midX+distanceFromCentre, midY) == true) {
 					found = true;
 					if(enemy.getClass() == GroundEnemy.class){
 						toReturn = objs.GROUND_ENEMY;
@@ -387,11 +585,11 @@ public class Agent {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;
-		float y = player.getY() + player.getHeight()/2;
+		float midX = x + width/2;
+		float midY = y + height/2;
 		while(found == false && distanceFromCentre <= diagonalRange){
-			int blockX = (int) ((x + distanceFromCentre)/side);
-			int blockY = (int) ((y - distanceFromCentre)/side);
+			int blockX = (int) ((midX + distanceFromCentre)/side);
+			int blockY = (int) ((midY - distanceFromCentre)/side);
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -402,7 +600,7 @@ public class Agent {
 				found = true;
 			}
 			for(Enemy enemy: enemies) {
-				if(enemy.crossesPoint(x+distanceFromCentre, y-distanceFromCentre) == true) {
+				if(enemy.crossesPoint(midX+distanceFromCentre, midY-distanceFromCentre) == true) {
 					found = true;
 					if(enemy.getClass() == GroundEnemy.class){
 						toReturn = objs.GROUND_ENEMY;
@@ -427,11 +625,11 @@ public class Agent {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;
-		float y = player.getY() + player.getHeight()/2;
+		float midX = x + width/2;
+		float midY = y + height/2;
 		while(found == false && distanceFromCentre <= straightRange){
-			int blockX = (int) (x/side);
-			int blockY = (int) ((y - distanceFromCentre)/side);
+			int blockX = (int) (midX/side);
+			int blockY = (int) ((midY - distanceFromCentre)/side);
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -442,7 +640,7 @@ public class Agent {
 				found = true;
 			}
 			for(Enemy enemy: enemies) {
-				if(enemy.crossesPoint(x, y-distanceFromCentre) == true) {
+				if(enemy.crossesPoint(midX, midY-distanceFromCentre) == true) {
 					found = true;
 					if(enemy.getClass() == GroundEnemy.class){
 						toReturn = objs.GROUND_ENEMY;
@@ -467,11 +665,11 @@ public class Agent {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;
-		float y = player.getY() + player.getHeight()/2;
+		float midX = x + width/2;
+		float midY = y + height/2;
 		while(found == false && distanceFromCentre <= diagonalRange){
-			int blockX = (int) ((x - distanceFromCentre)/side);
-			int blockY = (int) ((y - distanceFromCentre)/side);
+			int blockX = (int) ((midX - distanceFromCentre)/side);
+			int blockY = (int) ((midY - distanceFromCentre)/side);
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -482,7 +680,7 @@ public class Agent {
 				found = true;
 			}
 			for(Enemy enemy: enemies) {
-				if(enemy.crossesPoint(x-distanceFromCentre, y-distanceFromCentre) == true) {
+				if(enemy.crossesPoint(midX-distanceFromCentre, midY-distanceFromCentre) == true) {
 					found = true;
 					if(enemy.getClass() == GroundEnemy.class){
 						toReturn = objs.GROUND_ENEMY;
@@ -507,11 +705,11 @@ public class Agent {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;
-		float y = player.getY() + player.getHeight()/2;
+		float midX = x + width/2;
+		float midY = y + height/2;
 		while(found == false && distanceFromCentre <= straightRange){
-			int blockX = (int) ((x - distanceFromCentre)/side);
-			int blockY = (int) (y/side);
+			int blockX = (int) ((midX - distanceFromCentre)/side);
+			int blockY = (int) (midY/side);
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -522,7 +720,7 @@ public class Agent {
 				found = true;
 			}
 			for(Enemy enemy: enemies) {
-				if(enemy.crossesPoint(x-distanceFromCentre, y) == true) {
+				if(enemy.crossesPoint(midX-distanceFromCentre, midY) == true) {
 					found = true;
 					if(enemy.getClass() == GroundEnemy.class){
 						toReturn = objs.GROUND_ENEMY;
@@ -547,11 +745,11 @@ public class Agent {
 		boolean found = false;
 		int distanceFromCentre = 0;
 		objs toReturn = objs.NONE;
-		float x = player.getX() + player.getWidth()/2;
-		float y = player.getY() + player.getHeight()/2;
+		float midX = x + width/2;
+		float midY = y + height/2;
 		while(found == false && distanceFromCentre <= diagonalRange){
-			int blockX = (int) ((x - distanceFromCentre)/side);
-			int blockY = (int) ((y + distanceFromCentre)/side);
+			int blockX = (int) ((midX - distanceFromCentre)/side);
+			int blockY = (int) ((midY + distanceFromCentre)/side);
 			char block = map.get(blockX, blockY); 
 			if(block == 'S'){
 				toReturn = objs.SOLID_BLOCK;
@@ -562,7 +760,7 @@ public class Agent {
 				found = true;
 			}
 			for(Enemy enemy: enemies) {
-				if(enemy.crossesPoint(x-distanceFromCentre, y+distanceFromCentre) == true) {
+				if(enemy.crossesPoint(midX-distanceFromCentre, midY+distanceFromCentre) == true) {
 					found = true;
 					if(enemy.getClass() == GroundEnemy.class){
 						toReturn = objs.GROUND_ENEMY;

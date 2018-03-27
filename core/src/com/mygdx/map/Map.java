@@ -61,15 +61,13 @@ public class Map {
 		FileHandle file = Gdx.files.internal(fileName);
 		
 		String text = file.readString();
-		System.out.println(text.length());
-		
 		
 		grid = new Block[Constants.MAP_WIDTH][Constants.MAP_HEIGHT];
 		
 		
 		for(int j = 0; j < Constants.MAP_HEIGHT; j++) {
 			for(int i = 0; i < Constants.MAP_WIDTH; i++) {
-				char next = text.charAt(i + j*(2+Constants.MAP_WIDTH));
+				char next = text.charAt(i + j*(Constants.MAP_WIDTH));
 				if(next == 'N'){
 					grid[i][j] = null;
 				}
@@ -80,7 +78,6 @@ public class Map {
 					grid[i][j] = new RooflessBlock(i, j);
 				}
 			}
-			System.out.println();
 		}
 	
 		

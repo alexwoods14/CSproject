@@ -26,30 +26,30 @@ public class AIsettingsScreen implements Screen{
 	private Slider moveLeftReward;
 	private Slider moveUpReward;
 	private Slider moveDownReward;
-	private Slider initialRandomness;
+	private Slider stationaryReward;
 	
 	private MyButton done;
 	
 	private ArrayList<Slider> sliders;
 	private float width = Constants.WINDOW_WIDTH;
 	private float height = Constants.WINDOW_HEIGHT;
+	private String fileName;
 	
-	public AIsettingsScreen(MyGDXGame game) {
+	
+	public AIsettingsScreen(MyGDXGame game, String fileName) {
 		this.batch = game.batch;
 		this.sr = game.sr;
 		this.game = game;
-	}
-	
-	@Override
-	public void show() {
+		this.fileName = fileName;
+		
 		learningRate = new Slider(width/3 - width/6 , height - height/6, "learning_rate", false, 0, 1);
 		eagerness = new Slider(width/3 - width/6, 2*height/3 - height/6, "eagerness", false, 0, 1);
-		initialRandomness = new Slider(width/3 - width/6, height/3 - height/6, "randomness", true, 0, 1);
+		stationaryReward = new Slider(width/3 - width/6, height/3 - height/6, "stationary_reward", false, -5, 5);
 		
 		moveLeftReward = new Slider(2*width/3 - width/6, height - height/6, "move_left_reward", false, -5, 5);
 		moveRightReward = new Slider(2*width/3 - width/6, height/3 - height/6, "move_right_reward", false, -5, 5);
 		
-		deathReward = new Slider(width - width/6, height - height/6, "death_reward", false, -5, 0);
+		deathReward = new Slider(width - width/6, height - height/6, "death_reward", false, -15, 0);
 		moveDownReward = new Slider(width - width/6, 2*height/3 - height/6, "move_down_reward", false, -5, 5);
 		moveUpReward = new Slider(width - width/6, height/3 - height/6, "move_up_reward", false, -5, 5);
 
@@ -62,10 +62,14 @@ public class AIsettingsScreen implements Screen{
 		sliders.add(moveLeftReward);
 		sliders.add(moveUpReward);
 		sliders.add(moveDownReward);
-		sliders.add(initialRandomness);
+		sliders.add(stationaryReward);
 		
 		done = new MyButton("done", 2*width/3 - width/6, 2*height/3 - height/6);
-
+	}
+	
+	@Override
+	public void show() {
+		
 	}
 
 	@Override
@@ -81,7 +85,7 @@ public class AIsettingsScreen implements Screen{
 		
 		for(Slider slider: sliders) {
 			if(slider != null){
-				slider.draw(sr, null, Gdx.input.isTouched());
+				slider.draw(sr, game.cam, Gdx.input.isTouched());
 				slider.drawLabel(batch);
 			}
 		}
@@ -90,8 +94,7 @@ public class AIsettingsScreen implements Screen{
 		
 		if(Gdx.input.isTouched() == true) {
 			if(done.isHovering() == true) {
-				
-				game.setScreen(new World(sr, "map2.txt", batch));
+				game.setScreen(new World(sr, fileName, batch, eagerness.getDecimal(), learningRate.getDecimal(), deathReward.getDecimal(), moveRightReward.getDecimal(), moveLeftReward.getDecimal(), moveUpReward.getDecimal(), moveDownReward.getDecimal(), stationaryReward.getDecimal()));
 			}
 		}
 		

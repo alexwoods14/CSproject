@@ -20,12 +20,12 @@ public class MyGDXGame extends Game{
 		
 		cam.position.set(cam.viewportWidth/2, cam.viewportHeight/2, 0);
 		
-		this.setScreen(new MenuScreen(this));
+		//this.setScreen(new MenuScreen(this));
 		
 		//setScreen(new AIsettingsScreen(this, "map2.txt"));
 		
-		//this.setScreen(new World(sr, "map2.txt", batch, 0.95, 0.05, -100, 2, -4, 0, 0, -5));
-		
+		this.setScreen(new World(sr, "map2.txt", batch, 0.95, 0.05, -125, 2, -4, 0, 0, -5));
+
 		//this.setScreen(new World(sr, "map2.txt", batch));
 		this.dispose();
 	}

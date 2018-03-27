@@ -123,12 +123,12 @@ public class Agent extends Player{
 	
 	@Override
 	public void move(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall) {
-		if(touchingFloor == false){
-					
+
+		if(touchingFloor == false){			
 			if(y == floorY && y > 0){
 				touchingFloor = true;
+				//System.out.println("***");
 			}
-			
 		}
 
 		
@@ -226,7 +226,7 @@ public class Agent extends Player{
 					sr.setColor(Color.BLACK);
 					sr.rect(xDueToCam + 70+i*45, yDueToCam + 320+j*45, 40, 40);
 				}
-				else {
+//				else {
 //					if(currentState[8] == 1) {
 //						sr.setColor(Color.PINK);
 //					}
@@ -235,7 +235,7 @@ public class Agent extends Player{
 //					}
 //					sr.set(ShapeType.Filled);
 //					sr.rect(xDueToCam + 70+45, yDueToCam + 320+45, 40, 40);
-				}
+//				}
 			}
 		}
 		
@@ -267,6 +267,7 @@ public class Agent extends Player{
 			else {
 				aliveSinceLastState = true;
 			}
+			touchingFloor = false;
 		}
 		count++;
 

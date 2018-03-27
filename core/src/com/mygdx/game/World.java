@@ -90,13 +90,13 @@ public class World implements Screen{
 		enemies.add(new GroundEnemy(62*side, map, false));
 		enemies.add(new GroundEnemy(80*side, map, true));
 		enemies.add(new GroundEnemy(81*side, map, false));
-		enemies.add(new GroundEnemy(84*side, map, true));
+//		enemies.add(new GroundEnemy(84*side, map, true));
 		enemies.add(new GroundEnemy(94*side, map, false));
 		enemies.add(new GroundEnemy(105*side, map, false));
 		enemies.add(new GroundEnemy(125*side, map, true));
-		enemies.add(new GroundEnemy(122*side, map, false));
+//		enemies.add(new GroundEnemy(122*side, map, false));
 		enemies.add(new GroundEnemy(145*side, map, false));
-		enemies.add(new GroundEnemy(143*side, map, false));
+//		enemies.add(new GroundEnemy(143*side, map, false));
 		enemies.add(new GroundEnemy(141*side, map, false));
 		enemies.add(new GroundEnemy(139*side, map, false));
 		
@@ -109,8 +109,8 @@ public class World implements Screen{
 		
 		//sinusoidal flying enemies
 		enemies.add(new SineFlyingEnemy(12*side, 12*side, 9*side, 1.0f, 5*side));
-		enemies.add(new SineFlyingEnemy(56*side, 11*side, 7*side, 1.0f, 5*side));
-		enemies.add(new SineFlyingEnemy(116*side, 8*side, 12*side, 1.0f, 8*side));
+		enemies.add(new SineFlyingEnemy(56*side, 10*side, 7*side, 1.0f, 5*side));
+		enemies.add(new SineFlyingEnemy(116*side, 8*side, 11*side, 1.0f, 5*side));
 	}
 
 	@Override
@@ -138,12 +138,7 @@ public class World implements Screen{
 		}
 		
 		cam.position.set(camX, camY, 0);
-
 		cam.update();
-		//System.out.println("camX: " + camX + "  camX + viewportWidth: " + (camX + cam.viewportWidth));
-
-		
-		//System.out.println("X: " + Gdx.input.getX() + "   Y: " + (1080 - Gdx.input.getY()));
 				
 		ArrayList<Enemy> toRemove = new  ArrayList<Enemy>();
 

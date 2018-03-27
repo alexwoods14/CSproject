@@ -107,7 +107,4 @@ public class Player extends Entity{
 	public void draw(SpriteBatch batch) {
 	}
 
-	public boolean isNewState() {
-		return false;
-	}
 }

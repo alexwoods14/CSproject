@@ -44,12 +44,12 @@ public class AIsettingsScreen implements Screen{
 		
 		learningRate = new Slider(width/3 - width/6 , height - height/6, "learning_rate", false, 0, 1);
 		eagerness = new Slider(width/3 - width/6, 2*height/3 - height/6, "eagerness", false, 0, 1);
-		stationaryReward = new Slider(width/3 - width/6, height/3 - height/6, "stationary_reward", false, -5, 5);
+		stationaryReward = new Slider(width/3 - width/6, height/3 - height/6, "stationary_reward", false, -5, 0);
 		
-		moveLeftReward = new Slider(2*width/3 - width/6, height - height/6, "move_left_reward", false, -5, 5);
-		moveRightReward = new Slider(2*width/3 - width/6, height/3 - height/6, "move_right_reward", false, -5, 5);
+		moveLeftReward = new Slider(2*width/3 - width/6, height - height/6, "move_left_reward", false, -5, 0);
+		moveRightReward = new Slider(2*width/3 - width/6, height/3 - height/6, "move_right_reward", false, 0, 2);
 		
-		deathReward = new Slider(width - width/6, height - height/6, "death_reward", false, -15, 0);
+		deathReward = new Slider(width - width/6, height - height/6, "death_reward", false, -200, 0);
 		moveDownReward = new Slider(width - width/6, 2*height/3 - height/6, "move_down_reward", false, -5, 5);
 		moveUpReward = new Slider(width - width/6, height/3 - height/6, "move_up_reward", false, -5, 5);
 

@@ -66,7 +66,8 @@ public class Agent extends Player{
 	
 	private double[][][][][][][][][][] Q = new double[6][6][6][6][6][6][6][6][2][6];
 	
-	public Agent(Map map, ArrayList<Enemy> enemies, double eagerness, double learningRate, double deathReward, double rightReward, double leftReward, double upReward, double downReward, double stationaryReward) {
+	public Agent(Map map, ArrayList<Enemy> enemies, double eagerness, double learningRate, double deathReward,
+		     double rightReward, double leftReward, double upReward, double downReward, double stationaryReward) {
 		super();
 		this.map = map;
 		this.enemies = enemies;

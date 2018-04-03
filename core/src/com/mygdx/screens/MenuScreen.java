@@ -2,8 +2,6 @@ package com.mygdx.screens;
 
 import java.util.ArrayList;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
@@ -12,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyButton;
 import com.mygdx.game.MyGDXGame;
-import com.mygdx.game.World;
 import com.mygdx.map.MapMaker;
 
 public class MenuScreen implements Screen, TextInputListener{

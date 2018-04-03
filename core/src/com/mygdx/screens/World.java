@@ -1,7 +1,6 @@
-package com.mygdx.game;
+package com.mygdx.screens;
 
 import java.util.ArrayList;
-import java.util.Date;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,11 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.mygdx.entities.Agent;
 import com.mygdx.entities.Enemy;
 import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
 import com.mygdx.entities.SineFlyingEnemy;
 import com.mygdx.entities.VerticalFlyingEnemy;
+import com.mygdx.game.Constants;
 import com.mygdx.map.Map;
 import com.mygdx.map.Block.Sides;
 
@@ -33,14 +34,6 @@ public class World implements Screen{
 	private ArrayList<Enemy> enemies;
 	private Player player;
 	
-	
-
-	private String fileName;
-	
-	
-	
-	private boolean AI = false;
-
 	public World(ShapeRenderer sr, String fileName, SpriteBatch batch) {	
 		startUp(sr, fileName, batch);
 		player = new Player();
@@ -65,7 +58,6 @@ public class World implements Screen{
 	public void startUp(ShapeRenderer sr, String fileName, SpriteBatch batch) {
 		this.sr = sr;
 		this.batch = batch;
-		this.fileName = fileName;
 		
 		cam = new OrthographicCamera(1280, 720);
 

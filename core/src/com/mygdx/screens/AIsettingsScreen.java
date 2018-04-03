@@ -12,7 +12,6 @@ import com.mygdx.game.Constants;
 import com.mygdx.game.MyButton;
 import com.mygdx.game.MyGDXGame;
 import com.mygdx.game.Slider;
-import com.mygdx.game.World;
 
 public class AIsettingsScreen implements Screen{
 	

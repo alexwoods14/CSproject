@@ -1,9 +1,5 @@
 package com.mygdx.map;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -120,10 +116,10 @@ public class Map {
 	}
 		
 	public void findAllBoundaries(float x2, float y2 , float width, float height){
-		float leftFloor = findFloor((int) (x2/side), (int)(y2/side));
-		float rightFloor = findFloor((int) ((x2 + width)/side), (int)(y2/side));
+		float leftFloor = findFloor((int) Math.floor(x2/side), (int) Math.floor(y2/side));
+		float rightFloor = findFloor((int) Math.floor((x2 + width)/side), (int) Math.floor(y2/side));
 
-		if(leftFloor >= rightFloor){
+		if(leftFloor > rightFloor){
 			floorY = leftFloor;
 		}
 		else{
@@ -171,7 +167,6 @@ public class Map {
 		float floor = 0;
 		boolean foundFloor = false;
 		int i = 1;
-		//System.out.println(yindex);
 		while(foundFloor == false && i < 3){
 			if(yindex >= Constants.MAP_HEIGHT){
 				foundFloor = true;

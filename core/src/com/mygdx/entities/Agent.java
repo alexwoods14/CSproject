@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.entities;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,11 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.mygdx.entities.Enemy;
-import com.mygdx.entities.GroundEnemy;
-import com.mygdx.entities.Player;
-import com.mygdx.entities.SineFlyingEnemy;
-import com.mygdx.entities.VerticalFlyingEnemy;
+import com.mygdx.game.Constants;
+import com.mygdx.game.Slider;
 import com.mygdx.map.Map;
 
 public class Agent extends Player{
@@ -124,17 +121,24 @@ public class Agent extends Player{
 	@Override
 	public void move(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall) {
 
-		if(touchingFloor == false){			
-			if(y == floorY && y > 0){
-				touchingFloor = true;
-				//System.out.println("***");
-			}
+		if(y == floorY && y > 0){
+			touchingFloor = true;
+		}
+		else {
+			touchingFloor = false;
 		}
 
+	
+
 		
-		if((nextMove == actions.JUMP || nextMove == actions.JUMP_LEFT || nextMove == actions.JUMP_RIGHT) && y == floorY){
-			vertV = 1250.0f;
+		if((nextMove == actions.JUMP || nextMove == actions.JUMP_LEFT || nextMove == actions.JUMP_RIGHT)){
+			vertV = 1120.0f;
 		}
+		
+//		if(nextMove == actions.JUMP_RIGHT && vertV != 1150.0f){
+//			System.out.println(y + "        " + floorY);
+//		}
+		
 		
 		if(y > floorY){
 			vertV -= gravity * delta;
@@ -228,10 +232,7 @@ public class Agent extends Player{
 				}
 //				else {
 //					if(currentState[8] == 1) {
-//						sr.setColor(Color.PINK);
-//					}
-//					else {
-//						sr.setColor(Color.YELLOW);
+//						sr.setColor(Color.CYAN);
 //					}
 //					sr.set(ShapeType.Filled);
 //					sr.rect(xDueToCam + 70+45, yDueToCam + 320+45, 40, 40);
@@ -240,6 +241,7 @@ public class Agent extends Player{
 		}
 		
 		randomness.draw(sr, cam, Gdx.input.isTouched());
+		
 		
 	
 	}
@@ -267,7 +269,6 @@ public class Agent extends Player{
 			else {
 				aliveSinceLastState = true;
 			}
-			touchingFloor = false;
 		}
 		count++;
 
@@ -389,7 +390,7 @@ public class Agent extends Player{
 		}
 		
 		if(rand.nextDouble() >= randomness.getDecimal()){
-			nextMove = findBestAction(currentState);
+			nextMove = findBestAction();
 		}
 		else{
 			int action;
@@ -415,20 +416,20 @@ public class Agent extends Player{
 		touchingFloor = false;
 	}
 		
-	private actions findBestAction(int[] state) {
+	private actions findBestAction() {
 		double maxQ = -1000000;
 		int maxQindex = 2;
 		int limit;
-		if(state[8] == 1) {
+		if(currentState[8] == 1) {
 			limit = 6;
 		}
 		else {
 			limit = 3;
 		}
 		for(int i = 0; i < limit; i ++){
-			if(maxQ < Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]){
+			if(maxQ < Q[currentState[0]][currentState[1]][currentState[2]][currentState[3]][currentState[4]][currentState[5]][currentState[6]][currentState[7]][currentState[8]][i]){
 				maxQindex = i;
-				maxQ = Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i];
+				maxQ = Q[currentState[0]][currentState[1]][currentState[2]][currentState[3]][currentState[4]][currentState[5]][currentState[6]][currentState[7]][currentState[8]][i];
 			}
 		}
 		actions next = actions.values()[maxQindex];		

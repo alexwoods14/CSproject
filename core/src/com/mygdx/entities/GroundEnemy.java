@@ -1,6 +1,5 @@
 package com.mygdx.entities;
 
-import com.mygdx.game.Constants;
 import com.mygdx.map.Map;
 
 public class GroundEnemy extends Enemy{

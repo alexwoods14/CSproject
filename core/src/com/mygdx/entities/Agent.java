@@ -427,9 +427,11 @@ public class Agent extends Player{
 			limit = 3;
 		}
 		for(int i = 0; i < limit; i ++){
-			if(maxQ < Q[currentState[0]][currentState[1]][currentState[2]][currentState[3]][currentState[4]][currentState[5]][currentState[6]][currentState[7]][currentState[8]][i]){
+			if(maxQ < Q[currentState[0]][currentState[1]][currentState[2]][currentState[3]][currentState[4]]
+			           [currentState[5]][currentState[6]][currentState[7]][currentState[8]][i]){
 				maxQindex = i;
-				maxQ = Q[currentState[0]][currentState[1]][currentState[2]][currentState[3]][currentState[4]][currentState[5]][currentState[6]][currentState[7]][currentState[8]][i];
+				maxQ = Q[currentState[0]][currentState[1]][currentState[2]][currentState[3]][currentState[4]]
+					[currentState[5]][currentState[6]][currentState[7]][currentState[8]][i];
 			}
 		}
 		actions next = actions.values()[maxQindex];		
@@ -437,7 +439,7 @@ public class Agent extends Player{
 	}
 
 	private double findMaxQ(int[] state){
-		double maxQ = -10000000;
+		double maxQ = -1000000;
 		int limit;
 		if(state[8] == 1) {
 			limit = 6;
@@ -446,7 +448,8 @@ public class Agent extends Player{
 			limit = 3;
 		}
 		for(int i = 0; i < limit; i ++){
-			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]][state[5]][state[6]][state[7]][state[8]][i]);
+			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]]
+					       	      [state[5]][state[6]][state[7]][state[8]][i]);
 			maxQ = max2;
 		}
 		return maxQ;

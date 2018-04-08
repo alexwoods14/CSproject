@@ -448,9 +448,8 @@ public class Agent extends Player{
 			limit = 3;
 		}
 		for(int i = 0; i < limit; i ++){
-			double max2 = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]]
-					       	      [state[5]][state[6]][state[7]][state[8]][i]);
-			maxQ = max2;
+			maxQ = Math.max(maxQ, Q[state[0]][state[1]][state[2]][state[3]][state[4]]
+					       [state[5]][state[6]][state[7]][state[8]][i]);
 		}
 		return maxQ;
 		

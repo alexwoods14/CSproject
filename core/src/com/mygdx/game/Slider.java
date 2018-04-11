@@ -105,9 +105,8 @@ public class Slider {
 	
 
 	private void isHovering(float mouseX, float mouseY) {
-		//System.out.printf("mouseX: %f   mouseY: %f  draggerX: %f  draggerY: %f  %n", mouseX, mouseY, draggerX, draggerY);
 		if(mouseX > draggerX && mouseX < draggerX + draggerWidth && mouseY > draggerY && mouseY < draggerY + draggerHeight){	
-			hovering  = true;
+			hovering  = true;       // checks if mouse is within the boundaries of the dragger on the slider
 		}
 		else{
 			hovering = false;

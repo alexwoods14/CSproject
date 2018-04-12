@@ -20,8 +20,8 @@ public class Player extends Entity{
 		width = 48;
 		x = 0.0f;
 		y = 0.0f;
-		vertV = 0.0f;
-		horiV = 300.0f;
+		verticalVelocity = 0.0f;
+		horizontalVelocity = 300.0f;
 	}
 	
 	public void move(float delta, float gravity, float floorY, float roofY, float leftWall, float rightWall){
@@ -35,8 +35,8 @@ public class Player extends Entity{
 		}
 
 		if(Gdx.input.isKeyPressed(Keys.A) == true){
-			if(x - delta*horiV > leftWall){
-				x -= delta*horiV;
+			if(x - delta*horizontalVelocity > leftWall){
+				x -= delta*horizontalVelocity;
 			}
 			else{
 				x = leftWall +  0.001f;
@@ -44,8 +44,8 @@ public class Player extends Entity{
 		}
 
 		if(Gdx.input.isKeyPressed(Keys.D) == true){
-			if(x + delta*horiV < rightWall){
-				x += delta*horiV;
+			if(x + delta*horizontalVelocity < rightWall){
+				x += delta*horizontalVelocity;
 			}
 			else{
 				x = rightWall - 0.001f;
@@ -53,22 +53,22 @@ public class Player extends Entity{
 		}
 
 		if(Gdx.input.isKeyPressed(Keys.SPACE) == true && y <= floorY){
-			vertV = 1250.0f;
+			verticalVelocity = 1250.0f;
 		}
 
 		if(y > floorY){
-			vertV -= gravity * delta;
+			verticalVelocity -= gravity * delta;
 		}
 
-		if(y + vertV*delta > floorY){		
-			y += vertV * delta;
+		if(y + verticalVelocity*delta > floorY){		
+			y += verticalVelocity * delta;
 		}
 		else{
 			y = floorY;
-			vertV = 0;
+			verticalVelocity = 0;
 		}
-		 if(y + vertV*delta + height > roofY){
-			vertV = -100;
+		 if(y + verticalVelocity*delta + height > roofY){
+			verticalVelocity = -100;
 			y = roofY - height;
 		 }
 	 
@@ -78,7 +78,7 @@ public class Player extends Entity{
 	}
 	
 	public void bounce(){
-		vertV = 1000.0f;
+		verticalVelocity = 1000.0f;
 	}
 
 	public void draw(ShapeRenderer sr, OrthographicCamera cam) {

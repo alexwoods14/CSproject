@@ -14,12 +14,12 @@ public class Enemy extends Entity{
 		width = 48;
 		this.x = x;
 		this.y = map.findStartingFloor(x, width);
-		vertV = 0.0f;
+		verticalVelocity = 0.0f;
 		if(startsRight == true) {
-			horiV = 100.0f;
+			horizontalVelocity = 100.0f;
 		}
 		else {
-			horiV = -100.0f;
+			horizontalVelocity = -100.0f;
 		}
 	}	
 	
@@ -28,17 +28,17 @@ public class Enemy extends Entity{
 		width = 48;
 		this.x = x;
 		this.y = y;
-		vertV = 0.0f;
+		verticalVelocity = 0.0f;
 		if(startsRight == true) {
-			horiV = 100.0f;
+			horizontalVelocity = 100.0f;
 		}
 		else {
-			horiV = -100.0f;
+			horizontalVelocity = -100.0f;
 		}
 	}
 	
 	public void reverseDirection(){
-		horiV = - horiV;
+		horizontalVelocity = - horizontalVelocity;
 	}
 	
 	public void move(float delta, float leftWall, float rightWall, float floorY, float roofY, float gravity){
@@ -47,43 +47,43 @@ public class Enemy extends Entity{
 	}
 
 	public void moveHori(float delta, float leftWall, float rightWall) {
-		if(horiV > 0) {
-			if((x += delta*horiV) < rightWall) {
-				x += delta*horiV;
+		if(horizontalVelocity > 0) {
+			if((x += delta*horizontalVelocity) < rightWall) {
+				x += delta*horizontalVelocity;
 			}
 			else {
 				x = rightWall;
-				horiV = -horiV;
+				horizontalVelocity = -horizontalVelocity;
 			}
 		}
 		else {
-			if((x += delta*horiV) > leftWall) {
-				x += delta*horiV;
+			if((x += delta*horizontalVelocity) > leftWall) {
+				x += delta*horizontalVelocity;
 			}
 			else {
 				x = leftWall;
-				horiV = -horiV;
+				horizontalVelocity = -horizontalVelocity;
 			}
 		}
 	}
 	public void moveVert(float delta, float floorY, float roofY){
 		
-		if(vertV > 0) {
-			if((y += delta*vertV) < roofY) {
-				y += delta*vertV;
+		if(verticalVelocity > 0) {
+			if((y += delta*verticalVelocity) < roofY) {
+				y += delta*verticalVelocity;
 			}
 			else {
 				y = roofY - height;
-				vertV = -vertV;
+				verticalVelocity = -verticalVelocity;
 			}
 		}
 		else {
-			if((y += delta*vertV) > floorY) {
-				y += delta*vertV;
+			if((y += delta*verticalVelocity) > floorY) {
+				y += delta*verticalVelocity;
 			}
 			else {
 				y = floorY;
-				vertV = -vertV;
+				verticalVelocity = -verticalVelocity;
 			}
 		}
 	}

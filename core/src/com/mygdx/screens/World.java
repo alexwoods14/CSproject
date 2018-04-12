@@ -78,7 +78,7 @@ public class World implements Screen{
 		enemies.add(new GroundEnemy(25*side, map, false));
 		enemies.add(new GroundEnemy(40*side, map, true));
 		enemies.add(new GroundEnemy(33*side, map, false));
-		enemies.add(new GroundEnemy(59*side, map, true));
+//		enemies.add(new GroundEnemy(59*side, map, true));
 		enemies.add(new GroundEnemy(62*side, map, false));
 		enemies.add(new GroundEnemy(80*side, map, true));
 		enemies.add(new GroundEnemy(81*side, map, false));
@@ -88,14 +88,14 @@ public class World implements Screen{
 		enemies.add(new GroundEnemy(125*side, map, true));
 //		enemies.add(new GroundEnemy(122*side, map, false));
 		enemies.add(new GroundEnemy(145*side, map, false));
-//		enemies.add(new GroundEnemy(143*side, map, false));
-		enemies.add(new GroundEnemy(141*side, map, false));
-		enemies.add(new GroundEnemy(139*side, map, false));
+		enemies.add(new GroundEnemy(143*side, map, false));
+		enemies.add(new GroundEnemy(140*side, 5*side, false));
+		enemies.add(new GroundEnemy(141*side, 7*side, false));
 		
 		//vertical flying enemies
 		enemies.add(new VerticalFlyingEnemy(24*side, 9*side, 6*side, 1.5f));
 		enemies.add(new VerticalFlyingEnemy(44*side, 10*side, 6*side, 2.0f));
-		enemies.add(new VerticalFlyingEnemy(73*side, 7*side, 5*side, 1.0f));
+//		enemies.add(new VerticalFlyingEnemy(73*side, 7*side, 5*side, 1.0f));
 		enemies.add(new VerticalFlyingEnemy(93*side, 10*side, 7*side, 1.5f));
 		enemies.add(new VerticalFlyingEnemy(154*side, 12*side, 8*side, 1.5f));
 		

@@ -7,8 +7,8 @@ public class Entity {
 	protected int width;
 	protected float x;
 	protected float y;
-	protected float vertV;
-	protected float horiV;
+	protected float verticalVelocity;
+	protected float horizontalVelocity;
 
 	public int getHeight() {
 		return height;

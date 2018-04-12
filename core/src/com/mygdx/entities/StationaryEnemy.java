@@ -5,7 +5,7 @@ public class StationaryEnemy extends Enemy{
 		super(x + (48-32)/2, y - 128, false);
 		width = 32;
 		height = 128;
-		horiV = 0;
+		horizontalVelocity = 0;
 	}
 
 	private final double interval = 5;
@@ -17,7 +17,7 @@ public class StationaryEnemy extends Enemy{
 		}
 		if(timeToLive - delta <= 0){
 			timeToLive = 0;
-			vertV = 200;			
+			verticalVelocity = 200;			
 		}
 	}
 }

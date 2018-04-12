@@ -132,7 +132,7 @@ public class Agent extends Player{
 
 		
 		if((nextMove == actions.JUMP || nextMove == actions.JUMP_LEFT || nextMove == actions.JUMP_RIGHT)){
-			vertV = 1120.0f;
+			verticalVelocity = 1120.0f;
 		}
 		
 //		if(nextMove == actions.JUMP_RIGHT && vertV != 1150.0f){
@@ -141,26 +141,26 @@ public class Agent extends Player{
 		
 		
 		if(y > floorY){
-			vertV -= gravity * delta;
+			verticalVelocity -= gravity * delta;
 		}
 
-		if(y + vertV*delta > floorY){		
-			y += vertV * delta;
+		if(y + verticalVelocity*delta > floorY){		
+			y += verticalVelocity * delta;
 		}
 		else{
 			y = floorY;
-			vertV = 0;
+			verticalVelocity = 0;
 			
 		}
 		
-		if(y + vertV*delta + height > roofY){
-			vertV = -100;
+		if(y + verticalVelocity*delta + height > roofY){
+			verticalVelocity = -100;
 			y = roofY - height;
 		}
 		if(nextMove == actions.LEFT || nextMove == actions.JUMP_LEFT){
-			if(x - delta*horiV > leftWall){
-				deltaX -= delta*horiV;
-				x -= delta*horiV;
+			if(x - delta*horizontalVelocity > leftWall){
+				deltaX -= delta*horizontalVelocity;
+				x -= delta*horizontalVelocity;
 			}
 			else{
 				x = leftWall +  0.001f;
@@ -168,9 +168,9 @@ public class Agent extends Player{
 		}
 
 		if(nextMove == actions.RIGHT|| nextMove == actions.JUMP_RIGHT){
-			if(x + delta*horiV < rightWall){
-				deltaX += delta*horiV;
-				x += delta*horiV;
+			if(x + delta*horizontalVelocity < rightWall){
+				deltaX += delta*horizontalVelocity;
+				x += delta*horizontalVelocity;
 			}
 			else{
 				x = rightWall - 0.001f;
@@ -182,7 +182,7 @@ public class Agent extends Player{
 			aliveSinceLastState = false;
 		}
 		
-		deltaY += vertV*delta;
+		deltaY += verticalVelocity*delta;
 		
 		if(y <= 0){
 			died();
@@ -317,9 +317,9 @@ public class Agent extends Player{
 		
 		while(thread1.isAlive() == true || thread2.isAlive() == true || thread3.isAlive() == true || thread4.isAlive() == true){
 			try {
-				Thread.sleep(10);
+				Thread.sleep(5);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				// this wont be called as the thread will not be interrupted
 			}
 		}
 		

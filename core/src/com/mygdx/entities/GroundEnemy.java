@@ -8,7 +8,12 @@ public class GroundEnemy extends Enemy{
 	
 	public GroundEnemy(int x, Map map, boolean startsRight) {
 		super(x, map, startsRight);
-		vertV = 0.0f;
+		verticalVelocity = 0.0f;
+	}
+	
+	public GroundEnemy(int x, int y, boolean startsRight) {
+		super(x, y, startsRight);
+		verticalVelocity = 0.0f;
 	}
 	
 
@@ -17,19 +22,19 @@ public class GroundEnemy extends Enemy{
 		
 		if(y > floorY){
 			if(hasJumped == false) {
-				vertV = 400;
+				verticalVelocity = 400;
 				hasJumped = true;
 			}
-			vertV -= gravity * delta;
+			verticalVelocity -= gravity * delta;
 		}
 		
-		if(y + vertV*delta > floorY){
+		if(y + verticalVelocity*delta > floorY){
 			
-			y += vertV * delta;
+			y += verticalVelocity * delta;
 		}
 		else{
 			y = floorY;
-			vertV = 0;
+			verticalVelocity = 0;
 			hasJumped = false;
 		}
 		

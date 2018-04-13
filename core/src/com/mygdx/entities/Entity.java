@@ -29,7 +29,7 @@ public class Entity {
 	
 	public boolean hasCollided(float x2, float y2, int width2, int height2){
 		
-		if(y <= (y2 + height2) && (y + height) >= y2 && x <= (x2 + width2) && (x + width) >= x2){
+		if(y < (y2 + height2) && (y + height) > y2 && x < (x2 + width2) && (x + width) > x2){
 			return true;
 		}
 		else {

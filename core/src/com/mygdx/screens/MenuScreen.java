@@ -16,27 +16,30 @@ public class MenuScreen implements Screen, TextInputListener{
 	
 	private MyButton mapMakerButton;
 	private MyButton playButton;
+	private MyButton AIbutton;
 	private MyGDXGame game;
 	private SpriteBatch batch;
 	private ArrayList<MyButton> buttons;
 	private boolean input = false;
 	private String fileName;
-	private boolean AI;
+	private boolean AI = false;
 	
 	public MenuScreen(MyGDXGame game) {
 		this.batch = game.batch;
 		this.game = game;
 		input = false;
 		buttons = new ArrayList<MyButton>();
-		mapMakerButton = new MyButton("map_button", Constants.WINDOW_WIDTH/2 + 200, 300);
-		playButton = new MyButton("play_button", Constants.WINDOW_WIDTH/2 - 200, 300);
+		mapMakerButton = new MyButton("map_button", Constants.WINDOW_WIDTH/4, Constants.WINDOW_HEIGHT/2);
+		playButton = new MyButton("play_button", Constants.WINDOW_WIDTH/2, Constants.WINDOW_HEIGHT/2);
+		AIbutton = new MyButton("ai_button", 3*Constants.WINDOW_WIDTH/4, Constants.WINDOW_HEIGHT/2);
 		buttons.add(mapMakerButton);
 		buttons.add(playButton);
+		buttons.add(AIbutton);
 	}
 	
 	@Override
 	public void show() {
-		
+
 	}
 
 	@Override
@@ -48,17 +51,20 @@ public class MenuScreen implements Screen, TextInputListener{
 		if(Gdx.input.isTouched() == true){
 			for(MyButton button: buttons){
 				if(button.isHovering() == true){
-					//this.dispose();
 					this.pause();
-					if(button.equals(mapMakerButton)){
-						this.hide();
+					if(button.equals(mapMakerButton) && input == false){
+						input = true;
 						game.setScreen(new MapMaker(game));
 					}
 					if(button.equals(playButton) && input == false){
 						input = true;
+						AI = false;
+						Gdx.input.getTextInput(this, "Enter a map name:", "", "mapname.txt");						
+					}
+					if(button.equals(AIbutton) && input == false) {
+						input = true;
 						AI = true;
 						Gdx.input.getTextInput(this, "Enter a map name:", "", "mapname.txt");
-						
 					}
 				}
 			}
@@ -69,8 +75,13 @@ public class MenuScreen implements Screen, TextInputListener{
 		}
 		batch.end();
 		
-		if(fileName!= null && AI == true) {
-			game.setScreen(new AIsettingsScreen(game, fileName));
+		if(fileName!= null) {
+			if(AI == true) {
+				game.setScreen(new AIsettingsScreen(game, fileName));
+			}
+			else {
+				game.setScreen(new World(game.sr, fileName, batch));
+			}
 		}
 						
 	}
@@ -94,12 +105,14 @@ public class MenuScreen implements Screen, TextInputListener{
 
 	@Override
 	public void input(String text) {
-		if(Gdx.files.internal(text).exists() == true){
-			fileName = text;
+		if(text.endsWith(".txt")) {
+			if(Gdx.files.internal(text).exists() == true){
+				fileName = text;
+			}
 		}
 		else {
 			input = false;
-			AI = false;
+			canceled();
 		}
 		
 	}

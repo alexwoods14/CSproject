@@ -28,53 +28,13 @@ public class Entity {
 
 	
 	public boolean hasCollided(float x2, float y2, int width2, int height2){
-		boolean hasHit = false;
-		int area;
-		float xLength = 0;
-		float yLength = 0;
-
+		
 		if(y <= (y2 + height2) && (y + height) >= y2 && x <= (x2 + width2) && (x + width) >= x2){
-			//top
-			if((y + height) >= y2 && y < y2){
-				yLength = (y + height) - y2;
-			}
-
-			//middle
-			if(y <= y2 && (y + height) >= (y2 + height2)){
-				yLength = height;
-			}
-
-			//bottom			
-			if(y <= (y2 + height2) && y > y2){
-				yLength = (y2 + height2) - y;
-
-			}
-
-			//left
-			if(x <= (x2 + width2) && x > x2){
-				xLength = (x2 + width2) - x;
-			}
-
-			//middle
-			if(x <= x2 && (x + width) >= (x2 + width2)){
-				xLength = width;
-			}
-
-			//right
-			if((x + width) >= x2 && x < x2){
-				xLength = (x + width) - x2;
-			}
-
+			return true;
 		}
-		
-		
-		area = (int) (xLength*yLength);
-		
-		if(area != 0){
-			hasHit = true;
+		else {
+			return false;
 		}
-
-		return hasHit;
 
 	}
 	

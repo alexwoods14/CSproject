@@ -10,13 +10,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.entities.Agent;
 import com.mygdx.entities.Enemy;
+import com.mygdx.entities.Entity.Sides;
 import com.mygdx.entities.GroundEnemy;
 import com.mygdx.entities.Player;
 import com.mygdx.entities.SineFlyingEnemy;
 import com.mygdx.entities.VerticalFlyingEnemy;
 import com.mygdx.game.Constants;
 import com.mygdx.map.Map;
-import com.mygdx.map.Block.Sides;
 
 public class World implements Screen{
 

@@ -1,6 +1,5 @@
 package com.mygdx.entities;
 
-import com.mygdx.map.Block.Sides;
 
 public class Entity {
 	protected int height;
@@ -26,6 +25,9 @@ public class Entity {
 		return y;
 	}
 
+	public enum Sides{
+		LEFT,RIGHT,TOP,BOTTOM;
+	}
 	
 	public boolean hasCollided(float x2, float y2, int width2, int height2){
 		

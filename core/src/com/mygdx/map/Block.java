@@ -7,10 +7,6 @@ public class Block {
 	protected float x;
 	protected float y;
 
-	public enum Sides{
-		LEFT,RIGHT,TOP,BOTTOM;
-	}
-
 	public Block(int x, int y) {
 		this.x = x*side;
 		this.y = y*side;

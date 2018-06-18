@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -62,6 +63,15 @@ public class Agent extends Player{
 	private final double gamma;
 	
 	private double[][][][][][][][][][] Q = new double[6][6][6][6][6][6][6][6][2][6];
+	
+	int toFile = 0;
+	int iterations = 0;
+	private float toFile2;
+	private int iterations2;
+	private int toFile4;
+	private int toFile3;
+	private int iterations3;
+	private int iterations4;
 	
 	public Agent(Map map, ArrayList<Enemy> enemies, double eagerness, double learningRate, double deathReward,
 		     double rightReward, double leftReward, double upReward, double downReward, double stationaryReward) {
@@ -454,11 +464,67 @@ public class Agent extends Player{
 	}
 
 	public void revive(Map map) {
+//		iterations  ++;
+//		iterations2 ++;
+//		iterations3 ++;
+//		iterations4 ++;
+//		toFile  += x;
+//		toFile2 += x;
+//		toFile3 += x;
+//		toFile4 += x;
+//		if(iterations == 5) {
+//			writeToFile5();
+//			iterations = 0;
+//			toFile = 0;
+//		}
+//		if(iterations2 == 10) {
+//			writeToFile10();
+//			iterations2 = 0;
+//			toFile2 = 0;
+//		}
+//		if(iterations3 == 50) {
+//			writeToFile50();
+//			iterations3 = 0;
+//			toFile3 = 0;
+//		}
+//		if(iterations4 == 100) {
+//			writeToFile100();
+//			iterations4 = 0;
+//			toFile4 = 0;
+//		}
+//		writeToFile();
 		super.revive(map);
 		aliveSinceLastState = true;
 		startOfRunTime = new Date();
-	}
 		
+	}
+	
+	private void writeToFile100() {
+		FileHandle file = Gdx.files.local("distance_data_for_graph_100");
+		file.writeString(String.format("%d\n", (int) (toFile4/100)), true);
+	}
+	
+	private void writeToFile50() {
+		FileHandle file = Gdx.files.local("distance_data_for_graph_50");
+		file.writeString(String.format("%d\n", (int) (toFile3/50)), true);
+	}
+	
+	private void writeToFile10() {
+		FileHandle file = Gdx.files.local("distance_data_for_graph_10");
+		file.writeString(String.format("%d\n", (int) (toFile2/10)), true);
+	}
+
+	private void writeToFile5() {
+		FileHandle file = Gdx.files.local("distance_data_for_graph_5");
+		file.writeString(String.format("%d\n", (int) (toFile/5)), true);
+		
+	}
+	private void writeToFile() {
+		FileHandle file = Gdx.files.local("distance_data_for_graph");
+		file.writeString(String.format("%d\n", (int) (x)), true);
+	}
+
+
 	public boolean isAlive() {
 		return aliveSinceLastState;
 	}

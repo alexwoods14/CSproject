@@ -87,22 +87,22 @@ public class World implements Screen{
 		enemies.add(new GroundEnemy(105*side, map, false));
 		enemies.add(new GroundEnemy(125*side, map, true));
 //		enemies.add(new GroundEnemy(122*side, map, false));
-		enemies.add(new GroundEnemy(145*side, map, false));
+//		enemies.add(new GroundEnemy(145*side, map, false));
 		enemies.add(new GroundEnemy(143*side, map, false));
 		enemies.add(new GroundEnemy(140*side, 5*side, false));
-		enemies.add(new GroundEnemy(141*side, 7*side, false));
+		enemies.add(new GroundEnemy(143*side, 7*side, false));
 		
 		//vertical flying enemies
-		enemies.add(new VerticalFlyingEnemy(24*side, 9*side, 6*side, 1.5f));
-		enemies.add(new VerticalFlyingEnemy(44*side, 10*side, 6*side, 2.0f));
+		enemies.add(new VerticalFlyingEnemy(23*side, 9*side, 6*side, 1.5f));
+		enemies.add(new VerticalFlyingEnemy(45*side, 10*side, 6*side, 2.0f));
 //		enemies.add(new VerticalFlyingEnemy(73*side, 7*side, 5*side, 1.0f));
-		enemies.add(new VerticalFlyingEnemy(93*side, 10*side, 7*side, 1.5f));
+		enemies.add(new VerticalFlyingEnemy(91*side, 10*side, 7*side, 1.5f));
 		enemies.add(new VerticalFlyingEnemy(154*side, 12*side, 8*side, 1.5f));
 		
 		//sinusoidal flying enemies
 		enemies.add(new SineFlyingEnemy(12*side, 12*side, 9*side, 1.0f, 5*side));
 		enemies.add(new SineFlyingEnemy(56*side, 10*side, 7*side, 1.0f, 5*side));
-		enemies.add(new SineFlyingEnemy(116*side, 8*side, 11*side, 1.0f, 5*side));
+		enemies.add(new SineFlyingEnemy(116*side, 9*side, 11*side, 1.0f, 5*side));
 	}
 
 	@Override
@@ -235,9 +235,6 @@ public class World implements Screen{
 		if(player.isAlive() == false) {
 			reset();
 		}
-		
-		
-		
 	}
 	
 	private void reset(){
